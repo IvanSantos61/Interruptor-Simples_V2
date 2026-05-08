@@ -1,1 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Simulador de Fiação SMT Pro</title>
+    <style>
+        #cenario {
+            position: relative;
+            width: fit-content;
+            user-select: none;
+        }
+        #fundo { display: block; max-width: 100%; }
+        
+        .camada-cabo {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-size: contain;
+            background-repeat: no-repeat;
+            pointer-events: none;
+        }
 
+        /* Estilo dos pontos de clique (Coordenadas) */
+        .ponto {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background: rgba(255, 255, 0, 0.6);
+            border: 2px solid yellow;
+            border-radius: 50%;
+            cursor: pointer;
+            display: none; /* Escondidos por padrão */
+            z-index: 10;
+            transform: translate(-50%, -50%);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+<div id="cenario">
+    <img src="ambiente.jpg" id="fundo">
+    
+    <!-- Camadas de Imagens -->
+    <div id="camada-fase1" class="camada-cabo"></div>
+    <div id="camada-fase2" class="camada-cabo"></div>
+    <div id="camada-retorno1" class="camada-cabo"></div>
+    <div id="camada-retorno2" class="camada-cabo"></div>
+    <div id="camada-neutro1" class="camada-cabo"></div>
+    <div id="camada-neutro2" class="camada-cabo"></div>
+
+    <!-- Pontos de Clique -->
+    <div id="ponto-inicio" class="ponto"></div>
+    <div id="ponto-fim" class="ponto"></div>
+</div>
+
+<script>
+    // Configuração das sequências (Ajuste as coordenadas top/left aqui)
+    const sequencia = [
+        { id: 'FASE1', max: 54, pasta: 'FASE1', ini: {t: '20%', l: '10%'}, fim: {t: '25%', l: '40%'} },
+        { id: 'FASE2', max: 18, pasta: 'FASE2', ini: {t: '25%', l: '40%'}, fim: {t: '30%', l: '70%'} },
+        { id: 'RETORNO1', max: 18, pasta: 'RETORNO1', ini: {t: '30%', l: '70%'}, fim: {t: '50%', l: '70%'} },
+        { id: 'RETORNO2', max: 24, pasta: 'RETORNO2', ini: {t: '50%', l: '70%'}, fim: {t: '50%', l: '30%'} },
+        { id: 'NEUTRO1', max: 76, pasta: 'NEUTRO1', ini: {t: '20%', l: '15%'}, fim: {t: '50%', l: '30%'} },
+        { id: 'NEUTRO2', max: 30, pasta: 'NEUTRO2', ini: {t: '50%', l: '30%'}, fim: {t: '80%', l: '30%'} }
+    ];
+
+    let etapaAtual = 0;
+    let aguardandoFim = false;
+
+    const elInicio = document.getElementById('ponto-inicio');
+    const elFim = document.getElementById('ponto-fim');
+
+    function carregarEtapa() {
+        if (etapaAtual >= sequencia.length) {
+            alert("Instalação concluída com sucesso!");
+            return;
+        }
+
+        const dados = sequencia[etapaAtual];
+        
+        // Posiciona e mostra ponto inicial
+        elInicio.style.top = dados.ini.t;
+        elInicio.style.left = dados.ini.l;
+        elInicio.style.display = 'block';
+        elInicio.style.background = "rgba(255, 255, 0, 0.6)";
+
+        // Posiciona o ponto final (mas mantém oculto até o primeiro clique)
+        elFim.style.top = dados.fim.t;
+        elFim.style.left = dados.fim.l;
+        elFim.style.display = 'none';
+        
+        aguardandoFim = false;
+    }
+
+    elInicio.onclick = () => {
+        elInicio.style.background = "rgba(0, 255, 0, 0.8)"; // Verde para indicar seleção
+        elFim.style.display = 'block'; // Mostra onde deve conectar
+        aguardandoFim = true;
+    };
+
+    elFim.onclick = () => {
+        if (!aguardandoFim) return;
+        
+        elInicio.style.display = 'none';
+        elFim.style.display = 'none';
+        animarCabo(sequencia[etapaAtual]);
+    };
+
+    function animarCabo(cabo) {
+        let frame = 0;
+        const camada = document.getElementById(`camada-${cabo.id.toLowerCase()}`);
+        
+        const loop = setInterval(() => {
+            const frameString = frame.toString().padStart(4, '0');
+            camada.style.backgroundImage = `url('${cabo.pasta}/quadro${frameString}.png')`;
+            
+            if (frame >= cabo.max) {
+                clearInterval(loop);
+                etapaAtual++;
+                carregarEtapa(); // Inicia a próxima fiação da sequência
+            }
+            frame += 6; // Passo de 6 em 6 como solicitado
+        }, 80);
+    }
+
+    // Iniciar primeira etapa
+    window.onload = carregarEtapa;
+
+</script>
+</body>
+</html>
