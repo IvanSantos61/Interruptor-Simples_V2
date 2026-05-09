@@ -81,7 +81,7 @@
             pointer-events: none; top: 46.5%; left: 75.8%; width: 242px;
         }
 
-        /* PAINEL DE CONCLUSÃO (CONFORME GRAVURA) */
+        /* PAINEL DE CONCLUSÃO */
         #modal-concluido {
             position: absolute;
             top: 50%;
@@ -105,8 +105,8 @@
             content: ''; position: absolute; width: 15px; height: 15px;
             background: #666; border-radius: 50%; border: 2px solid #222;
         }
-        #modal-concluido::before { top: 10px; left: 10px; } /* Parafuso TL */
-        #modal-concluido::after { top: 10px; right: 10px; } /* Parafuso TR */
+        #modal-concluido::before { top: 10px; left: 10px; }
+        #modal-concluido::after { top: 10px; right: 10px; }
         .bolt-bl { bottom: 10px; left: 10px; }
         .bolt-br { bottom: 10px; right: 10px; }
 
@@ -166,7 +166,6 @@
 
         <img src="lamp_on.png" id="camada-lampada">
 
-        <!-- MODAL DE CONCLUSÃO -->
         <div id="modal-concluido">
             <div class="bolt-bl"></div>
             <div class="bolt-br"></div>
@@ -191,6 +190,7 @@
     let estados = { dg: false, dr: false, int: false };
     let instalacaoConcluida = false;
     let primeiroTesteFeito = false;
+    let modalJaExibido = false; // Garante que o modal apareça apenas uma vez
     let etapaAtual = 0;
     let aguardandoDestino = false;
 
@@ -272,14 +272,6 @@
         if (tipo === 'int') {
             somInterruptor.currentTime = 0; somInterruptor.play();
             el.src = estados.int ? 'tec_int_on.png' : 'tec_int_off.png';
-            
-            // Lógica do Modal: Se desligou após o primeiro teste
-            if (!estados.int && primeiroTesteFeito) {
-                setTimeout(() => {
-                    modalConcluido.style.display = 'flex';
-                    setTimeout(() => { modalConcluido.style.display = 'none'; }, 2000);
-                }, 2000);
-            }
         }
         atualizarCircuito();
     }
@@ -287,13 +279,28 @@
     function atualizarCircuito() {
         const lamp = document.getElementById('camada-lampada');
         const tudoLigado = instalacaoConcluida && estados.dg && estados.dr && estados.int;
+
         if (tudoLigado) {
-            lamp.style.opacity = "1"; primeiroTesteFeito = true;
+            lamp.style.opacity = "1"; 
+            primeiroTesteFeito = true;
             statusTxt.innerHTML = '<div class="status-final acesa">LÂMPADA ACESA</div>';
         } else {
             lamp.style.opacity = "0";
             if (instalacaoConcluida) {
-                statusTxt.innerHTML = primeiroTesteFeito ? '<div class="status-final apagada">LÂMPADA APAGADA</div>' : '<span class="destaque">MONTAGEM CONCLUÍDA!</span> LIGUE O DG, O DR E O INTERRUPTOR.';
+                if (primeiroTesteFeito) {
+                    statusTxt.innerHTML = '<div class="status-final apagada">LÂMPADA APAGADA</div>';
+                    
+                    // Dispara o modal ao apagar se for após o primeiro teste e ainda não exibido
+                    if (!modalJaExibido) {
+                        modalJaExibido = true;
+                        setTimeout(() => {
+                            modalConcluido.style.display = 'flex';
+                            setTimeout(() => { modalConcluido.style.display = 'none'; }, 2000);
+                        }, 2000);
+                    }
+                } else {
+                    statusTxt.innerHTML = '<span class="destaque">MONTAGEM CONCLUÍDA!</span> LIGUE O DG, O DR E O INTERRUPTOR.';
+                }
             }
         }
     }
