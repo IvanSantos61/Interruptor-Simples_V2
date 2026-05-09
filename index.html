@@ -68,9 +68,16 @@
             opacity: 0; transition: opacity 0.3s;
         }
 
+        /* Lâmpada - Sua referência original */
         #camada-lampada { 
-            position: absolute; z-index: 30; opacity: 0; 
-            transition: opacity 0.2s; pointer-events: none;
+            position: absolute; 
+            z-index: 30; 
+            opacity: 0; 
+            transition: opacity 0.2s; 
+            pointer-events: none;
+            top: 10%; 
+            left: 45%; 
+            width: 120px;
         }
 
         .tecla { position: absolute; cursor: pointer; z-index: 25; transition: transform 0.1s; }
@@ -78,7 +85,7 @@
 
         .conector { position: absolute; width: 72px; display: none; z-index: 15; pointer-events: none; transform-origin: center; }
 
-        /* Botão Reiniciar - Alinhado conforme sua imagem */
+        /* Botão Reiniciar - Alinhado conforme a gravura padrão.PNG */
         #btn-reiniciar {
             position: absolute;
             bottom: 45px;
@@ -128,13 +135,14 @@
         <div id="camada-neutro1" class="camada-cabo"></div>
         <div id="camada-neutro2" class="camada-cabo"></div>
 
-        <!-- Lâmpada - Coordenadas ORIGINAIS restauradas -->
-        <img src="lamp_on.png" id="camada-lampada" style="top: 10%; left: 45%; width: 120px;">
+        <!-- Lâmpada - Posição fixa no CSS garantindo a referência -->
+        <img src="lamp_on.png" id="camada-lampada">
 
         <img src="al_dg_off.png" id="tecla-dg" class="tecla" style="top: 25%; left: 11.4%; width: 50px;" onclick="toggleDispositivo('dg')">
         <img src="al_dr_off.png" id="tecla-dr" class="tecla" style="top: 28%; left: 23.8%; width: 50px;" onclick="toggleDispositivo('dr')">
         <img src="tec_int_off.png" id="tecla-int" class="tecla" style="top: 73%; left: 72%; width: 53px;" onclick="toggleDispositivo('int')">
 
+        <!-- Conectores Wago -->
         <img src="con_wago.png" id="wago-fase" class="conector">
         <img src="con_wago.png" id="wago-retorno" class="conector">
         <img src="con_wago.png" id="wago-neutro" class="conector">
@@ -151,6 +159,7 @@
     let etapaAtual = 0;
     let aguardandoDestino = false;
 
+    // Coordenadas dos conectores Wago conforme seu padrão validado
     const sequencia = [
         { id: 'FASE1', max: 54, pasta: 'FASE1', ini: {t: '38%', l: '27%'}, fim: {t: '23%', l: '56.5%'}, msg: '<span class="destaque">CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA DO DR.' },
         { id: 'FASE2', max: 18, pasta: 'FASE2', ini: {t: '23%', l: '58%'}, fim: {t: '81%', l: '68%'}, wagoTop: '25%', wagoLeft: '57.4%', wagoRot: '90deg', msg: 'CONECTE A FASE AO INTERRUPTOR.' },
@@ -177,6 +186,7 @@
         elInicio.style.top = dados.ini.t;
         elInicio.style.left = dados.ini.l;
         elInicio.style.display = 'block';
+        elInicio.style.background = "rgba(255, 255, 0, 0.7)";
         elFim.style.top = dados.fim.t;
         elFim.style.left = dados.fim.l;
         elFim.style.display = 'none';
