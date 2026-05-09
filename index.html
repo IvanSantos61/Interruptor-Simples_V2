@@ -27,10 +27,15 @@
             z-index: 5;
         }
 
-        /* Camada específica para a lâmpada (sobreposta a tudo) */
-        #camada-lampada { z-index: 20; opacity: 0; transition: opacity 0.2s; }
+        /* Camada da lâmpada: opacity 0 por padrão, transição suave ao acender */
+        #camada-lampada { 
+            position: absolute;
+            z-index: 30; 
+            opacity: 0; 
+            transition: opacity 0.2s ease-in-out;
+            pointer-events: none;
+        }
 
-        /* Estilo para as teclas clicáveis */
         .tecla {
             position: absolute;
             cursor: pointer;
@@ -78,11 +83,10 @@
         <div id="camada-neutro1" class="camada-cabo"></div>
         <div id="camada-neutro2" class="camada-cabo"></div>
 
-        <!-- Lâmpada (Acesa) -->
-        <div id="camada-lampada" class="elemento-interativo" style="background-image: url('lamp_on.png');"></div>
+        <!-- LÂMPADA (Ajuste o posicionamento aqui) -->
+        <img src="lamp_on.png" id="camada-lampada" style="top: 10%; left: 45%; width: 120px;">
 
         <!-- Dispositivos (Teclas) -->
-        <!-- Posicionei o DG e DR lado a lado e o Interruptor em outra área. Ajuste as coordenadas abaixo: -->
         <img src="al_dg_off.png" id="tecla-dg" class="tecla" style="top: 25%; left: 11.4%; width: 50px;" onclick="toggleDispositivo('dg')">
         <img src="al_dr_off.png" id="tecla-dr" class="tecla" style="top: 28%; left: 23.8%; width: 50px;" onclick="toggleDispositivo('dr')">
         <img src="tec_int_off.png" id="tecla-int" class="tecla" style="top: 73%; left: 72%; width: 53px;" onclick="toggleDispositivo('int')">
@@ -97,7 +101,6 @@
     </div>
 
 <script>
-    // Estados do sistema
     let estados = { dg: false, dr: false, int: false };
     let instalacaoConcluida = false;
 
@@ -136,23 +139,64 @@
         aguardandoDestino = false;
     }
 
-    // Lógica para alternar botões e atualizar circuito
+    elInicio.onclick = (e) => {
+        e.stopPropagation();
+        elInicio.style.background = "#00ff00";
+        elFim.style.display = 'block';
+        aguardandoDestino = true;
+    };
+
+    elFim.onclick = (e) => {
+        e.stopPropagation();
+        if (!aguardandoDestino) return;
+        elInicio.style.display = 'none';
+        elFim.style.display = 'none';
+        animarCabo(sequencia[etapaAtual]);
+    };
+
+    function animarCabo(cabo) {
+        let frame = 0;
+        const camada = document.getElementById(`camada-${cabo.id.toLowerCase()}`);
+        camada.style.opacity = "1";
+        
+        const loop = setInterval(() => {
+            const frameExibir = Math.min(frame, cabo.max);
+            const frameString = frameExibir.toString().padStart(4, '0');
+            camada.style.backgroundImage = `url('${cabo.pasta}/quadro${frameString}.png')`;
+            
+            if (frame >= cabo.max) {
+                clearInterval(loop);
+                if (cabo.wagoTop) { // Se o cabo tiver dados de conector
+                    let idWago = cabo.id.toLowerCase().includes('fase') ? 'wago-fase' : 
+                                 cabo.id.toLowerCase().includes('retorno') ? 'wago-retorno' : 'wago-neutro';
+                    mostrarConector(idWago, cabo);
+                }
+                etapaAtual++;
+                setTimeout(carregarEtapa, 600);
+            }
+            frame += 6;
+        }, 70);
+    }
+
+    function mostrarConector(idElemento, dadosCabo) {
+        const wago = document.getElementById(idElemento);
+        wago.style.top = dadosCabo.wagoTop;
+        wago.style.left = dadosCabo.wagoLeft;
+        wago.style.transform = `translate(-50%, -50%) rotate(${dadosCabo.wagoRot})`;
+        wago.style.display = 'block';
+    }
+
     function toggleDispositivo(tipo) {
         estados[tipo] = !estados[tipo];
         const el = document.getElementById(`tecla-${tipo}`);
-        
-        // Atualiza imagem da tecla
         if (tipo === 'dg') el.src = estados.dg ? 'al_dg_on.png' : 'al_dg_off.png';
         if (tipo === 'dr') el.src = estados.dr ? 'al_dr_on.png' : 'al_dr_off.png';
         if (tipo === 'int') el.src = estados.int ? 'tec_int_on.png' : 'tec_int_off.png';
-
         atualizarCircuito();
     }
 
     function atualizarCircuito() {
         const lamp = document.getElementById('camada-lampada');
-        
-        // Lógica de acionamento: Fiação pronta + DG ON + DR ON + Interruptor ON
         if (instalacaoConcluida && estados.dg && estados.dr && estados.int) {
             lamp.style.opacity = "1";
             txtStatus.innerText = "💡 LÂMPADA ACESA!";
@@ -160,13 +204,17 @@
             lamp.style.opacity = "0";
             if (instalacaoConcluida) {
                 if (!estados.dg || !estados.dr) txtStatus.innerText = "⚠️ SEM ENERGIA NO QUADRO (DG/DR Desligados)";
-                else if (!estados.int) txtStatus.innerText = "Circuito pronto. Ligue o interruptor.";
+                else if (!estados.int) txtStatus.innerText = "Circuito energizado. Ligue o interruptor.";
             }
         }
     }
 
-    // (O restante das funções elInicio.onclick, elFim.onclick, animarCabo e mostrarConector permanecem iguais ao código anterior)
-    // ... [Inserir aqui as funções de animação do código anterior] ...
+    document.getElementById('container-simulador').onclick = function(e) {
+        const rect = this.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width * 100).toFixed(1);
+        const y = ((e.clientY - rect.top) / rect.height * 100).toFixed(1);
+        console.log(`t: '${y}%', l: '${x}%'`);
+    };
 
     window.onload = carregarEtapa;
 </script>
