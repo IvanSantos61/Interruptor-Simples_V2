@@ -31,6 +31,17 @@
             z-index: 5;
         }
 
+        /* Estilo para o Conector Wago */
+        .conector {
+            position: absolute;
+            width: 40px; /* Ajuste o tamanho da imagem aqui */
+            height: auto;
+            display: none; /* Inicia oculto */
+            z-index: 15;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+
         .ponto {
             position: absolute;
             width: 20px;
@@ -68,12 +79,16 @@
     <div id="container-simulador">
         <img src="ambiente.jpg" id="fundo" alt="Cenário">
         
+        <!-- Camadas de Cabos -->
         <div id="camada-fase1" class="camada-cabo"></div>
         <div id="camada-fase2" class="camada-cabo"></div>
         <div id="camada-retorno1" class="camada-cabo"></div>
         <div id="camada-retorno2" class="camada-cabo"></div>
         <div id="camada-neutro1" class="camada-cabo"></div>
         <div id="camada-neutro2" class="camada-cabo"></div>
+
+        <!-- Penduricalhos (Conectores) -->
+        <img src="con_wago.png" id="wago-fase" class="conector">
 
         <div id="ponto-inicio" class="ponto"></div>
         <div id="ponto-fim" class="ponto"></div>
@@ -144,7 +159,6 @@
         txtStatus.innerText = `Passando cabo ${cabo.id}...`;
 
         const loop = setInterval(() => {
-            // Garante que o frame não ultrapasse o máximo definido
             const frameExibir = Math.min(frame, cabo.max);
             const frameString = frameExibir.toString().padStart(4, '0');
             
@@ -152,6 +166,16 @@
             
             if (frame >= cabo.max) {
                 clearInterval(loop);
+
+                // GATILHO PARA O CONECTOR WAGO APÓS FASE2
+                if (cabo.id === 'FASE2') {
+                    const wago = document.getElementById('wago-fase');
+                    // Ele se posiciona no destino do cabo FASE2
+                    wago.style.top = cabo.fim.t;
+                    wago.style.left = cabo.fim.l;
+                    wago.style.display = 'block';
+                }
+
                 etapaAtual++;
                 setTimeout(carregarEtapa, 600);
             }
@@ -159,7 +183,7 @@
         }, 70);
     }
 
-    // MODO DESENVOLVEDOR para ajustes finos
+    // MODO DESENVOLVEDOR para ajustes de coordenadas
     document.getElementById('container-simulador').onclick = function(e) {
         const rect = this.getBoundingClientRect();
         const x = ((e.clientX - rect.left) / rect.width * 100).toFixed(1);
