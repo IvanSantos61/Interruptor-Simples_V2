@@ -204,8 +204,25 @@
             msg: '<span class="destaque">CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.',
             msgDestino: '<span class="destaque">CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA MOSTRADA NA LÂMPADA.'
         },
-        { id: 'NEUTRO1', max: 78, pasta: 'NEUTRO1', ini: {t: '35%', l: '44.3%'}, fim: {t: '14%', l: '56%'}, msg: 'CONECTE O NEUTRO NO BARRAMENTO.' },
-        { id: 'NEUTRO2', max: 30, pasta: 'NEUTRO2', ini: {t: '13%', l: '58%'}, fim: {t: '55%', l: '91.3%'}, wagoTop: '14.5%', wagoLeft: '57%', wagoRot: '270deg', msg: 'FINALIZE A CONEXÃO DO NEUTRO NA LÂMPADA.' }
+        { 
+            id: 'NEUTRO1', 
+            max: 78, 
+            pasta: 'NEUTRO1', 
+            ini: {t: '35%', l: '44.3%'}, 
+            fim: {t: '14%', l: '56%'}, 
+            msg: '<span class="destaque">CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA MOSTRADA NO BARRAMENTO (N)' 
+        },
+        { 
+            id: 'NEUTRO2', 
+            max: 30, 
+            pasta: 'NEUTRO2', 
+            ini: {t: '13%', l: '58%'}, 
+            fim: {t: '55%', l: '91.3%'}, 
+            wagoTop: '14.5%', 
+            wagoLeft: '57%', 
+            wagoRot: '270deg', 
+            msg: 'FINALIZE A CONEXÃO DO NEUTRO NA LÂMPADA.' 
+        }
     ];
 
     const elInicio = document.getElementById('ponto-inicio');
