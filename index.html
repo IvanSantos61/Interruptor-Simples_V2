@@ -48,6 +48,8 @@
             transition: all 0.3s ease;
         }
 
+        .destaque { color: #ffff00; text-shadow: 0 0 5px #ffff00; }
+
         .status-final {
             padding: 12px 40px;
             border-radius: 50px;
@@ -81,7 +83,6 @@
             pointer-events: none; top: 46.5%; left: 75.8%; width: 242px;
         }
 
-        /* PAINEL DE CONCLUSÃO */
         #modal-concluido {
             position: absolute;
             top: 50%;
@@ -100,24 +101,11 @@
             box-shadow: 0 0 30px rgba(0,0,0,0.8);
         }
 
-        #modal-concluido::before, #modal-concluido::after, 
-        #modal-concluido .bolt-bl, #modal-concluido .bolt-br {
-            content: ''; position: absolute; width: 15px; height: 15px;
-            background: #666; border-radius: 50%; border: 2px solid #222;
-        }
-        #modal-concluido::before { top: 10px; left: 10px; }
-        #modal-concluido::after { top: 10px; right: 10px; }
-        .bolt-bl { bottom: 10px; left: 10px; }
-        .bolt-br { bottom: 10px; right: 10px; }
-
         .texto-concluido {
             color: #00ff00;
             font-size: 4em;
             font-weight: 900;
             text-shadow: 0 0 20px #00ff00;
-            display: flex;
-            align-items: center;
-            gap: 20px;
         }
 
         .tecla { position: absolute; cursor: pointer; z-index: 25; transition: transform 0.1s; }
@@ -155,7 +143,7 @@
     </div>
 
     <div id="container-simulador">
-        <img src="ambiente.jpg" id="fundo" alt="Cenário">
+        <img src="ambiente.jpg" id="fundo">
         
         <div id="camada-fase1" class="camada-cabo"></div>
         <div id="camada-fase2" class="camada-cabo"></div>
@@ -166,13 +154,8 @@
 
         <img src="lamp_on.png" id="camada-lampada">
 
-        <!-- O PAINEL DE CONCLUSÃO PODE SER UMA IMAGEM OU CSS -->
         <div id="modal-concluido">
-            <div class="bolt-bl"></div>
-            <div class="bolt-br"></div>
             <div class="texto-concluido">✓ CONCLUÍDO</div>
-            <!-- Se preferir usar sua imagem concluido2.png, basta trocar a div acima por:
-            <img src="concluido2.png" style="width: 100%; height: 100%;"> -->
         </div>
 
         <img src="al_dg_off.png" id="tecla-dg" class="tecla" style="top: 25%; left: 11.4%; width: 50px;" onclick="toggleDispositivo('dg')">
@@ -203,36 +186,41 @@
     const statusTxt = document.getElementById('status-mensagem');
     const modalConcluido = document.getElementById('modal-concluido');
 
-    // ... (Mantive as definições de sequencia e animação conforme conversas anteriores) ...
     const sequencia = [
-        { id: 'FASE1', max: 54, pasta: 'FASE1', ini: {t: '38%', l: '27%'}, fim: {t: '23%', l: '56.5%'}, msg: '<span class="destaque">CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA DO DR.' },
-        { id: 'NEUTRO1', max: 78, pasta: 'NEUTRO1', ini: {t: '35%', l: '44.3%'}, fim: {t: '14%', l: '56%'}, msg: '<span class="destaque">CONECTE O NEUTRO.</span> BARRAMENTO (N)' },
-        { id: 'FASE2', max: 18, pasta: 'FASE2', ini: {t: '23%', l: '58%'}, fim: {t: '81%', l: '68%'}, wagoTop: '25%', wagoLeft: '57.4%', wagoRot: '90deg' },
-        { id: 'RETORNO1', max: 18, pasta: 'RETORNO1', ini: {t: '20%', l: '61%'}, fim: {t: '75%', l: '68%'} },
-        { id: 'RETORNO2', max: 24, pasta: 'RETORNO2', ini: {t: '17%', l: '61%'}, fim: {t: '55%', l: '89%'}, wagoTop: '17.3%', wagoLeft: '60%', wagoRot: '0deg' },
-        { id: 'NEUTRO2', max: 30, pasta: 'NEUTRO2', ini: {t: '13%', l: '58%'}, fim: {t: '55%', l: '91.3%'}, wagoTop: '14.5%', wagoLeft: '57%', wagoRot: '270deg' }
+        { id: 'FASE1', max: 54, pasta: 'FASE1', ini: {t: '38%', l: '27%'}, fim: {t: '23%', l: '56.5%'}, msg: '<span class="destaque">CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA DO DR.', msgDestino: '<span class="destaque">CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.' },
+        { id: 'NEUTRO1', max: 78, pasta: 'NEUTRO1', ini: {t: '35%', l: '44.3%'}, fim: {t: '14%', l: '56%'}, msg: '<span class="destaque">CONECTE O NEUTRO.</span> BARRAMENTO (N)', msgDestino: '<span class="destaque">CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM' },
+        { id: 'FASE2', max: 18, pasta: 'FASE2', ini: {t: '23%', l: '58%'}, fim: {t: '81%', l: '68%'}, wagoTop: '25%', wagoLeft: '57.4%', wagoRot: '90deg', msg: '<span class="destaque">CONECTE A FASE.</span> CLIQUE NA CAIXA DE PASSAGEM.', msgDestino: '<span class="destaque">CONECTE A FASE.</span> CLIQUE NO INTERRUPTOR.' },
+        { id: 'RETORNO1', max: 18, pasta: 'RETORNO1', ini: {t: '20%', l: '61%'}, fim: {t: '75%', l: '68%'}, msg: '<span class="destaque">CONECTE O RETORNO.</span> CLIQUE NA CAIXA DE PASSAGEM.', msgDestino: '<span class="destaque">CONECTE O RETORNO.</span> CLIQUE NO INTERRUPTOR.' },
+        { id: 'RETORNO2', max: 24, pasta: 'RETORNO2', ini: {t: '17%', l: '61%'}, fim: {t: '55%', l: '89%'}, wagoTop: '17.3%', wagoLeft: '60%', wagoRot: '0deg', msg: '<span class="destaque">CONECTE O RETORNO.</span> CLIQUE NA CAIXA DE PASSAGEM.', msgDestino: '<span class="destaque">CONECTE O RETORNO.</span> CLIQUE NA LÂMPADA.' },
+        { id: 'NEUTRO2', max: 30, pasta: 'NEUTRO2', ini: {t: '13%', l: '58%'}, fim: {t: '55%', l: '91.3%'}, wagoTop: '14.5%', wagoLeft: '57%', wagoRot: '270deg', msg: '<span class="destaque">CONECTE O NEUTRO.</span> CLIQUE NA CAIXA DE PASSAGEM.', msgDestino: '<span class="destaque">CONECTE O NEUTRO.</span> CLIQUE NA LÂMPADA' }
     ];
 
     function carregarEtapa() {
         if (etapaAtual >= sequencia.length) {
             instalacaoConcluida = true;
             statusTxt.innerHTML = '<span class="destaque">MONTAGEM CONCLUÍDA!</span> LIGUE O DG, O DR E O INTERRUPTOR.';
+            document.getElementById('ponto-inicio').style.display = 'none';
+            document.getElementById('ponto-fim').style.display = 'none';
             return;
         }
         const dados = sequencia[etapaAtual];
-        statusTxt.innerHTML = dados.msg || '<span class="destaque">PROSSIGA COM A FIAÇÃO...</span>';
+        statusTxt.innerHTML = dados.msg;
         const pIni = document.getElementById('ponto-inicio');
-        pIni.style.top = dados.ini.t; pIni.style.left = dados.ini.l; pIni.style.display = 'block';
+        pIni.style.top = dados.ini.t; pIni.style.left = dados.ini.l; pIni.style.display = 'block'; pIni.style.background = "rgba(255, 255, 0, 0.7)";
+        document.getElementById('ponto-fim').style.top = dados.fim.t; document.getElementById('ponto-fim').style.left = dados.fim.l; document.getElementById('ponto-fim').style.display = 'none';
+        aguardandoDestino = false;
     }
 
     document.getElementById('ponto-inicio').onclick = (e) => {
-        document.getElementById('ponto-fim').style.top = sequencia[etapaAtual].fim.t;
-        document.getElementById('ponto-fim').style.left = sequencia[etapaAtual].fim.l;
+        e.stopPropagation();
+        document.getElementById('ponto-inicio').style.background = "#00ff00";
         document.getElementById('ponto-fim').style.display = 'block';
         aguardandoDestino = true;
+        if(sequencia[etapaAtual].msgDestino) statusTxt.innerHTML = sequencia[etapaAtual].msgDestino;
     };
 
     document.getElementById('ponto-fim').onclick = (e) => {
+        e.stopPropagation();
         if (!aguardandoDestino) return;
         document.getElementById('ponto-inicio').style.display = 'none';
         document.getElementById('ponto-fim').style.display = 'none';
@@ -248,12 +236,13 @@
             camada.style.backgroundImage = `url('${cabo.pasta}/quadro${frameString}.png')`;
             if (frame >= cabo.max) {
                 clearInterval(loop);
-                somConexao.play();
+                somConexao.currentTime = 0; somConexao.play();
                 if (cabo.wagoTop) {
-                    const wago = document.getElementById(cabo.id.toLowerCase().includes('fase') ? 'wago-fase' : cabo.id.toLowerCase().includes('retorno') ? 'wago-retorno' : 'wago-neutro');
+                    let idWago = cabo.id.toLowerCase().includes('fase') ? 'wago-fase' : cabo.id.toLowerCase().includes('retorno') ? 'wago-retorno' : 'wago-neutro';
+                    const wago = document.getElementById(idWago);
                     wago.style.top = cabo.wagoTop; wago.style.left = cabo.wagoLeft; wago.style.transform = `translate(-50%, -50%) rotate(${cabo.wagoRot})`; wago.style.display = 'block';
                 }
-                etapaAtual++; carregarEtapa();
+                etapaAtual++; setTimeout(carregarEtapa, 600);
             }
             frame += 6;
         }, 70);
@@ -262,12 +251,12 @@
     function toggleDispositivo(tipo) {
         estados[tipo] = !estados[tipo];
         const el = document.getElementById(`tecla-${tipo}`);
-        if (tipo === 'int') {
-            somInterruptor.play();
-            el.src = estados.int ? 'tec_int_on.png' : 'tec_int_off.png';
-        } else {
-            somDisjuntor.play();
+        if (tipo === 'dg' || tipo === 'dr') {
+            somDisjuntor.currentTime = 0; somDisjuntor.play();
             el.src = estados[tipo] ? `al_${tipo}_on.png` : `al_${tipo}_off.png`;
+        } else {
+            somInterruptor.currentTime = 0; somInterruptor.play();
+            el.src = estados.int ? 'tec_int_on.png' : 'tec_int_off.png';
         }
         atualizarCircuito();
     }
@@ -285,17 +274,17 @@
             if (instalacaoConcluida) {
                 statusTxt.innerHTML = '<div class="status-final apagada">LÂMPADA APAGADA</div>';
                 
-                // LÓGICA DO MODAL: Se a lâmpada apagou após o primeiro teste e o modal não está rodando
+                // NOVO CRITÉRIO: Ao apagar, se já testou a lâmpada acesa antes
                 if (primeiroTesteFeito && !modalEmExecucao) {
                     modalEmExecucao = true; 
-
                     setTimeout(() => {
                         modalConcluido.style.display = 'flex';
                         setTimeout(() => { 
                             modalConcluido.style.display = 'none'; 
-                            // O modal só aparecerá de novo se resetar essa variável
                         }, 2000);
                     }, 2000);
+                } else if (!primeiroTesteFeito) {
+                    statusTxt.innerHTML = '<span class="destaque">MONTAGEM CONCLUÍDA!</span> LIGUE O DG, O DR E O INTERRUPTOR.';
                 }
             }
         }
