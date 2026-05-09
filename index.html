@@ -48,8 +48,6 @@
             transition: all 0.3s ease;
         }
 
-        .destaque { color: #ffff00; text-shadow: 0 0 5px #ffff00; }
-
         .status-final {
             padding: 12px 40px;
             border-radius: 50px;
@@ -58,8 +56,21 @@
             letter-spacing: 1px;
         }
 
-        .acesa { background: #008000; box-shadow: 0 0 20px #00ff00; border: 1px solid #00ff00; }
-        .apagada { background: #cc0000; box-shadow: 0 0 20px #ff0000; border: 1px solid #ff4444; }
+        .acesa {
+            background: #008000;
+            box-shadow: 0 0 20px #00ff00;
+            border: 1px solid #00ff00;
+        }
+
+        .apagada {
+            background: #cc0000;
+            box-shadow: 0 0 20px #ff0000;
+            border: 1px solid #ff4444;
+        }
+
+        #status-mensagem span.destaque {
+            color: #ff9900;
+        }
 
         #container-simulador {
             position: relative;
@@ -79,47 +90,42 @@
         }
 
         #camada-lampada { 
-            position: absolute; z-index: 30; opacity: 0; transition: opacity 0.2s; 
-            pointer-events: none; top: 46.5%; left: 75.8%; width: 242px;
-        }
-
-        #modal-concluido {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 60%;
-            height: 40%;
-            background: linear-gradient(145deg, #333, #111);
-            border: 4px solid #444;
-            border-radius: 15px;
-            z-index: 100;
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 0 30px rgba(0,0,0,0.8);
-        }
-
-        .texto-concluido {
-            color: #00ff00;
-            font-size: 4em;
-            font-weight: 900;
-            text-shadow: 0 0 20px #00ff00;
+            position: absolute; 
+            z-index: 30; 
+            opacity: 0; 
+            transition: opacity 0.2s; 
+            pointer-events: none;
+            top: 46.5%; 
+            left: 75.8%; 
+            width: 242px;
         }
 
         .tecla { position: absolute; cursor: pointer; z-index: 25; transition: transform 0.1s; }
-        .conector { position: absolute; width: 72px; display: none; z-index: 15; transform-origin: center; }
+        .tecla:active { transform: scale(0.95); }
+
+        .conector { position: absolute; width: 72px; display: none; z-index: 15; pointer-events: none; transform-origin: center; }
 
         #btn-reiniciar {
-            position: absolute; bottom: 45px; left: 49%; transform: translateX(-50%);
-            padding: 8px 30px; background: #cc0000; color: white; border: none;
-            border-radius: 20px; font-weight: bold; cursor: pointer; z-index: 50;
+            position: absolute;
+            bottom: 45px;
+            left: 49%;
+            transform: translateX(-50%);
+            padding: 8px 30px;
+            background: #cc0000;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 50;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            font-size: 15px;
         }
 
         .ponto {
-            position: absolute; width: 22px; height: 22px; background: rgba(255, 255, 0, 0.7);
-            border: 2px solid gold; border-radius: 50%; cursor: pointer; display: none; z-index: 40;
+            position: absolute; width: 22px; height: 22px;
+            background: rgba(255, 255, 0, 0.7); border: 2px solid gold;
+            border-radius: 50%; cursor: pointer; display: none; z-index: 40;
             transform: translate(-50%, -50%); animation: pulsar 1.2s infinite;
         }
 
@@ -143,7 +149,7 @@
     </div>
 
     <div id="container-simulador">
-        <img src="ambiente.jpg" id="fundo">
+        <img src="ambiente.jpg" id="fundo" alt="Cenário">
         
         <div id="camada-fase1" class="camada-cabo"></div>
         <div id="camada-fase2" class="camada-cabo"></div>
@@ -153,10 +159,6 @@
         <div id="camada-neutro2" class="camada-cabo"></div>
 
         <img src="lamp_on.png" id="camada-lampada">
-
-        <div id="modal-concluido">
-            <div class="texto-concluido">✓ CONCLUÍDO</div>
-        </div>
 
         <img src="al_dg_off.png" id="tecla-dg" class="tecla" style="top: 25%; left: 11.4%; width: 50px;" onclick="toggleDispositivo('dg')">
         <img src="al_dr_off.png" id="tecla-dr" class="tecla" style="top: 28%; left: 23.8%; width: 50px;" onclick="toggleDispositivo('dr')">
@@ -175,55 +177,94 @@
 <script>
     let estados = { dg: false, dr: false, int: false };
     let instalacaoConcluida = false;
-    let primeiroTesteFeito = false;
-    let modalEmExecucao = false; 
+    let primeiroTesteFeito = false; // Controle para a mensagem de desligada
     let etapaAtual = 0;
     let aguardandoDestino = false;
 
     const somDisjuntor = document.getElementById('som-disjuntor');
     const somInterruptor = document.getElementById('som-interruptor');
     const somConexao = document.getElementById('som-conexao');
-    const statusTxt = document.getElementById('status-mensagem');
-    const modalConcluido = document.getElementById('modal-concluido');
 
     const sequencia = [
-        { id: 'FASE1', max: 54, pasta: 'FASE1', ini: {t: '38%', l: '27%'}, fim: {t: '23%', l: '56.5%'}, msg: '<span class="destaque">CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA DO DR.', msgDestino: '<span class="destaque">CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.' },
-        { id: 'NEUTRO1', max: 78, pasta: 'NEUTRO1', ini: {t: '35%', l: '44.3%'}, fim: {t: '14%', l: '56%'}, msg: '<span class="destaque">CONECTE O NEUTRO.</span> BARRAMENTO (N)', msgDestino: '<span class="destaque">CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM' },
-        { id: 'FASE2', max: 18, pasta: 'FASE2', ini: {t: '23%', l: '58%'}, fim: {t: '81%', l: '68%'}, wagoTop: '25%', wagoLeft: '57.4%', wagoRot: '90deg', msg: '<span class="destaque">CONECTE A FASE.</span> CLIQUE NA CAIXA DE PASSAGEM.', msgDestino: '<span class="destaque">CONECTE A FASE.</span> CLIQUE NO INTERRUPTOR.' },
-        { id: 'RETORNO1', max: 18, pasta: 'RETORNO1', ini: {t: '20%', l: '61%'}, fim: {t: '75%', l: '68%'}, msg: '<span class="destaque">CONECTE O RETORNO.</span> CLIQUE NA CAIXA DE PASSAGEM.', msgDestino: '<span class="destaque">CONECTE O RETORNO.</span> CLIQUE NO INTERRUPTOR.' },
-        { id: 'RETORNO2', max: 24, pasta: 'RETORNO2', ini: {t: '17%', l: '61%'}, fim: {t: '55%', l: '89%'}, wagoTop: '17.3%', wagoLeft: '60%', wagoRot: '0deg', msg: '<span class="destaque">CONECTE O RETORNO.</span> CLIQUE NA CAIXA DE PASSAGEM.', msgDestino: '<span class="destaque">CONECTE O RETORNO.</span> CLIQUE NA LÂMPADA.' },
-        { id: 'NEUTRO2', max: 30, pasta: 'NEUTRO2', ini: {t: '13%', l: '58%'}, fim: {t: '55%', l: '91.3%'}, wagoTop: '14.5%', wagoLeft: '57%', wagoRot: '270deg', msg: '<span class="destaque">CONECTE O NEUTRO.</span> CLIQUE NA CAIXA DE PASSAGEM.', msgDestino: '<span class="destaque">CONECTE O NEUTRO.</span> CLIQUE NA LÂMPADA' }
+        { 
+            id: 'FASE1', max: 54, pasta: 'FASE1', 
+            ini: {t: '38%', l: '27%'}, fim: {t: '23%', l: '56.5%'}, 
+            msg: '<span class="destaque">CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA DO DR.',
+            msgDestino: '<span class="destaque">CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.'
+        },
+        { 
+            id: 'NEUTRO1', max: 78, pasta: 'NEUTRO1', 
+            ini: {t: '35%', l: '44.3%'}, fim: {t: '14%', l: '56%'}, 
+            msg: '<span class="destaque">CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA MOSTRADA NO BARRAMENTO (N)',
+            msgDestino: '<span class="destaque">CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM'
+        },
+        { 
+            id: 'FASE2', max: 18, pasta: 'FASE2', 
+            ini: {t: '23%', l: '58%'}, fim: {t: '81%', l: '68%'}, 
+            wagoTop: '25%', wagoLeft: '57.4%', wagoRot: '90deg', 
+            msg: '<span class="destaque">CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.',
+            msgDestino: '<span class="destaque">CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA MOSTRADA NO INTERRUPTOR.'
+        },
+        { 
+            id: 'RETORNO1', max: 18, pasta: 'RETORNO1', 
+            ini: {t: '20%', l: '61%'}, fim: {t: '75%', l: '68%'}, 
+            msg: '<span class="destaque">CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.',
+            msgDestino: '<span class="destaque">CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA DO INTERRUPTOR.'
+        },
+        { 
+            id: 'RETORNO2', max: 24, pasta: 'RETORNO2', 
+            ini: {t: '17%', l: '61%'}, fim: {t: '55%', l: '89%'}, 
+            wagoTop: '17.3%', wagoLeft: '60%', wagoRot: '0deg', 
+            msg: '<span class="destaque">CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.',
+            msgDestino: '<span class="destaque">CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA MOSTRADA NA LÂMPADA.'
+        },
+        { 
+            id: 'NEUTRO2', max: 30, pasta: 'NEUTRO2', 
+            ini: {t: '13%', l: '58%'}, fim: {t: '55%', l: '91.3%'}, 
+            wagoTop: '14.5%', wagoLeft: '57%', wagoRot: '270deg', 
+            msg: '<span class="destaque">CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.',
+            msgDestino: '<span class="destaque">CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA MOSTRADA NA LÂMPADA'
+        }
     ];
+
+    const elInicio = document.getElementById('ponto-inicio');
+    const elFim = document.getElementById('ponto-fim');
+    const statusTxt = document.getElementById('status-mensagem');
 
     function carregarEtapa() {
         if (etapaAtual >= sequencia.length) {
             instalacaoConcluida = true;
             statusTxt.innerHTML = '<span class="destaque">MONTAGEM CONCLUÍDA!</span> LIGUE O DG, O DR E O INTERRUPTOR.';
-            document.getElementById('ponto-inicio').style.display = 'none';
-            document.getElementById('ponto-fim').style.display = 'none';
+            elInicio.style.display = 'none';
+            elFim.style.display = 'none';
             return;
         }
         const dados = sequencia[etapaAtual];
         statusTxt.innerHTML = dados.msg;
-        const pIni = document.getElementById('ponto-inicio');
-        pIni.style.top = dados.ini.t; pIni.style.left = dados.ini.l; pIni.style.display = 'block'; pIni.style.background = "rgba(255, 255, 0, 0.7)";
-        document.getElementById('ponto-fim').style.top = dados.fim.t; document.getElementById('ponto-fim').style.left = dados.fim.l; document.getElementById('ponto-fim').style.display = 'none';
+        elInicio.style.top = dados.ini.t;
+        elInicio.style.left = dados.ini.l;
+        elInicio.style.display = 'block';
+        elInicio.style.background = "rgba(255, 255, 0, 0.7)";
+        elFim.style.top = dados.fim.t;
+        elFim.style.left = dados.fim.l;
+        elFim.style.display = 'none';
         aguardandoDestino = false;
     }
 
-    document.getElementById('ponto-inicio').onclick = (e) => {
+    elInicio.onclick = (e) => {
         e.stopPropagation();
-        document.getElementById('ponto-inicio').style.background = "#00ff00";
-        document.getElementById('ponto-fim').style.display = 'block';
+        const dados = sequencia[etapaAtual];
+        elInicio.style.background = "#00ff00";
+        elFim.style.display = 'block';
         aguardandoDestino = true;
-        if(sequencia[etapaAtual].msgDestino) statusTxt.innerHTML = sequencia[etapaAtual].msgDestino;
+        if(dados.msgDestino) statusTxt.innerHTML = dados.msgDestino;
     };
 
-    document.getElementById('ponto-fim').onclick = (e) => {
+    elFim.onclick = (e) => {
         e.stopPropagation();
         if (!aguardandoDestino) return;
-        document.getElementById('ponto-inicio').style.display = 'none';
-        document.getElementById('ponto-fim').style.display = 'none';
+        elInicio.style.display = 'none';
+        elFim.style.display = 'none';
         animarCabo(sequencia[etapaAtual]);
     };
 
@@ -232,17 +273,24 @@
         const camada = document.getElementById(`camada-${cabo.id.toLowerCase()}`);
         camada.style.opacity = "1";
         const loop = setInterval(() => {
-            const frameString = Math.min(frame, cabo.max).toString().padStart(4, '0');
+            const frameExibir = Math.min(frame, cabo.max);
+            const frameString = frameExibir.toString().padStart(4, '0');
             camada.style.backgroundImage = `url('${cabo.pasta}/quadro${frameString}.png')`;
             if (frame >= cabo.max) {
                 clearInterval(loop);
-                somConexao.currentTime = 0; somConexao.play();
+                somConexao.currentTime = 0;
+                somConexao.play();
                 if (cabo.wagoTop) {
-                    let idWago = cabo.id.toLowerCase().includes('fase') ? 'wago-fase' : cabo.id.toLowerCase().includes('retorno') ? 'wago-retorno' : 'wago-neutro';
+                    let idWago = cabo.id.toLowerCase().includes('fase') ? 'wago-fase' : 
+                                 cabo.id.toLowerCase().includes('retorno') ? 'wago-retorno' : 'wago-neutro';
                     const wago = document.getElementById(idWago);
-                    wago.style.top = cabo.wagoTop; wago.style.left = cabo.wagoLeft; wago.style.transform = `translate(-50%, -50%) rotate(${cabo.wagoRot})`; wago.style.display = 'block';
+                    wago.style.top = cabo.wagoTop;
+                    wago.style.left = cabo.wagoLeft;
+                    wago.style.transform = `translate(-50%, -50%) rotate(${cabo.wagoRot})`;
+                    wago.style.display = 'block';
                 }
-                etapaAtual++; setTimeout(carregarEtapa, 600);
+                etapaAtual++;
+                setTimeout(carregarEtapa, 600);
             }
             frame += 6;
         }, 70);
@@ -253,8 +301,10 @@
         const el = document.getElementById(`tecla-${tipo}`);
         if (tipo === 'dg' || tipo === 'dr') {
             somDisjuntor.currentTime = 0; somDisjuntor.play();
-            el.src = estados[tipo] ? `al_${tipo}_on.png` : `al_${tipo}_off.png`;
-        } else {
+            if (tipo === 'dg') el.src = estados.dg ? 'al_dg_on.png' : 'al_dg_off.png';
+            if (tipo === 'dr') el.src = estados.dr ? 'al_dr_on.png' : 'al_dr_off.png';
+        }
+        if (tipo === 'int') {
             somInterruptor.currentTime = 0; somInterruptor.play();
             el.src = estados.int ? 'tec_int_on.png' : 'tec_int_off.png';
         }
@@ -266,24 +316,17 @@
         const tudoLigado = instalacaoConcluida && estados.dg && estados.dr && estados.int;
 
         if (tudoLigado) {
-            lamp.style.opacity = "1"; 
-            primeiroTesteFeito = true;
+            lamp.style.opacity = "1";
+            primeiroTesteFeito = true; // Marca que a lâmpada já acendeu pelo menos uma vez
             statusTxt.innerHTML = '<div class="status-final acesa">LÂMPADA ACESA</div>';
         } else {
             lamp.style.opacity = "0";
             if (instalacaoConcluida) {
-                statusTxt.innerHTML = '<div class="status-final apagada">LÂMPADA APAGADA</div>';
-                
-                // NOVO CRITÉRIO: Ao apagar, se já testou a lâmpada acesa antes
-                if (primeiroTesteFeito && !modalEmExecucao) {
-                    modalEmExecucao = true; 
-                    setTimeout(() => {
-                        modalConcluido.style.display = 'flex';
-                        setTimeout(() => { 
-                            modalConcluido.style.display = 'none'; 
-                        }, 2000);
-                    }, 2000);
-                } else if (!primeiroTesteFeito) {
+                // Só mostra "APAGADA" se o usuário já tiver acendido a lâmpada uma vez
+                if (primeiroTesteFeito) {
+                    statusTxt.innerHTML = '<div class="status-final apagada">LÂMPADA APAGADA</div>';
+                } else {
+                    // Mantém a instrução até o primeiro acendimento bem-sucedido
                     statusTxt.innerHTML = '<span class="destaque">MONTAGEM CONCLUÍDA!</span> LIGUE O DG, O DR E O INTERRUPTOR.';
                 }
             }
