@@ -34,7 +34,7 @@
             padding: 25px;
             margin-bottom: 30px;
             text-align: center;
-            min-height: 60px;
+            min-height: 80px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -45,6 +45,28 @@
             font-weight: bold;
             color: #ffffff;
             text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        /* PADRÃO DAS GRAVURAS: BOTÃO NEON */
+        .status-final {
+            padding: 12px 40px;
+            border-radius: 50px;
+            display: inline-block;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            letter-spacing: 1px;
+        }
+
+        .acesa {
+            background: #008000; /* Verde conforme gravura */
+            box-shadow: 0 0 20px #00ff00;
+            border: 1px solid #00ff00;
+        }
+
+        .apagada {
+            background: #cc0000; /* Vermelho conforme gravura */
+            box-shadow: 0 0 20px #ff0000;
+            border: 1px solid #ff4444;
         }
 
         #status-mensagem span.destaque {
@@ -163,7 +185,6 @@
     const somInterruptor = document.getElementById('som-interruptor');
     const somConexao = document.getElementById('som-conexao');
 
-    // SEQUÊNCIA DIDÁTICA REVISADA COM TODAS AS MENSAGENS ANTERIORES
     const sequencia = [
         { 
             id: 'FASE1', max: 54, pasta: 'FASE1', 
@@ -213,7 +234,8 @@
     function carregarEtapa() {
         if (etapaAtual >= sequencia.length) {
             instalacaoConcluida = true;
-            statusTxt.innerHTML = '✅ <span class="destaque">MONTAGEM CONCLUÍDA!</span> LIGUE O DG, O DR E O INTERRUPTOR.';
+            // Mensagem inicial de conclusão antes de ligar os disjuntores
+            statusTxt.innerHTML = '<span class="destaque">MONTAGEM CONCLUÍDA!</span> LIGUE O DG, O DR E O INTERRUPTOR.';
             elInicio.style.display = 'none';
             elFim.style.display = 'none';
             return;
@@ -292,8 +314,21 @@
 
     function atualizarCircuito() {
         const lamp = document.getElementById('camada-lampada');
-        if (instalacaoConcluida && estados.dg && estados.dr && estados.int) lamp.style.opacity = "1";
-        else lamp.style.opacity = "0";
+        
+        // Verifica se tudo está ligado
+        const tudoLigado = instalacaoConcluida && estados.dg && estados.dr && estados.int;
+
+        if (tudoLigado) {
+            lamp.style.opacity = "1";
+            // MOSTRA MENSAGEM ACESA CONFORME PADRÃO DA GRAVURA
+            statusTxt.innerHTML = '<div class="status-final acesa">LÂMPADA ACESA</div>';
+        } else {
+            lamp.style.opacity = "0";
+            // MOSTRA MENSAGEM APAGADA APENAS SE A INSTALAÇÃO JÁ ESTIVER CONCLUÍDA
+            if (instalacaoConcluida) {
+                statusTxt.innerHTML = '<div class="status-final apagada">LÂMPADA APAGADA</div>';
+            }
+        }
     }
 
     function reiniciarSimulador() { location.reload(); }
