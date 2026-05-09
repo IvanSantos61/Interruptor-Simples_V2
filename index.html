@@ -29,10 +29,6 @@
             background-repeat: no-repeat;
             pointer-events: none;
             z-index: 5;
-            /* --- EFEITOS DE REALISMO --- */
-            filter: drop-shadow(2px 4px 3px rgba(0,0,0,0.5)) brightness(1.1) contrast(1.1);
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
         }
 
         .conector {
@@ -43,7 +39,6 @@
             z-index: 15;
             pointer-events: none;
             transform-origin: center;
-            filter: drop-shadow(0px 0px 5px rgba(255,255,255,0.2));
         }
 
         .ponto {
@@ -135,7 +130,7 @@
             pasta: 'NEUTRO2',  
             ini: {t: '13%', l: '58%'}, 
             fim: {t: '55%', l: '91.3%'},
-            wagoTop: '14.5%',
+            wagoTop: '14.5%',   // Ajuste manual para o conector do Neutro
             wagoLeft: '57%',  
             wagoRot: '270deg'
         }
@@ -157,7 +152,6 @@
         }
         const dados = sequencia[etapaAtual];
         txtStatus.innerText = `Conecte o cabo: ${dados.id}`;
-        elInicio.style.background = "rgba(255, 255, 0, 0.7)"; // Reset da cor
         elInicio.style.top = dados.ini.t;
         elInicio.style.left = dados.ini.l;
         elInicio.style.display = 'block';
@@ -186,9 +180,6 @@
         let frame = 0;
         const camada = document.getElementById(`camada-${cabo.id.toLowerCase()}`);
         
-        // Inicia a visibilidade suavemente
-        camada.style.opacity = "1";
-        
         const loop = setInterval(() => {
             const frameExibir = Math.min(frame, cabo.max);
             const frameString = frameExibir.toString().padStart(4, '0');
@@ -197,10 +188,16 @@
             if (frame >= cabo.max) {
                 clearInterval(loop);
 
-                // Lógica para os conectores
-                if (cabo.id === 'FASE2') mostrarConector('wago-fase', cabo);
-                if (cabo.id === 'RETORNO2') mostrarConector('wago-retorno', cabo);
-                if (cabo.id === 'NEUTRO2') mostrarConector('wago-neutro', cabo);
+                // Lógica para os conectores baseada no ID do cabo
+                if (cabo.id === 'FASE2') {
+                    mostrarConector('wago-fase', cabo);
+                }
+                if (cabo.id === 'RETORNO2') {
+                    mostrarConector('wago-retorno', cabo);
+                }
+                if (cabo.id === 'NEUTRO2') {
+                    mostrarConector('wago-neutro', cabo);
+                }
 
                 etapaAtual++;
                 setTimeout(carregarEtapa, 600);
@@ -209,6 +206,7 @@
         }, 70);
     }
 
+    // Função auxiliar para exibir e posicionar o conector
     function mostrarConector(idElemento, dadosCabo) {
         const wago = document.getElementById(idElemento);
         wago.style.top = dadosCabo.wagoTop;
@@ -217,7 +215,6 @@
         wago.style.display = 'block';
     }
 
-    // Ferramenta de coordenadas (Console)
     document.getElementById('container-simulador').onclick = function(e) {
         const rect = this.getBoundingClientRect();
         const x = ((e.clientX - rect.left) / rect.width * 100).toFixed(1);
