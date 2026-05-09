@@ -68,7 +68,6 @@
             opacity: 0; transition: opacity 0.3s;
         }
 
-        /* Lâmpada - Sua referência original */
         #camada-lampada { 
             position: absolute; 
             z-index: 30; 
@@ -85,7 +84,6 @@
 
         .conector { position: absolute; width: 72px; display: none; z-index: 15; pointer-events: none; transform-origin: center; }
 
-        /* Botão Reiniciar - Alinhado conforme a gravura padrão.PNG */
         #btn-reiniciar {
             position: absolute;
             bottom: 45px;
@@ -121,7 +119,6 @@
 
     <h1>LABORATÓRIO SMT PRO</h1>
 
-    <!-- EFEITOS SONOROS -->
     <audio id="som-disjuntor" src="disj.mp3"></audio>
     <audio id="som-interruptor" src="int.mp3"></audio>
 
@@ -139,14 +136,12 @@
         <div id="camada-neutro1" class="camada-cabo"></div>
         <div id="camada-neutro2" class="camada-cabo"></div>
 
-        <!-- Lâmpada - Posição fixa no CSS garantindo a referência -->
         <img src="lamp_on.png" id="camada-lampada">
 
         <img src="al_dg_off.png" id="tecla-dg" class="tecla" style="top: 25%; left: 11.4%; width: 50px;" onclick="toggleDispositivo('dg')">
         <img src="al_dr_off.png" id="tecla-dr" class="tecla" style="top: 28%; left: 23.8%; width: 50px;" onclick="toggleDispositivo('dr')">
         <img src="tec_int_off.png" id="tecla-int" class="tecla" style="top: 73%; left: 72%; width: 53px;" onclick="toggleDispositivo('int')">
 
-        <!-- Conectores Wago -->
         <img src="con_wago.png" id="wago-fase" class="conector">
         <img src="con_wago.png" id="wago-retorno" class="conector">
         <img src="con_wago.png" id="wago-neutro" class="conector">
@@ -166,9 +161,17 @@
     const somDisjuntor = document.getElementById('som-disjuntor');
     const somInterruptor = document.getElementById('som-interruptor');
 
-    // Coordenadas dos conectores Wago conforme seu padrão validado
+    // Sequência atualizada com suas novas instruções
     const sequencia = [
-        { id: 'FASE1', max: 54, pasta: 'FASE1', ini: {t: '38%', l: '27%'}, fim: {t: '23%', l: '56.5%'}, msg: '<span class="destaque">CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA DO DR.' },
+        { 
+            id: 'FASE1', 
+            max: 54, 
+            pasta: 'FASE1', 
+            ini: {t: '38%', l: '27%'}, 
+            fim: {t: '23%', l: '56.5%'}, 
+            msg: '<span class="destaque">CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA DO DR.',
+            msgDestino: '<span class="destaque">CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA NA CAIXA DE PASSAGEM.'
+        },
         { id: 'FASE2', max: 18, pasta: 'FASE2', ini: {t: '23%', l: '58%'}, fim: {t: '81%', l: '68%'}, wagoTop: '25%', wagoLeft: '57.4%', wagoRot: '90deg', msg: 'CONECTE A FASE AO INTERRUPTOR.' },
         { id: 'RETORNO1', max: 18, pasta: 'RETORNO1', ini: {t: '20%', l: '61%'}, fim: {t: '75%', l: '68%'}, msg: 'CONECTE O RETORNO NO INTERRUPTOR.' },
         { id: 'RETORNO2', max: 24, pasta: 'RETORNO2', ini: {t: '17%', l: '61%'}, fim: {t: '55%', l: '89%'}, wagoTop: '17.3%', wagoLeft: '60%', wagoRot: '0deg', msg: 'LEVE O RETORNO ATÉ A LÂMPADA.' },
@@ -202,9 +205,15 @@
 
     elInicio.onclick = (e) => {
         e.stopPropagation();
+        const dados = sequencia[etapaAtual];
         elInicio.style.background = "#00ff00";
         elFim.style.display = 'block';
         aguardandoDestino = true;
+        
+        // Atualiza para a segunda mensagem da sequência quando clicar no ponto inicial
+        if(dados.msgDestino) {
+            statusTxt.innerHTML = dados.msgDestino;
+        }
     };
 
     elFim.onclick = (e) => {
