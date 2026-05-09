@@ -31,16 +31,16 @@
             z-index: 5;
         }
 
-        /* Estilo para o Conector Wago com suporte a rotação */
+        /* Estilo do Conector Wago */
         .conector {
             position: absolute;
-            width: 40px; /* Ajuste o tamanho da imagem aqui */
+            width: 72px; /* Ajuste o tamanho geral aqui se precisar */
             height: auto;
             display: none;
             z-index: 15;
-            /* O translate mantém o centro, a rotação será aplicada via JS */
-            transform-origin: center; 
             pointer-events: none;
+            /* Centraliza a imagem no ponto top/left */
+            transform-origin: center;
         }
 
         .ponto {
@@ -87,19 +87,29 @@
         <div id="camada-neutro1" class="camada-cabo"></div>
         <div id="camada-neutro2" class="camada-cabo"></div>
 
+        <!-- O conector Wago -->
         <img src="con_wago.png" id="wago-fase" class="conector">
 
         <div id="ponto-inicio" class="ponto"></div>
         <div id="ponto-fim" class="ponto"></div>
     </div>
 
-    <p style="color: #888; font-size: 12px;">Dica: Clique na imagem para ver coordenadas no Console.</p>
-
 <script>
     const sequencia = [
         { id: 'FASE1',    max: 54, pasta: 'FASE1',    ini: {t: '38%', l: '27%'}, fim: {t: '23%', l: '56.5%'} },
-        // Adicionei a propriedade 'rot' para você ajustar o ângulo (ex: '90deg', '45deg', '-30deg')
-        { id: 'FASE2',    max: 18, pasta: 'FASE2',    ini: {t: '23%', l: '58%'}, fim: {t: '81%', l: '68%'}, rot: '0deg' },
+        
+        // AQUI ESTÃO AS PROPRIEDADES PARA VOCÊ ALTERAR:
+        { 
+            id: 'FASE2',    
+            max: 18, 
+            pasta: 'FASE2',    
+            ini: {t: '23%', l: '58%'}, 
+            fim: {t: '81%', l: '68%'},
+            wagoTop: '25%',   // Altere a posição vertical do Wago aqui
+            wagoLeft: '57.4%',  // Altere a posição horizontal do Wago aqui
+            wagoRot: '90deg'   // Altere a rotação do Wago aqui (ex: '90deg', '-45deg')
+        },
+
         { id: 'RETORNO1', max: 18, pasta: 'RETORNO1', ini: {t: '20%', l: '61%'}, fim: {t: '75%', l: '68%'} },
         { id: 'RETORNO2', max: 24, pasta: 'RETORNO2', ini: {t: '17%', l: '61%'}, fim: {t: '55%', l: '89%'} },
         { id: 'NEUTRO1',  max: 78, pasta: 'NEUTRO1',  ini: {t: '35%', l: '44.3%'}, fim: {t: '14%', l: '56%'} },
@@ -125,7 +135,6 @@
         elInicio.style.top = dados.ini.t;
         elInicio.style.left = dados.ini.l;
         elInicio.style.display = 'block';
-        elInicio.style.background = "rgba(255, 255, 0, 0.7)";
         elFim.style.top = dados.fim.t;
         elFim.style.left = dados.fim.l;
         elFim.style.display = 'none';
@@ -137,7 +146,6 @@
         elInicio.style.background = "#00ff00";
         elFim.style.display = 'block';
         aguardandoDestino = true;
-        txtStatus.innerText = `Selecione o destino para ${sequencia[etapaAtual].id}`;
     };
 
     elFim.onclick = (e) => {
@@ -151,8 +159,7 @@
     function animarCabo(cabo) {
         let frame = 0;
         const camada = document.getElementById(`camada-${cabo.id.toLowerCase()}`);
-        txtStatus.innerText = `Passando cabo ${cabo.id}...`;
-
+        
         const loop = setInterval(() => {
             const frameExibir = Math.min(frame, cabo.max);
             const frameString = frameExibir.toString().padStart(4, '0');
@@ -161,13 +168,12 @@
             if (frame >= cabo.max) {
                 clearInterval(loop);
 
-                // Lógica do Conector com Rotação
+                // Lógica que usa as propriedades que você vai editar
                 if (cabo.id === 'FASE2') {
                     const wago = document.getElementById('wago-fase');
-                    wago.style.top = cabo.fim.t;
-                    wago.style.left = cabo.fim.l;
-                    // Aplica translação para centralizar e a rotação definida na sequência
-                    wago.style.transform = `translate(-50%, -50%) rotate(${cabo.rot || '0deg'})`;
+                    wago.style.top = cabo.wagoTop;
+                    wago.style.left = cabo.wagoLeft;
+                    wago.style.transform = `translate(-50%, -50%) rotate(${cabo.wagoRot})`;
                     wago.style.display = 'block';
                 }
 
