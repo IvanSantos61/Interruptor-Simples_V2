@@ -119,8 +119,10 @@
 
     <h1>LABORATÓRIO SMT PRO</h1>
 
+    <!-- EFEITOS SONOROS -->
     <audio id="som-disjuntor" src="disj.mp3"></audio>
     <audio id="som-interruptor" src="int.mp3"></audio>
+    <audio id="som-conexao" src="conexao.mp3"></audio>
 
     <div id="painel-status">
         <div id="status-mensagem">AGUARDANDO INÍCIO...</div>
@@ -160,8 +162,8 @@
 
     const somDisjuntor = document.getElementById('som-disjuntor');
     const somInterruptor = document.getElementById('som-interruptor');
+    const somConexao = document.getElementById('som-conexao');
 
-    // NOVA SEQUÊNCIA DIDÁTICA: FASE1 -> NEUTRO1 -> FASE2 -> RETORNO1 -> RETORNO2 -> NEUTRO2
     const sequencia = [
         { 
             id: 'FASE1', 
@@ -282,6 +284,11 @@
             camada.style.backgroundImage = `url('${cabo.pasta}/quadro${frameString}.png')`;
             if (frame >= cabo.max) {
                 clearInterval(loop);
+
+                // DISPARA O SOM DE CONEXÃO AO FINALIZAR O CABO
+                somConexao.currentTime = 0;
+                somConexao.play();
+
                 if (cabo.wagoTop) {
                     let idWago = cabo.id.toLowerCase().includes('fase') ? 'wago-fase' : 
                                  cabo.id.toLowerCase().includes('retorno') ? 'wago-retorno' : 'wago-neutro';
