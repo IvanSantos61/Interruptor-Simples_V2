@@ -88,6 +88,7 @@
         <!-- Conectores Wago -->
         <img src="con_wago.png" id="wago-fase" class="conector">
         <img src="con_wago.png" id="wago-retorno" class="conector">
+        <img src="con_wago.png" id="wago-neutro" class="conector">
 
         <div id="ponto-inicio" class="ponto"></div>
         <div id="ponto-fim" class="ponto"></div>
@@ -116,13 +117,23 @@
             pasta: 'RETORNO2', 
             ini: {t: '17%', l: '61%'}, 
             fim: {t: '55%', l: '89%'},
-            wagoTop: '17.3%',   // Propriedades liberadas para seu ajuste manual
+            wagoTop: '18%',   
             wagoLeft: '60%',  
             wagoRot: '0deg'   
         },
 
         { id: 'NEUTRO1',  max: 78, pasta: 'NEUTRO1',  ini: {t: '35%', l: '44.3%'}, fim: {t: '14%', l: '56%'} },
-        { id: 'NEUTRO2',  max: 30, pasta: 'NEUTRO2',  ini: {t: '13%', l: '58%'}, fim: {t: '55%', l: '91.3%'} }
+        
+        { 
+            id: 'NEUTRO2',  
+            max: 30, 
+            pasta: 'NEUTRO2',  
+            ini: {t: '13%', l: '58%'}, 
+            fim: {t: '55%', l: '91.3%'},
+            wagoTop: '15%',   // Ajuste manual para o conector do Neutro
+            wagoLeft: '55%',  
+            wagoRot: '0deg'
+        }
     ];
 
     let etapaAtual = 0;
@@ -177,22 +188,15 @@
             if (frame >= cabo.max) {
                 clearInterval(loop);
 
-                // Lógica para o Wago da FASE
+                // Lógica para os conectores baseada no ID do cabo
                 if (cabo.id === 'FASE2') {
-                    const wago = document.getElementById('wago-fase');
-                    wago.style.top = cabo.wagoTop;
-                    wago.style.left = cabo.wagoLeft;
-                    wago.style.transform = `translate(-50%, -50%) rotate(${cabo.wagoRot})`;
-                    wago.style.display = 'block';
+                    mostrarConector('wago-fase', cabo);
                 }
-
-                // Lógica para o Wago do RETORNO
                 if (cabo.id === 'RETORNO2') {
-                    const wago = document.getElementById('wago-retorno');
-                    wago.style.top = cabo.wagoTop;
-                    wago.style.left = cabo.wagoLeft;
-                    wago.style.transform = `translate(-50%, -50%) rotate(${cabo.wagoRot})`;
-                    wago.style.display = 'block';
+                    mostrarConector('wago-retorno', cabo);
+                }
+                if (cabo.id === 'NEUTRO2') {
+                    mostrarConector('wago-neutro', cabo);
                 }
 
                 etapaAtual++;
@@ -200,6 +204,15 @@
             }
             frame += 6;
         }, 70);
+    }
+
+    // Função auxiliar para exibir e posicionar o conector
+    function mostrarConector(idElemento, dadosCabo) {
+        const wago = document.getElementById(idElemento);
+        wago.style.top = dadosCabo.wagoTop;
+        wago.style.left = dadosCabo.wagoLeft;
+        wago.style.transform = `translate(-50%, -50%) rotate(${dadosCabo.wagoRot})`;
+        wago.style.display = 'block';
     }
 
     document.getElementById('container-simulador').onclick = function(e) {
