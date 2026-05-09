@@ -48,7 +48,6 @@
             transition: all 0.3s ease;
         }
 
-        /* PADRÃO DAS GRAVURAS: BOTÃO NEON */
         .status-final {
             padding: 12px 40px;
             border-radius: 50px;
@@ -58,13 +57,13 @@
         }
 
         .acesa {
-            background: #008000; /* Verde conforme gravura */
+            background: #008000;
             box-shadow: 0 0 20px #00ff00;
             border: 1px solid #00ff00;
         }
 
         .apagada {
-            background: #cc0000; /* Vermelho conforme gravura */
+            background: #cc0000;
             box-shadow: 0 0 20px #ff0000;
             border: 1px solid #ff4444;
         }
@@ -178,6 +177,7 @@
 <script>
     let estados = { dg: false, dr: false, int: false };
     let instalacaoConcluida = false;
+    let primeiroTesteFeito = false; // Controle para a mensagem de desligada
     let etapaAtual = 0;
     let aguardandoDestino = false;
 
@@ -234,7 +234,6 @@
     function carregarEtapa() {
         if (etapaAtual >= sequencia.length) {
             instalacaoConcluida = true;
-            // Mensagem inicial de conclusão antes de ligar os disjuntores
             statusTxt.innerHTML = '<span class="destaque">MONTAGEM CONCLUÍDA!</span> LIGUE O DG, O DR E O INTERRUPTOR.';
             elInicio.style.display = 'none';
             elFim.style.display = 'none';
@@ -314,19 +313,22 @@
 
     function atualizarCircuito() {
         const lamp = document.getElementById('camada-lampada');
-        
-        // Verifica se tudo está ligado
         const tudoLigado = instalacaoConcluida && estados.dg && estados.dr && estados.int;
 
         if (tudoLigado) {
             lamp.style.opacity = "1";
-            // MOSTRA MENSAGEM ACESA CONFORME PADRÃO DA GRAVURA
+            primeiroTesteFeito = true; // Marca que a lâmpada já acendeu pelo menos uma vez
             statusTxt.innerHTML = '<div class="status-final acesa">LÂMPADA ACESA</div>';
         } else {
             lamp.style.opacity = "0";
-            // MOSTRA MENSAGEM APAGADA APENAS SE A INSTALAÇÃO JÁ ESTIVER CONCLUÍDA
             if (instalacaoConcluida) {
-                statusTxt.innerHTML = '<div class="status-final apagada">LÂMPADA APAGADA</div>';
+                // Só mostra "APAGADA" se o usuário já tiver acendido a lâmpada uma vez
+                if (primeiroTesteFeito) {
+                    statusTxt.innerHTML = '<div class="status-final apagada">LÂMPADA APAGADA</div>';
+                } else {
+                    // Mantém a instrução até o primeiro acendimento bem-sucedido
+                    statusTxt.innerHTML = '<span class="destaque">MONTAGEM CONCLUÍDA!</span> LIGUE O DG, O DR E O INTERRUPTOR.';
+                }
             }
         }
     }
