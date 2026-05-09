@@ -119,9 +119,9 @@
 
     <h1>LABORATÓRIO SMT PRO</h1>
 
-    <!-- EFEITOS SONOROS -->
     <audio id="som-disjuntor" src="disj.mp3"></audio>
     <audio id="som-interruptor" src="int.mp3"></audio>
+    <audio id="som-conexao" src="conexao.mp3"></audio>
 
     <div id="painel-status">
         <div id="status-mensagem">AGUARDANDO INÍCIO...</div>
@@ -161,34 +161,49 @@
 
     const somDisjuntor = document.getElementById('som-disjuntor');
     const somInterruptor = document.getElementById('som-interruptor');
+    const somConexao = document.getElementById('som-conexao');
 
-    // Sequência atualizada com a lógica de transição de mensagens
+    // SEQUÊNCIA DIDÁTICA REVISADA COM TODAS AS MENSAGENS ANTERIORES
     const sequencia = [
         { 
-            id: 'FASE1', 
-            max: 54, 
-            pasta: 'FASE1', 
-            ini: {t: '38%', l: '27%'}, 
-            fim: {t: '23%', l: '56.5%'}, 
+            id: 'FASE1', max: 54, pasta: 'FASE1', 
+            ini: {t: '38%', l: '27%'}, fim: {t: '23%', l: '56.5%'}, 
             msg: '<span class="destaque">CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA DO DR.',
-            msgDestino: '<span class="destaque">CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA NA CAIXA DE PASSAGEM.'
+            msgDestino: '<span class="destaque">CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.'
         },
         { 
-            id: 'FASE2', 
-            max: 18, 
-            pasta: 'FASE2', 
-            ini: {t: '23%', l: '58%'}, 
-            fim: {t: '81%', l: '68%'}, 
-            wagoTop: '25%', 
-            wagoLeft: '57.4%', 
-            wagoRot: '90deg', 
+            id: 'NEUTRO1', max: 78, pasta: 'NEUTRO1', 
+            ini: {t: '35%', l: '44.3%'}, fim: {t: '14%', l: '56%'}, 
+            msg: '<span class="destaque">CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA MOSTRADA NO BARRAMENTO (N)',
+            msgDestino: '<span class="destaque">CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM'
+        },
+        { 
+            id: 'FASE2', max: 18, pasta: 'FASE2', 
+            ini: {t: '23%', l: '58%'}, fim: {t: '81%', l: '68%'}, 
+            wagoTop: '25%', wagoLeft: '57.4%', wagoRot: '90deg', 
             msg: '<span class="destaque">CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.',
             msgDestino: '<span class="destaque">CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA MOSTRADA NO INTERRUPTOR.'
         },
-        { id: 'RETORNO1', max: 18, pasta: 'RETORNO1', ini: {t: '20%', l: '61%'}, fim: {t: '75%', l: '68%'}, msg: 'CONECTE O RETORNO NO INTERRUPTOR.' },
-        { id: 'RETORNO2', max: 24, pasta: 'RETORNO2', ini: {t: '17%', l: '61%'}, fim: {t: '55%', l: '89%'}, wagoTop: '17.3%', wagoLeft: '60%', wagoRot: '0deg', msg: 'LEVE O RETORNO ATÉ A LÂMPADA.' },
-        { id: 'NEUTRO1', max: 78, pasta: 'NEUTRO1', ini: {t: '35%', l: '44.3%'}, fim: {t: '14%', l: '56%'}, msg: 'CONECTE O NEUTRO NO BARRAMENTO.' },
-        { id: 'NEUTRO2', max: 30, pasta: 'NEUTRO2', ini: {t: '13%', l: '58%'}, fim: {t: '55%', l: '91.3%'}, wagoTop: '14.5%', wagoLeft: '57%', wagoRot: '270deg', msg: 'FINALIZE A CONEXÃO DO NEUTRO NA LÂMPADA.' }
+        { 
+            id: 'RETORNO1', max: 18, pasta: 'RETORNO1', 
+            ini: {t: '20%', l: '61%'}, fim: {t: '75%', l: '68%'}, 
+            msg: '<span class="destaque">CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.',
+            msgDestino: '<span class="destaque">CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA DO INTERRUPTOR.'
+        },
+        { 
+            id: 'RETORNO2', max: 24, pasta: 'RETORNO2', 
+            ini: {t: '17%', l: '61%'}, fim: {t: '55%', l: '89%'}, 
+            wagoTop: '17.3%', wagoLeft: '60%', wagoRot: '0deg', 
+            msg: '<span class="destaque">CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.',
+            msgDestino: '<span class="destaque">CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA MOSTRADA NA LÂMPADA.'
+        },
+        { 
+            id: 'NEUTRO2', max: 30, pasta: 'NEUTRO2', 
+            ini: {t: '13%', l: '58%'}, fim: {t: '55%', l: '91.3%'}, 
+            wagoTop: '14.5%', wagoLeft: '57%', wagoRot: '270deg', 
+            msg: '<span class="destaque">CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.',
+            msgDestino: '<span class="destaque">CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA MOSTRADA NA LÂMPADA'
+        }
     ];
 
     const elInicio = document.getElementById('ponto-inicio');
@@ -198,7 +213,7 @@
     function carregarEtapa() {
         if (etapaAtual >= sequencia.length) {
             instalacaoConcluida = true;
-            statusTxt.innerHTML = '✅ <span class="destaque">MONTAGEM CONCLUÍDA!</span> TESTE O CIRCUITO.';
+            statusTxt.innerHTML = '✅ <span class="destaque">MONTAGEM CONCLUÍDA!</span> LIGUE O DG, O DR E O INTERRUPTOR.';
             elInicio.style.display = 'none';
             elFim.style.display = 'none';
             return;
@@ -221,10 +236,7 @@
         elInicio.style.background = "#00ff00";
         elFim.style.display = 'block';
         aguardandoDestino = true;
-        
-        if(dados.msgDestino) {
-            statusTxt.innerHTML = dados.msgDestino;
-        }
+        if(dados.msgDestino) statusTxt.innerHTML = dados.msgDestino;
     };
 
     elFim.onclick = (e) => {
@@ -245,6 +257,8 @@
             camada.style.backgroundImage = `url('${cabo.pasta}/quadro${frameString}.png')`;
             if (frame >= cabo.max) {
                 clearInterval(loop);
+                somConexao.currentTime = 0;
+                somConexao.play();
                 if (cabo.wagoTop) {
                     let idWago = cabo.id.toLowerCase().includes('fase') ? 'wago-fase' : 
                                  cabo.id.toLowerCase().includes('retorno') ? 'wago-retorno' : 'wago-neutro';
@@ -264,36 +278,25 @@
     function toggleDispositivo(tipo) {
         estados[tipo] = !estados[tipo];
         const el = document.getElementById(`tecla-${tipo}`);
-        
         if (tipo === 'dg' || tipo === 'dr') {
-            somDisjuntor.currentTime = 0;
-            somDisjuntor.play();
+            somDisjuntor.currentTime = 0; somDisjuntor.play();
             if (tipo === 'dg') el.src = estados.dg ? 'al_dg_on.png' : 'al_dg_off.png';
             if (tipo === 'dr') el.src = estados.dr ? 'al_dr_on.png' : 'al_dr_off.png';
         }
-
         if (tipo === 'int') {
-            somInterruptor.currentTime = 0;
-            somInterruptor.play();
+            somInterruptor.currentTime = 0; somInterruptor.play();
             el.src = estados.int ? 'tec_int_on.png' : 'tec_int_off.png';
         }
-
         atualizarCircuito();
     }
 
     function atualizarCircuito() {
         const lamp = document.getElementById('camada-lampada');
-        if (instalacaoConcluida && estados.dg && estados.dr && estados.int) {
-            lamp.style.opacity = "1";
-        } else {
-            lamp.style.opacity = "0";
-        }
+        if (instalacaoConcluida && estados.dg && estados.dr && estados.int) lamp.style.opacity = "1";
+        else lamp.style.opacity = "0";
     }
 
-    function reiniciarSimulador() {
-        location.reload();
-    }
-
+    function reiniciarSimulador() { location.reload(); }
     window.onload = carregarEtapa;
 </script>
 </body>
