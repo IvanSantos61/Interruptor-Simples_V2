@@ -121,6 +121,10 @@
 
     <h1>LABORATÓRIO SMT PRO</h1>
 
+    <!-- EFEITOS SONOROS -->
+    <audio id="som-disjuntor" src="disj.mp3"></audio>
+    <audio id="som-interruptor" src="int.mp3"></audio>
+
     <div id="painel-status">
         <div id="status-mensagem">AGUARDANDO INÍCIO...</div>
     </div>
@@ -158,6 +162,9 @@
     let instalacaoConcluida = false;
     let etapaAtual = 0;
     let aguardandoDestino = false;
+
+    const somDisjuntor = document.getElementById('som-disjuntor');
+    const somInterruptor = document.getElementById('som-interruptor');
 
     // Coordenadas dos conectores Wago conforme seu padrão validado
     const sequencia = [
@@ -237,9 +244,20 @@
     function toggleDispositivo(tipo) {
         estados[tipo] = !estados[tipo];
         const el = document.getElementById(`tecla-${tipo}`);
-        if (tipo === 'dg') el.src = estados.dg ? 'al_dg_on.png' : 'al_dg_off.png';
-        if (tipo === 'dr') el.src = estados.dr ? 'al_dr_on.png' : 'al_dr_off.png';
-        if (tipo === 'int') el.src = estados.int ? 'tec_int_on.png' : 'tec_int_off.png';
+        
+        if (tipo === 'dg' || tipo === 'dr') {
+            somDisjuntor.currentTime = 0;
+            somDisjuntor.play();
+            if (tipo === 'dg') el.src = estados.dg ? 'al_dg_on.png' : 'al_dg_off.png';
+            if (tipo === 'dr') el.src = estados.dr ? 'al_dr_on.png' : 'al_dr_off.png';
+        }
+
+        if (tipo === 'int') {
+            somInterruptor.currentTime = 0;
+            somInterruptor.play();
+            el.src = estados.int ? 'tec_int_on.png' : 'tec_int_off.png';
+        }
+
         atualizarCircuito();
     }
 
