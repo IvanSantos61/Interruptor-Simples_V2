@@ -31,14 +31,15 @@
             z-index: 5;
         }
 
-        /* Estilo para o Conector Wago */
+        /* Estilo para o Conector Wago com suporte a rotação */
         .conector {
             position: absolute;
             width: 40px; /* Ajuste o tamanho da imagem aqui */
             height: auto;
-            display: none; /* Inicia oculto */
+            display: none;
             z-index: 15;
-            transform: translate(-50%, -50%);
+            /* O translate mantém o centro, a rotação será aplicada via JS */
+            transform-origin: center; 
             pointer-events: none;
         }
 
@@ -79,7 +80,6 @@
     <div id="container-simulador">
         <img src="ambiente.jpg" id="fundo" alt="Cenário">
         
-        <!-- Camadas de Cabos -->
         <div id="camada-fase1" class="camada-cabo"></div>
         <div id="camada-fase2" class="camada-cabo"></div>
         <div id="camada-retorno1" class="camada-cabo"></div>
@@ -87,19 +87,19 @@
         <div id="camada-neutro1" class="camada-cabo"></div>
         <div id="camada-neutro2" class="camada-cabo"></div>
 
-        <!-- Penduricalhos (Conectores) -->
         <img src="con_wago.png" id="wago-fase" class="conector">
 
         <div id="ponto-inicio" class="ponto"></div>
         <div id="ponto-fim" class="ponto"></div>
     </div>
 
-    <p style="color: #888; font-size: 12px;">Dica: Abra o console (F12) para ver as coordenadas ao clicar na imagem.</p>
+    <p style="color: #888; font-size: 12px;">Dica: Clique na imagem para ver coordenadas no Console.</p>
 
 <script>
     const sequencia = [
         { id: 'FASE1',    max: 54, pasta: 'FASE1',    ini: {t: '38%', l: '27%'}, fim: {t: '23%', l: '56.5%'} },
-        { id: 'FASE2',    max: 18, pasta: 'FASE2',    ini: {t: '23%', l: '58%'}, fim: {t: '81%', l: '68%'} },
+        // Adicionei a propriedade 'rot' para você ajustar o ângulo (ex: '90deg', '45deg', '-30deg')
+        { id: 'FASE2',    max: 18, pasta: 'FASE2',    ini: {t: '23%', l: '58%'}, fim: {t: '81%', l: '68%'}, rot: '0deg' },
         { id: 'RETORNO1', max: 18, pasta: 'RETORNO1', ini: {t: '20%', l: '61%'}, fim: {t: '75%', l: '68%'} },
         { id: 'RETORNO2', max: 24, pasta: 'RETORNO2', ini: {t: '17%', l: '61%'}, fim: {t: '55%', l: '89%'} },
         { id: 'NEUTRO1',  max: 78, pasta: 'NEUTRO1',  ini: {t: '35%', l: '44.3%'}, fim: {t: '14%', l: '56%'} },
@@ -120,19 +120,15 @@
             elFim.style.display = 'none';
             return;
         }
-
         const dados = sequencia[etapaAtual];
         txtStatus.innerText = `Conecte o cabo: ${dados.id}`;
-
         elInicio.style.top = dados.ini.t;
         elInicio.style.left = dados.ini.l;
         elInicio.style.display = 'block';
         elInicio.style.background = "rgba(255, 255, 0, 0.7)";
-
         elFim.style.top = dados.fim.t;
         elFim.style.left = dados.fim.l;
         elFim.style.display = 'none';
-        
         aguardandoDestino = false;
     }
 
@@ -147,7 +143,6 @@
     elFim.onclick = (e) => {
         e.stopPropagation();
         if (!aguardandoDestino) return;
-        
         elInicio.style.display = 'none';
         elFim.style.display = 'none';
         animarCabo(sequencia[etapaAtual]);
@@ -161,18 +156,18 @@
         const loop = setInterval(() => {
             const frameExibir = Math.min(frame, cabo.max);
             const frameString = frameExibir.toString().padStart(4, '0');
-            
             camada.style.backgroundImage = `url('${cabo.pasta}/quadro${frameString}.png')`;
             
             if (frame >= cabo.max) {
                 clearInterval(loop);
 
-                // GATILHO PARA O CONECTOR WAGO APÓS FASE2
+                // Lógica do Conector com Rotação
                 if (cabo.id === 'FASE2') {
                     const wago = document.getElementById('wago-fase');
-                    // Ele se posiciona no destino do cabo FASE2
                     wago.style.top = cabo.fim.t;
                     wago.style.left = cabo.fim.l;
+                    // Aplica translação para centralizar e a rotação definida na sequência
+                    wago.style.transform = `translate(-50%, -50%) rotate(${cabo.rot || '0deg'})`;
                     wago.style.display = 'block';
                 }
 
@@ -183,12 +178,11 @@
         }, 70);
     }
 
-    // MODO DESENVOLVEDOR para ajustes de coordenadas
     document.getElementById('container-simulador').onclick = function(e) {
         const rect = this.getBoundingClientRect();
         const x = ((e.clientX - rect.left) / rect.width * 100).toFixed(1);
         const y = ((e.clientY - rect.top) / rect.height * 100).toFixed(1);
-        console.log(`Coordenada clicada: t: '${y}%', l: '${x}%'`);
+        console.log(`t: '${y}%', l: '${x}%'`);
     };
 
     window.onload = carregarEtapa;
