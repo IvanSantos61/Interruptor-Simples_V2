@@ -31,15 +31,13 @@
             z-index: 5;
         }
 
-        /* Estilo do Conector Wago */
         .conector {
             position: absolute;
-            width: 72px; /* Ajuste o tamanho geral aqui se precisar */
+            width: 72px; 
             height: auto;
             display: none;
             z-index: 15;
             pointer-events: none;
-            /* Centraliza a imagem no ponto top/left */
             transform-origin: center;
         }
 
@@ -87,8 +85,9 @@
         <div id="camada-neutro1" class="camada-cabo"></div>
         <div id="camada-neutro2" class="camada-cabo"></div>
 
-        <!-- O conector Wago -->
+        <!-- Conectores Wago -->
         <img src="con_wago.png" id="wago-fase" class="conector">
+        <img src="con_wago.png" id="wago-retorno" class="conector">
 
         <div id="ponto-inicio" class="ponto"></div>
         <div id="ponto-fim" class="ponto"></div>
@@ -98,20 +97,30 @@
     const sequencia = [
         { id: 'FASE1',    max: 54, pasta: 'FASE1',    ini: {t: '38%', l: '27%'}, fim: {t: '23%', l: '56.5%'} },
         
-        // AQUI ESTÃO AS PROPRIEDADES PARA VOCÊ ALTERAR:
         { 
             id: 'FASE2',    
             max: 18, 
             pasta: 'FASE2',    
             ini: {t: '23%', l: '58%'}, 
             fim: {t: '81%', l: '68%'},
-            wagoTop: '25%',   // Altere a posição vertical do Wago aqui
-            wagoLeft: '57.4%',  // Altere a posição horizontal do Wago aqui
-            wagoRot: '90deg'   // Altere a rotação do Wago aqui (ex: '90deg', '-45deg')
+            wagoTop: '25%',   
+            wagoLeft: '57.4%',  
+            wagoRot: '90deg'   
         },
 
         { id: 'RETORNO1', max: 18, pasta: 'RETORNO1', ini: {t: '20%', l: '61%'}, fim: {t: '75%', l: '68%'} },
-        { id: 'RETORNO2', max: 24, pasta: 'RETORNO2', ini: {t: '17%', l: '61%'}, fim: {t: '55%', l: '89%'} },
+        
+        { 
+            id: 'RETORNO2', 
+            max: 24, 
+            pasta: 'RETORNO2', 
+            ini: {t: '17%', l: '61%'}, 
+            fim: {t: '55%', l: '89%'},
+            wagoTop: '18%',   // Propriedades liberadas para seu ajuste manual
+            wagoLeft: '60%',  
+            wagoRot: '0deg'   
+        },
+
         { id: 'NEUTRO1',  max: 78, pasta: 'NEUTRO1',  ini: {t: '35%', l: '44.3%'}, fim: {t: '14%', l: '56%'} },
         { id: 'NEUTRO2',  max: 30, pasta: 'NEUTRO2',  ini: {t: '13%', l: '58%'}, fim: {t: '55%', l: '91.3%'} }
     ];
@@ -168,9 +177,18 @@
             if (frame >= cabo.max) {
                 clearInterval(loop);
 
-                // Lógica que usa as propriedades que você vai editar
+                // Lógica para o Wago da FASE
                 if (cabo.id === 'FASE2') {
                     const wago = document.getElementById('wago-fase');
+                    wago.style.top = cabo.wagoTop;
+                    wago.style.left = cabo.wagoLeft;
+                    wago.style.transform = `translate(-50%, -50%) rotate(${cabo.wagoRot})`;
+                    wago.style.display = 'block';
+                }
+
+                // Lógica para o Wago do RETORNO
+                if (cabo.id === 'RETORNO2') {
+                    const wago = document.getElementById('wago-retorno');
                     wago.style.top = cabo.wagoTop;
                     wago.style.left = cabo.wagoLeft;
                     wago.style.transform = `translate(-50%, -50%) rotate(${cabo.wagoRot})`;
