@@ -161,6 +161,7 @@
     const somDisjuntor = document.getElementById('som-disjuntor');
     const somInterruptor = document.getElementById('som-interruptor');
 
+    // NOVA SEQUÊNCIA DIDÁTICA: FASE1 -> NEUTRO1 -> FASE2 -> RETORNO1 -> RETORNO2 -> NEUTRO2
     const sequencia = [
         { 
             id: 'FASE1', 
@@ -170,6 +171,15 @@
             fim: {t: '23%', l: '56.5%'}, 
             msg: '<span class="destaque">CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA DO DR.',
             msgDestino: '<span class="destaque">CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.'
+        },
+        { 
+            id: 'NEUTRO1', 
+            max: 78, 
+            pasta: 'NEUTRO1', 
+            ini: {t: '35%', l: '44.3%'}, 
+            fim: {t: '14%', l: '56%'}, 
+            msg: '<span class="destaque">CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA MOSTRADA NO BARRAMENTO (N)',
+            msgDestino: '<span class="destaque">CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM'
         },
         { 
             id: 'FASE2', 
@@ -203,15 +213,6 @@
             wagoRot: '0deg', 
             msg: '<span class="destaque">CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.',
             msgDestino: '<span class="destaque">CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA MOSTRADA NA LÂMPADA.'
-        },
-        { 
-            id: 'NEUTRO1', 
-            max: 78, 
-            pasta: 'NEUTRO1', 
-            ini: {t: '35%', l: '44.3%'}, 
-            fim: {t: '14%', l: '56%'}, 
-            msg: '<span class="destaque">CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA MOSTRADA NO BARRAMENTO (N)',
-            msgDestino: '<span class="destaque">CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM'
         },
         { 
             id: 'NEUTRO2', 
