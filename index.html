@@ -87,7 +87,7 @@
 
         .conector { position: absolute; width: 72px; display: none; z-index: 15; pointer-events: none; transform-origin: center; }
 
-        /* CONTROLES NA LATERAL ESQUERDA */
+        /* BOTOES ESQUERDA */
         .controles-inferiores {
             position: absolute;
             bottom: 30px;
@@ -107,13 +107,12 @@
             font-size: 14px;
             color: white;
             text-transform: uppercase;
-            transition: 0.2s;
         }
 
         #btn-reiniciar { background: #cc0000; }
         #btn-ajuda { background: #1a2a44; border: 1px solid #00ffff; box-shadow: 0 0 10px rgba(0,255,255,0.3); }
 
-        /* PLACA DE CONCLUÍDO COM PARAFUSOS GRANDES E FENDA */
+        /* PLACA COM PARAFUSOS GRANDES */
         #placa-concluido {
             position: absolute; top: 50%; left: 50%;
             transform: translate(-50%, -50%) scale(0.8);
@@ -136,7 +135,7 @@
         .p-tl { top: 12px; left: 12px; } .p-tr { top: 12px; right: 12px; }
         .p-bl { bottom: 12px; left: 12px; } .p-br { bottom: 12px; right: 12px; }
 
-        /* MODAL DE AJUDA */
+        /* AJUDA */
         #modal-ajuda {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             width: 380px; background: rgba(5, 10, 20, 0.98);
@@ -144,16 +143,9 @@
             display: none; flex-direction: column; padding: 25px;
             box-shadow: 0 0 30px rgba(0, 255, 255, 0.4);
         }
-        .ajuda-titulo { color: #00ffff; text-align: center; margin-bottom: 20px; font-weight: bold; font-size: 1.1em; }
-        .ajuda-item { background: rgba(0, 255, 255, 0.05); border: 1px solid #00ffff; color: white; padding: 10px 15px; margin-bottom: 10px; border-radius: 5px; cursor: pointer; font-size: 14px; }
-        .btn-fechar { background: #222; color: #aaa; border: 1px solid #444; padding: 8px; margin-top: 5px; border-radius: 5px; cursor: pointer; }
-
-        /* VISUALIZADOR DE GRAVURAS REDUZIDO */
-        #visualizador-ajuda {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); z-index: 200; display: none;
-            justify-content: center; align-items: center;
-        }
+        .ajuda-titulo { color: #00ffff; text-align: center; margin-bottom: 20px; font-weight: bold; }
+        .ajuda-item { background: rgba(0, 255, 255, 0.05); border: 1px solid #00ffff; color: white; padding: 10px; margin-bottom: 10px; border-radius: 5px; cursor: pointer; }
+        #visualizador-ajuda { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 200; display: none; justify-content: center; align-items: center; }
         #img-ajuda-grande { max-width: 70%; max-height: 70%; border: 2px solid #00ffff; border-radius: 8px; }
 
         .ponto {
@@ -169,6 +161,10 @@
 <body>
 
     <h1>LABORATÓRIO SMT PRO</h1>
+
+    <audio id="som-disjuntor" src="disj.mp3"></audio>
+    <audio id="som-interruptor" src="int.mp3"></audio>
+    <audio id="som-conexao" src="conexao.mp3"></audio>
 
     <div id="painel-status">
         <div id="status-mensagem">AGUARDANDO INÍCIO...</div>
@@ -208,7 +204,7 @@
             <div class="ajuda-item" onclick="mostrarEsquema('ligaint.png')">1. Ligação do Interruptor</div>
             <div class="ajuda-item" onclick="mostrarEsquema('ligabocal.png')">2. Ligação da Lâmpada</div>
             <div class="ajuda-item" onclick="mostrarEsquema('emendas2.png')">3. Emendas e conexões</div>
-            <button class="btn-fechar" onclick="fecharAjuda()">FECHAR</button>
+            <button onclick="fecharAjuda()">FECHAR</button>
         </div>
 
         <div class="controles-inferiores">
@@ -229,6 +225,10 @@
     let etapaAtual = 0;
     let aguardandoDestino = false;
 
+    const somDisjuntor = document.getElementById('som-disjuntor');
+    const somInterruptor = document.getElementById('som-interruptor');
+    const somConexao = document.getElementById('som-conexao');
+
     function abrirAjuda() { document.getElementById('modal-ajuda').style.display = 'flex'; }
     function fecharAjuda() { document.getElementById('modal-ajuda').style.display = 'none'; }
     function mostrarEsquema(src) {
@@ -237,7 +237,6 @@
         fecharAjuda();
     }
 
-    // RECUPERADAS AS MENSAGENS ORIGINAIS AUTORIZADAS
     const sequencia = [
         { id: 'FASE1', max: 54, pasta: 'FASE1', ini: {t: '38%', l: '27%'}, fim: {t: '23%', l: '56.5%'}, msg: '<span class="destaque">CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA DO DR.', msgDestino: '<span class="destaque">CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.' },
         { id: 'NEUTRO1', max: 78, pasta: 'NEUTRO1', ini: {t: '35%', l: '44.3%'}, fim: {t: '14%', l: '56%'}, msg: '<span class="destaque">CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA MOSTRADA NO BARRAMENTO (N)', msgDestino: '<span class="destaque">CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM' },
@@ -278,6 +277,9 @@
             camada.style.backgroundImage = `url('${cabo.pasta}/quadro${frameString}.png')`;
             if (frame >= cabo.max) {
                 clearInterval(loop);
+                // SOM DE CONEXÃO REINSERIDO
+                somConexao.currentTime = 0; somConexao.play();
+                
                 if (cabo.wagoTop) {
                     let idWago = cabo.id.toLowerCase().includes('fase') ? 'wago-fase' : cabo.id.toLowerCase().includes('retorno') ? 'wago-retorno' : 'wago-neutro';
                     const wago = document.getElementById(idWago);
@@ -293,9 +295,17 @@
     function toggleDispositivo(tipo) {
         estados[tipo] = !estados[tipo];
         const el = document.getElementById(`tecla-${tipo}`);
-        if (tipo === 'dg') el.src = estados.dg ? 'al_dg_on.png' : 'al_dg_off.png';
-        if (tipo === 'dr') el.src = estados.dr ? 'al_dr_on.png' : 'al_dr_off.png';
-        if (tipo === 'int') el.src = estados.int ? 'tec_int_on.png' : 'tec_int_off.png';
+        
+        // SONS DE CLIQUES REINSERIDOS
+        if (tipo === 'dg' || tipo === 'dr') {
+            somDisjuntor.currentTime = 0; somDisjuntor.play();
+            if (tipo === 'dg') el.src = estados.dg ? 'al_dg_on.png' : 'al_dg_off.png';
+            if (tipo === 'dr') el.src = estados.dr ? 'al_dr_on.png' : 'al_dr_off.png';
+        }
+        if (tipo === 'int') {
+            somInterruptor.currentTime = 0; somInterruptor.play();
+            el.src = estados.int ? 'tec_int_on.png' : 'tec_int_off.png';
+        }
         atualizarCircuito();
     }
 
