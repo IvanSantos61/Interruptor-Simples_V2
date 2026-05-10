@@ -122,7 +122,7 @@
             font-size: 15px;
         }
 
-        /* CONFIGURAÇÃO DA PLACA FINAL */
+        /* CONFIGURAÇÃO DA PLACA FINAL COM NOVOS PARAFUSOS CSS */
         #placa-concluido {
             position: absolute;
             top: 50%;
@@ -137,7 +137,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 60px 40px; /* Altura aumentada conforme pedido */
+            padding: 60px 40px; 
             box-shadow: 0 0 50px rgba(0,0,0,0.8), inset 0 0 15px rgba(255,255,255,0.1);
             opacity: 0;
             transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -152,7 +152,7 @@
         .texto-concluido {
             color: #00ff00;
             font-size: 3em;
-            font-weight: 400; /* Texto sem negrito conforme pedido */
+            font-weight: 400; 
             text-shadow: 0 0 20px rgba(0, 255, 0, 0.6);
             display: flex;
             align-items: center;
@@ -160,18 +160,27 @@
             letter-spacing: 2px;
         }
 
+        /* NOVOS PARAFUSOS CSS: MAIORES E COM FENDA */
         .parafuso {
             position: absolute;
-            width: 15px;
-            height: 15px;
-            background: #444;
+            width: 28px; /* Aumentado de 15px para 28px */
+            height: 28px;
             border-radius: 50%;
-            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.5);
+            /* Fenda CSS: Usando gradiente linear para simular o corte central */
+            background: 
+                linear-gradient(to bottom, #111 2px, transparent 2px, transparent calc(100% - 2px), #111 calc(100% - 2px)),
+                linear-gradient(to right, #444 48%, #111 48%, #111 52%, #444 52%);
+            box-shadow: 
+                inset 2px 2px 5px rgba(0,0,0,0.6), 
+                0 0 5px rgba(0,0,0,0.8);
+            border: 1px solid #222;
         }
-        .p-tl { top: 15px; left: 15px; }
-        .p-tr { top: 15px; right: 15px; }
-        .p-bl { bottom: 15px; left: 15px; }
-        .p-br { bottom: 15px; right: 15px; }
+        
+        /* Ajuste fino das posições para os parafusos maiores */
+        .p-tl { top: 12px; left: 12px; }
+        .p-tr { top: 12px; right: 12px; }
+        .p-bl { bottom: 12px; left: 12px; }
+        .p-br { bottom: 12px; right: 12px; }
 
         .ponto {
             position: absolute; width: 22px; height: 22px;
