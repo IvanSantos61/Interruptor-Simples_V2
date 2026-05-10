@@ -87,7 +87,7 @@
 
         .conector { position: absolute; width: 72px; display: none; z-index: 15; pointer-events: none; transform-origin: center; }
 
-        /* BOTOES ESQUERDA */
+        /* BOTÕES NA LATERAL ESQUERDA */
         .controles-inferiores {
             position: absolute;
             bottom: 30px;
@@ -112,7 +112,7 @@
         #btn-reiniciar { background: #cc0000; }
         #btn-ajuda { background: #1a2a44; border: 1px solid #00ffff; box-shadow: 0 0 10px rgba(0,255,255,0.3); }
 
-        /* PLACA COM PARAFUSOS GRANDES */
+        /* PLACA DE CONCLUÍDO */
         #placa-concluido {
             position: absolute; top: 50%; left: 50%;
             transform: translate(-50%, -50%) scale(0.8);
@@ -135,7 +135,7 @@
         .p-tl { top: 12px; left: 12px; } .p-tr { top: 12px; right: 12px; }
         .p-bl { bottom: 12px; left: 12px; } .p-br { bottom: 12px; right: 12px; }
 
-        /* AJUDA */
+        /* MODAL DE AJUDA */
         #modal-ajuda {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             width: 380px; background: rgba(5, 10, 20, 0.98);
@@ -144,9 +144,17 @@
             box-shadow: 0 0 30px rgba(0, 255, 255, 0.4);
         }
         .ajuda-titulo { color: #00ffff; text-align: center; margin-bottom: 20px; font-weight: bold; }
-        .ajuda-item { background: rgba(0, 255, 255, 0.05); border: 1px solid #00ffff; color: white; padding: 10px; margin-bottom: 10px; border-radius: 5px; cursor: pointer; }
-        #visualizador-ajuda { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 200; display: none; justify-content: center; align-items: center; }
+        .ajuda-item { background: rgba(0, 255, 255, 0.05); border: 1px solid #00ffff; color: white; padding: 10px; margin-bottom: 10px; border-radius: 5px; cursor: pointer; font-size: 14px; }
+        .btn-fechar { background: #222; color: #aaa; border: 1px solid #444; padding: 8px; margin-top: 5px; border-radius: 5px; cursor: pointer; }
+
+        /* VISUALIZADOR DE GRAVURAS COM INDICAÇÃO */
+        #visualizador-ajuda {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); z-index: 200; display: none;
+            flex-direction: column; justify-content: center; align-items: center;
+        }
         #img-ajuda-grande { max-width: 70%; max-height: 70%; border: 2px solid #00ffff; border-radius: 8px; }
+        .legenda-voltar { color: #00ffff; font-weight: bold; margin-top: 15px; font-size: 14px; letter-spacing: 1px; text-transform: uppercase; }
 
         .ponto {
             position: absolute; width: 22px; height: 22px;
@@ -204,7 +212,7 @@
             <div class="ajuda-item" onclick="mostrarEsquema('ligaint.png')">1. Ligação do Interruptor</div>
             <div class="ajuda-item" onclick="mostrarEsquema('ligabocal.png')">2. Ligação da Lâmpada</div>
             <div class="ajuda-item" onclick="mostrarEsquema('emendas2.png')">3. Emendas e conexões</div>
-            <button onclick="fecharAjuda()">FECHAR</button>
+            <button class="btn-fechar" onclick="fecharAjuda()">FECHAR</button>
         </div>
 
         <div class="controles-inferiores">
@@ -214,6 +222,7 @@
 
         <div id="visualizador-ajuda" onclick="this.style.display='none'">
             <img id="img-ajuda-grande" src="">
+            <div class="legenda-voltar">CLIQUE PARA VOLTAR</div>
         </div>
     </div>
 
@@ -277,9 +286,7 @@
             camada.style.backgroundImage = `url('${cabo.pasta}/quadro${frameString}.png')`;
             if (frame >= cabo.max) {
                 clearInterval(loop);
-                // SOM DE CONEXÃO REINSERIDO
                 somConexao.currentTime = 0; somConexao.play();
-                
                 if (cabo.wagoTop) {
                     let idWago = cabo.id.toLowerCase().includes('fase') ? 'wago-fase' : cabo.id.toLowerCase().includes('retorno') ? 'wago-retorno' : 'wago-neutro';
                     const wago = document.getElementById(idWago);
@@ -295,8 +302,6 @@
     function toggleDispositivo(tipo) {
         estados[tipo] = !estados[tipo];
         const el = document.getElementById(`tecla-${tipo}`);
-        
-        // SONS DE CLIQUES REINSERIDOS
         if (tipo === 'dg' || tipo === 'dr') {
             somDisjuntor.currentTime = 0; somDisjuntor.play();
             if (tipo === 'dg') el.src = estados.dg ? 'al_dg_on.png' : 'al_dg_off.png';
