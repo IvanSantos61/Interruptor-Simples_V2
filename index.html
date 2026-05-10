@@ -122,7 +122,6 @@
             transition: all 0.3s ease;
         }
 
-        /* NOVA REGRA PARA DESTAQUE EM VERMELHO */
         .cor-alerta {
             color: #ff0000 !important;
             text-shadow: 0 0 5px rgba(255, 0, 0, 0.3);
@@ -158,14 +157,20 @@
 
         #camada-lampada { 
             position: absolute; z-index: 30; opacity: 0; 
-            transition: opacity 0.2s; pointer-events: none;
+            transition: opacity 0.2s; pointer-events: auto; /* Alterado para auto */
             top: 46.5%; left: 75.8%; width: 242px;
+            cursor: help;
         }
 
         .tecla { position: absolute; cursor: pointer; z-index: 25; transition: transform 0.1s; }
         .tecla:active { transform: scale(0.95); }
 
-        .conector { position: absolute; width: 72px; display: none; z-index: 15; pointer-events: none; transform-origin: center; }
+        .conector { 
+            position: absolute; width: 72px; display: none; z-index: 15; 
+            pointer-events: auto; /* Alterado para auto */
+            transform-origin: center; 
+            cursor: help;
+        }
 
         /* BOTÕES NA LATERAL ESQUERDA */
         .controles-inferiores {
@@ -279,11 +284,14 @@
         <div id="camada-neutro1" class="camada-cabo"></div>
         <div id="camada-neutro2" class="camada-cabo"></div>
 
-        <img src="lamp_on.png" id="camada-lampada">
+        <!-- Lâmpada com mensagem ao passar o mouse -->
+        <img src="lamp_on.png" id="camada-lampada" title="Para interligações consulte em 'AJUDA'">
 
         <img src="al_dg_off.png" id="tecla-dg" class="tecla" style="top: 25%; left: 11.4%; width: 50px;" onclick="toggleDispositivo('dg')">
         <img src="al_dr_off.png" id="tecla-dr" class="tecla" style="top: 28%; left: 23.8%; width: 50px;" onclick="toggleDispositivo('dr')">
-        <img src="tec_int_off.png" id="tecla-int" class="tecla" style="top: 73%; left: 72%; width: 53px;" onclick="toggleDispositivo('int')">
+        
+        <!-- Interruptor com mensagem ao passar o mouse -->
+        <img src="tec_int_off.png" id="tecla-int" class="tecla" style="top: 73%; left: 72%; width: 53px;" onclick="toggleDispositivo('int')" title="Para interligações consulte em 'AJUDA'">
 
         <img src="con_wago.png" id="wago-fase" class="conector">
         <img src="con_wago.png" id="wago-retorno" class="conector">
@@ -396,7 +404,10 @@
                     let idWago = cabo.id.toLowerCase().includes('fase') ? 'wago-fase' : cabo.id.toLowerCase().includes('retorno') ? 'wago-retorno' : 'wago-neutro';
                     const wago = document.getElementById(idWago);
                     wago.style.top = cabo.wagoTop; wago.style.left = cabo.wagoLeft;
-                    wago.style.transform = `translate(-50%, -50%) rotate(${cabo.wagoRot})`; wago.style.display = 'block';
+                    wago.style.transform = `translate(-50%, -50%) rotate(${cabo.wagoRot})`; 
+                    wago.style.display = 'block';
+                    // ADIÇÃO: Mensagem de ajuda no conector
+                    wago.title = "Para interligações consulte em 'AJUDA'";
                 }
                 etapaAtual++; setTimeout(carregarEtapa, 600);
             }
