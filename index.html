@@ -14,6 +14,7 @@
             align-items: center; 
             padding: 20px;
             margin: 0;
+            overflow-x: hidden;
         }
 
         h1 {
@@ -25,6 +26,79 @@
             text-transform: uppercase;
         }
 
+        /* TELA DE SPLASH */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #050a14;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 500;
+            cursor: pointer;
+            transition: opacity 0.8s ease, visibility 0.8s;
+        }
+
+        .splash-container {
+            width: 80%;
+            max-width: 800px;
+            background: linear-gradient(145deg, #0a1528, #050a14);
+            border: 3px solid #00ffff;
+            border-radius: 20px;
+            padding: 60px 40px;
+            text-align: center;
+            box-shadow: 0 0 40px rgba(0, 255, 255, 0.4), inset 0 0 20px rgba(0, 255, 255, 0.1);
+        }
+
+        .splash-titulo {
+            color: #00ffff;
+            font-size: 2.8em;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            text-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
+        }
+
+        .splash-sub {
+            color: #00ffff;
+            font-size: 1.5em;
+            letter-spacing: 3px;
+            margin-bottom: 30px;
+        }
+
+        .splash-divisor {
+            width: 150px;
+            height: 2px;
+            background: #00ffff;
+            margin: 30px auto;
+            border: none;
+            opacity: 0.5;
+        }
+
+        .splash-creditos {
+            color: #ffffff;
+            font-size: 1.1em;
+            opacity: 0.8;
+            margin-top: 40px;
+        }
+
+        .splash-entrar {
+            margin-top: 30px;
+            font-size: 0.9em;
+            color: #00ffff;
+            animation: pulsarBotao 1.5s infinite;
+        }
+
+        @keyframes pulsarBotao {
+            0% { opacity: 0.3; }
+            50% { opacity: 1; }
+            100% { opacity: 0.3; }
+        }
+
+        /* PAINEL DE STATUS */
         #painel-status {
             width: 90%;
             max-width: 950px;
@@ -169,6 +243,16 @@
 </head>
 <body>
 
+    <div id="splash-screen" onclick="entrarNoLab()">
+        <div class="splash-container">
+            <div class="splash-titulo">Interruptor Simples para 2 Lâmpadas</div>
+            <div class="splash-sub">CIRCUITO MONOFÁSICO - 127V</div>
+            <hr class="splash-divisor">
+            <div class="splash-creditos">© Desenvolvido por Ivan Santos - ConectaeadPLUS - 2026</div>
+            <div class="splash-entrar">CLIQUE PARA INICIAR O LABORATÓRIO</div>
+        </div>
+    </div>
+
     <h1>LABORATÓRIO SMT PRO</h1>
 
     <audio id="som-disjuntor" src="disj.mp3"></audio>
@@ -239,24 +323,31 @@
     const somInterruptor = document.getElementById('som-interruptor');
     const somConexao = document.getElementById('som-conexao');
 
+    // LÓGICA DO SPLASH
+    function entrarNoLab() {
+        const splash = document.getElementById('splash-screen');
+        splash.style.opacity = '0';
+        setTimeout(() => {
+            splash.style.visibility = 'hidden';
+        }, 800);
+    }
+
     function abrirAjuda() { document.getElementById('modal-ajuda').style.display = 'flex'; }
     function fecharAjuda() { document.getElementById('modal-ajuda').style.display = 'none'; }
 
-    // Ao clicar na foto, ela abre e o menu de fundo some
     function mostrarEsquema(src) {
         document.getElementById('img-ajuda-grande').src = src;
         document.getElementById('visualizador-ajuda').style.display = 'flex';
         fecharAjuda();
     }
 
-    // NOVA FUNÇÃO: Fecha a foto e reabre o menu de opções
     function voltarParaMenu() {
         document.getElementById('visualizador-ajuda').style.display = 'none';
         abrirAjuda();
     }
 
     const sequencia = [
-        { id: 'FASE1', max: 54, pasta: 'FASE1', ini: {t: '38%', l: '27%'}, fim: {t: '23%', l: '56.5%'}, msg: '<span class="destaque">CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA DO DR.', msgDestino: '<span class="destaque">CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.' },
+        { id: 'FASE1', max: 54, pasta: 'FASE1', ini: {t: '38%', l: '27%'}, fim: {t: '23%', l: '56.5%'}, msg: '<span class="destaque">CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA DO DR.', msgDestino: '<span class="destaque">CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIRA DE PASSAGEM.' },
         { id: 'NEUTRO1', max: 78, pasta: 'NEUTRO1', ini: {t: '35%', l: '44.3%'}, fim: {t: '14%', l: '56%'}, msg: '<span class="destaque">CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA MOSTRADA NO BARRAMENTO (N)', msgDestino: '<span class="destaque">CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM' },
         { id: 'FASE2', max: 18, pasta: 'FASE2', ini: {t: '23%', l: '58%'}, fim: {t: '81%', l: '68%'}, wagoTop: '25%', wagoLeft: '57.4%', wagoRot: '90deg', msg: '<span class="destaque">CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.', msgDestino: '<span class="destaque">CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA MOSTRADA NO INTERRUPTOR.' },
         { id: 'RETORNO1', max: 18, pasta: 'RETORNO1', ini: {t: '20%', l: '61%'}, fim: {t: '75%', l: '68%'}, msg: '<span class="destaque">CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.', msgDestino: '<span class="destaque">CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA DO INTERRUPTOR.' },
