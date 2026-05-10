@@ -157,7 +157,7 @@
 
         #camada-lampada { 
             position: absolute; z-index: 30; opacity: 0; 
-            transition: opacity 0.2s; pointer-events: auto; /* Alterado para auto */
+            transition: opacity 0.2s; pointer-events: auto;
             top: 46.5%; left: 75.8%; width: 242px;
             cursor: help;
         }
@@ -167,7 +167,7 @@
 
         .conector { 
             position: absolute; width: 72px; display: none; z-index: 15; 
-            pointer-events: auto; /* Alterado para auto */
+            pointer-events: auto;
             transform-origin: center; 
             cursor: help;
         }
@@ -284,14 +284,16 @@
         <div id="camada-neutro1" class="camada-cabo"></div>
         <div id="camada-neutro2" class="camada-cabo"></div>
 
-        <!-- Lâmpada com mensagem ao passar o mouse -->
         <img src="lamp_on.png" id="camada-lampada" title="Para interligações consulte em 'AJUDA'">
 
         <img src="al_dg_off.png" id="tecla-dg" class="tecla" style="top: 25%; left: 11.4%; width: 50px;" onclick="toggleDispositivo('dg')">
         <img src="al_dr_off.png" id="tecla-dr" class="tecla" style="top: 28%; left: 23.8%; width: 50px;" onclick="toggleDispositivo('dr')">
         
-        <!-- Interruptor com mensagem ao passar o mouse -->
-        <img src="tec_int_off.png" id="tecla-int" class="tecla" style="top: 73%; left: 72%; width: 53px;" onclick="toggleDispositivo('int')" title="Para interligações consulte em 'AJUDA'">
+        <!-- Interruptor com correção de z-index e cursor para teste -->
+        <img src="tec_int_off.png" id="tecla-int" class="tecla" 
+             style="top: 73%; left: 72%; width: 53px; z-index: 100; pointer-events: auto; cursor: help;" 
+             onclick="toggleDispositivo('int')" 
+             title="Para interligações consulte em 'AJUDA'">
 
         <img src="con_wago.png" id="wago-fase" class="conector">
         <img src="con_wago.png" id="wago-retorno" class="conector">
@@ -406,7 +408,6 @@
                     wago.style.top = cabo.wagoTop; wago.style.left = cabo.wagoLeft;
                     wago.style.transform = `translate(-50%, -50%) rotate(${cabo.wagoRot})`; 
                     wago.style.display = 'block';
-                    // ADIÇÃO: Mensagem de ajuda no conector
                     wago.title = "Para interligações consulte em 'AJUDA'";
                 }
                 etapaAtual++; setTimeout(carregarEtapa, 600);
