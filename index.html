@@ -122,7 +122,7 @@
             font-size: 15px;
         }
 
-        /* AJUSTE NA PLACA: ALTURA MAIOR E TEXTO SEM NEGRITO */
+        /* CONFIGURAÇÃO DA PLACA FINAL */
         #placa-concluido {
             position: absolute;
             top: 50%;
@@ -137,7 +137,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 60px 40px; /* Aumentada a altura vertical */
+            padding: 60px 40px; /* Altura aumentada conforme pedido */
             box-shadow: 0 0 50px rgba(0,0,0,0.8), inset 0 0 15px rgba(255,255,255,0.1);
             opacity: 0;
             transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -152,7 +152,7 @@
         .texto-concluido {
             color: #00ff00;
             font-size: 3em;
-            font-weight: 400; /* Removido o negrito */
+            font-weight: 400; /* Texto sem negrito conforme pedido */
             text-shadow: 0 0 20px rgba(0, 255, 0, 0.6);
             display: flex;
             align-items: center;
@@ -239,7 +239,7 @@
     let estados = { dg: false, dr: false, int: false };
     let instalacaoConcluida = false;
     let primeiroTesteFeito = false; 
-    let cicloCompleto = false;
+    let placaAtiva = false; // Controle para evitar sobreposição de timers
     let etapaAtual = 0;
     let aguardandoDestino = false;
 
@@ -382,26 +382,39 @@
             lamp.style.opacity = "1";
             primeiroTesteFeito = true; 
             statusTxt.innerHTML = '<div class="status-final acesa">LÂMPADA ACESA</div>';
+            
+            // Se ligar novamente, interrompe a placa se estiver aparecendo
+            placa.classList.remove('show');
+            setTimeout(() => { placa.style.display = 'none'; }, 500);
+            placaAtiva = false;
         } else {
             lamp.style.opacity = "0";
             if (instalacaoConcluida) {
                 if (primeiroTesteFeito) {
                     statusTxt.innerHTML = '<div class="status-final apagada">LÂMPADA APAGADA</div>';
                     
-                    // Lógica da Placa: Aparece 2s após apagar e some 2s depois
-                    if(!cicloCompleto) {
-                        cicloCompleto = true; 
-                        setTimeout(() => {
-                            placa.style.display = 'flex';
-                            setTimeout(() => placa.classList.add('show'), 50);
+                    // Lógica da Placa Recurrente
+                    if (!placaAtiva) {
+                        placaAtiva = true;
 
-                            // Mantém por 2 segundos e depois esconde
-                            setTimeout(() => {
-                                placa.classList.remove('show');
+                        // Espera 2 segundos após apagar
+                        setTimeout(() => {
+                            // Verifica se continua apagada antes de mostrar
+                            if (!estados.dg || !estados.dr || !estados.int) {
+                                placa.style.display = 'flex';
+                                setTimeout(() => placa.classList.add('show'), 50);
+
+                                // Exibe por 2 segundos e some
                                 setTimeout(() => {
-                                    placa.style.display = 'none';
-                                }, 500);
-                            }, 2000); 
+                                    placa.classList.remove('show');
+                                    setTimeout(() => {
+                                        placa.style.display = 'none';
+                                        placaAtiva = false; 
+                                    }, 500);
+                                }, 2000); 
+                            } else {
+                                placaAtiva = false;
+                            }
                         }, 2000);
                     }
                 } else {
