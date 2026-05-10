@@ -87,33 +87,35 @@
 
         .conector { position: absolute; width: 72px; display: none; z-index: 15; pointer-events: none; transform-origin: center; }
 
-        /* BOTÕES DE CONTROLE */
+        /* BOTÕES NA LATERAL ESQUERDA */
         .controles-inferiores {
             position: absolute;
-            bottom: 45px;
-            left: 50%;
-            transform: translateX(-50%);
+            bottom: 30px;
+            left: 30px; /* Posicionado à esquerda */
             display: flex;
-            gap: 20px;
+            gap: 15px;
             z-index: 100;
         }
 
         .btn-acao {
-            padding: 8px 30px;
+            padding: 8px 25px;
             border: none;
             border-radius: 20px;
             font-weight: bold;
             cursor: pointer;
             box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-            font-size: 15px;
+            font-size: 14px;
             color: white;
             text-transform: uppercase;
+            transition: 0.2s;
         }
 
         #btn-reiniciar { background: #cc0000; }
+        #btn-reiniciar:hover { background: #ff0000; }
         #btn-ajuda { background: #1a2a44; border: 1px solid #00ffff; box-shadow: 0 0 10px rgba(0,255,255,0.3); }
+        #btn-ajuda:hover { background: #00ffff; color: #000; }
 
-        /* PLACA DE CONCLUÍDO */
+        /* PLACA DE CONCLUÍDO (Sempre invisível até o fim) */
         #placa-concluido {
             position: absolute; top: 50%; left: 50%;
             transform: translate(-50%, -50%) scale(0.8);
@@ -139,34 +141,41 @@
         /* MODAL DE AJUDA */
         #modal-ajuda {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 400px; background: rgba(5, 10, 20, 0.95);
-            border: 2px solid #00ffff; border-radius: 20px; z-index: 150;
-            display: none; flex-direction: column; padding: 30px;
+            width: 380px; background: rgba(5, 10, 20, 0.98);
+            border: 2px solid #00ffff; border-radius: 15px; z-index: 150;
+            display: none; flex-direction: column; padding: 25px;
             box-shadow: 0 0 30px rgba(0, 255, 255, 0.4);
         }
 
-        .ajuda-titulo { color: #00ffff; text-align: center; margin-bottom: 20px; font-weight: bold; font-size: 1.2em; }
+        .ajuda-titulo { color: #00ffff; text-align: center; margin-bottom: 20px; font-weight: bold; font-size: 1.1em; letter-spacing: 1px; }
 
         .ajuda-item {
-            background: rgba(0, 255, 255, 0.1); border: 1px solid #00ffff;
-            color: white; padding: 12px; margin-bottom: 10px; border-radius: 8px;
+            background: rgba(0, 255, 255, 0.05); border: 1px solid #00ffff;
+            color: white; padding: 10px 15px; margin-bottom: 10px; border-radius: 5px;
             cursor: pointer; transition: 0.3s; text-align: left; font-size: 14px;
         }
-        .ajuda-item:hover { background: rgba(0, 255, 255, 0.3); }
+        .ajuda-item:hover { background: rgba(0, 255, 255, 0.2); }
 
         .btn-fechar {
-            background: #333; color: white; border: none; padding: 10px;
-            margin-top: 10px; border-radius: 5px; cursor: pointer; font-weight: bold;
+            background: #222; color: #aaa; border: 1px solid #444; padding: 8px;
+            margin-top: 5px; border-radius: 5px; cursor: pointer; font-size: 12px;
         }
+        .btn-fechar:hover { color: white; border-color: #666; }
 
-        /* OVERLAY DE IMAGEM DA AJUDA */
+        /* VISUALIZADOR DE GRAVURAS (DIMINUÍDO) */
         #visualizador-ajuda {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 200; display: none;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); z-index: 200; display: none;
             justify-content: center; align-items: center;
         }
-        #img-ajuda-grande { max-width: 90%; max-height: 80%; border: 3px solid #00ffff; border-radius: 10px; }
-        .instrucao-visualizador { position: absolute; bottom: 50px; color: #00ffff; font-weight: bold; }
+        #img-ajuda-grande { 
+            max-width: 70%; /* Gravura menor conforme solicitado */
+            max-height: 70%; 
+            border: 2px solid #00ffff; 
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        }
+        .instrucao-visualizador { position: absolute; bottom: 20px; color: #00ffff; font-size: 12px; opacity: 0.7; }
 
         .ponto {
             position: absolute; width: 22px; height: 22px;
@@ -226,11 +235,11 @@
             <button id="btn-reiniciar" class="btn-acao" onclick="location.reload()">REINICIAR</button>
             <button id="btn-ajuda" class="btn-acao" onclick="abrirAjuda()">AJUDA</button>
         </div>
-    </div>
 
-    <div id="visualizador-ajuda" onclick="this.style.display='none'">
-        <img id="img-ajuda-grande" src="">
-        <div class="instrucao-visualizador">CLIQUE PARA FECHAR A IMAGEM</div>
+        <div id="visualizador-ajuda" onclick="this.style.display='none'">
+            <img id="img-ajuda-grande" src="">
+            <div class="instrucao-visualizador">CLIQUE PARA VOLTAR</div>
+        </div>
     </div>
 
 <script>
@@ -241,22 +250,22 @@
     let etapaAtual = 0;
     let aguardandoDestino = false;
 
-    // Lógica da Ajuda
     function abrirAjuda() { document.getElementById('modal-ajuda').style.display = 'flex'; }
     function fecharAjuda() { document.getElementById('modal-ajuda').style.display = 'none'; }
     function mostrarEsquema(src) {
         const vis = document.getElementById('visualizador-ajuda');
         document.getElementById('img-ajuda-grande').src = src;
         vis.style.display = 'flex';
+        fecharAjuda(); // Fecha a lista ao abrir a foto
     }
 
     const sequencia = [
-        { id: 'FASE1', max: 54, pasta: 'FASE1', ini: {t: '38%', l: '27%'}, fim: {t: '23%', l: '56.5%'}, msg: 'CONECTE A FASE NO DR.', msgDestino: 'CLIQUE NA CAIXA DE PASSAGEM.' },
-        { id: 'NEUTRO1', max: 78, pasta: 'NEUTRO1', ini: {t: '35%', l: '44.3%'}, fim: {t: '14%', l: '56%'}, msg: 'CONECTE O NEUTRO NO BARRAMENTO.', msgDestino: 'CLIQUE NA CAIXA DE PASSAGEM.' },
-        { id: 'FASE2', max: 18, pasta: 'FASE2', ini: {t: '23%', l: '58%'}, fim: {t: '81%', l: '68%'}, wagoTop: '25%', wagoLeft: '57.4%', wagoRot: '90deg', msg: 'CAIXA DE PASSAGEM -> INTERRUPTOR.', msgDestino: 'CLIQUE NO INTERRUPTOR.' },
-        { id: 'RETORNO1', max: 18, pasta: 'RETORNO1', ini: {t: '20%', l: '61%'}, fim: {t: '75%', l: '68%'}, msg: 'CAIXA DE PASSAGEM -> INTERRUPTOR.', msgDestino: 'CLIQUE NO INTERRUPTOR.' },
-        { id: 'RETORNO2', max: 24, pasta: 'RETORNO2', ini: {t: '17%', l: '61%'}, fim: {t: '55%', l: '89%'}, wagoTop: '17.3%', wagoLeft: '60%', wagoRot: '0deg', msg: 'CAIXA DE PASSAGEM -> LÂMPADA.', msgDestino: 'CLIQUE NA LÂMPADA.' },
-        { id: 'NEUTRO2', max: 30, pasta: 'NEUTRO2', ini: {t: '13%', l: '58%'}, fim: {t: '55%', l: '91.3%'}, wagoTop: '14.5%', wagoLeft: '57%', wagoRot: '270deg', msg: 'CAIXA DE PASSAGEM -> LÂMPADA.', msgDestino: 'CLIQUE NA LÂMPADA.' }
+        { id: 'FASE1', max: 54, pasta: 'FASE1', ini: {t: '38%', l: '27%'}, fim: {t: '23%', l: '56.5%'}, msg: 'CONECTE A FASE NO DR.' },
+        { id: 'NEUTRO1', max: 78, pasta: 'NEUTRO1', ini: {t: '35%', l: '44.3%'}, fim: {t: '14%', l: '56%'}, msg: 'CONECTE O NEUTRO NO BARRAMENTO.' },
+        { id: 'FASE2', max: 18, pasta: 'FASE2', ini: {t: '23%', l: '58%'}, fim: {t: '81%', l: '68%'}, wagoTop: '25%', wagoLeft: '57.4%', wagoRot: '90deg', msg: 'CAIXA -> INTERRUPTOR (FASE).' },
+        { id: 'RETORNO1', max: 18, pasta: 'RETORNO1', ini: {t: '20%', l: '61%'}, fim: {t: '75%', l: '68%'}, msg: 'CAIXA -> INTERRUPTOR (RETORNO).' },
+        { id: 'RETORNO2', max: 24, pasta: 'RETORNO2', ini: {t: '17%', l: '61%'}, fim: {t: '55%', l: '89%'}, wagoTop: '17.3%', wagoLeft: '60%', wagoRot: '0deg', msg: 'CAIXA -> LÂMPADA (RETORNO).' },
+        { id: 'NEUTRO2', max: 30, pasta: 'NEUTRO2', ini: {t: '13%', l: '58%'}, fim: {t: '55%', l: '91.3%'}, wagoTop: '14.5%', wagoLeft: '57%', wagoRot: '270deg', msg: 'CAIXA -> LÂMPADA (NEUTRO).' }
     ];
 
     const elInicio = document.getElementById('ponto-inicio');
@@ -266,7 +275,7 @@
     function carregarEtapa() {
         if (etapaAtual >= sequencia.length) {
             instalacaoConcluida = true;
-            statusTxt.innerHTML = 'MONTAGEM CONCLUÍDA! LIGUE OS DISPOSITIVOS.';
+            statusTxt.innerHTML = 'MONTAGEM CONCLUÍDA! LIGUE OS DISJUNTORES E O INTERRUPTOR.';
             elInicio.style.display = 'none'; elFim.style.display = 'none';
             return;
         }
