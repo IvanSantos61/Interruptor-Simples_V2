@@ -108,7 +108,7 @@
         #btn-reiniciar {
             position: absolute;
             bottom: 45px;
-            left: 49%;
+            left: 50%;
             transform: translateX(-50%);
             padding: 8px 30px;
             background: #cc0000;
@@ -117,10 +117,60 @@
             border-radius: 20px;
             font-weight: bold;
             cursor: pointer;
-            z-index: 50;
+            z-index: 100; /* Aumentado para ficar sobre a placa */
             box-shadow: 0 4px 10px rgba(0,0,0,0.5);
             font-size: 15px;
         }
+
+        /* ESTILO DA PLACA DE CONCLUÍDO */
+        #placa-concluido {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            width: 500px;
+            background: linear-gradient(145deg, #2c2c2c, #1a1a1a);
+            border: 4px solid #333;
+            border-radius: 15px;
+            z-index: 90;
+            display: none; /* Escondido por padrão */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8), inset 0 0 15px rgba(255,255,255,0.1);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        #placa-concluido.show {
+            display: flex;
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .texto-concluido {
+            color: #00ff00;
+            font-size: 3.5em;
+            font-weight: 900;
+            text-shadow: 0 0 20px rgba(0, 255, 0, 0.6);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .parafuso {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: #555;
+            border-radius: 50%;
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.5);
+        }
+        .p-tl { top: 10px; left: 10px; }
+        .p-tr { top: 10px; right: 10px; }
+        .p-bl { bottom: 10px; left: 10px; }
+        .p-br { bottom: 10px; right: 10px; }
 
         .ponto {
             position: absolute; width: 22px; height: 22px;
@@ -171,13 +221,24 @@
         <div id="ponto-inicio" class="ponto"></div>
         <div id="ponto-fim" class="ponto"></div>
 
+        <div id="placa-concluido">
+            <div class="parafuso p-tl"></div>
+            <div class="parafuso p-tr"></div>
+            <div class="parafuso p-bl"></div>
+            <div class="parafuso p-br"></div>
+            <div class="texto-concluido">
+                <span>✓</span> CONCLUÍDO
+            </div>
+        </div>
+
         <button id="btn-reiniciar" onclick="reiniciarSimulador()">REINICIAR</button>
     </div>
 
 <script>
     let estados = { dg: false, dr: false, int: false };
     let instalacaoConcluida = false;
-    let primeiroTesteFeito = false; // Controle para a mensagem de desligada
+    let primeiroTesteFeito = false; 
+    let cicloCompleto = false; // Nova flag para a placa final
     let etapaAtual = 0;
     let aguardandoDestino = false;
 
@@ -313,20 +374,26 @@
 
     function atualizarCircuito() {
         const lamp = document.getElementById('camada-lampada');
+        const placa = document.getElementById('placa-concluido');
         const tudoLigado = instalacaoConcluida && estados.dg && estados.dr && estados.int;
 
         if (tudoLigado) {
             lamp.style.opacity = "1";
-            primeiroTesteFeito = true; // Marca que a lâmpada já acendeu pelo menos uma vez
+            primeiroTesteFeito = true; 
             statusTxt.innerHTML = '<div class="status-final acesa">LÂMPADA ACESA</div>';
         } else {
             lamp.style.opacity = "0";
             if (instalacaoConcluida) {
-                // Só mostra "APAGADA" se o usuário já tiver acendido a lâmpada uma vez
                 if (primeiroTesteFeito) {
                     statusTxt.innerHTML = '<div class="status-final apagada">LÂMPADA APAGADA</div>';
+                    
+                    // LÓGICA DA PLACA: Se já acendeu e agora desligou (pelo DG, DR ou INT)
+                    if(!cicloCompleto) {
+                        cicloCompleto = true;
+                        placa.style.display = 'flex';
+                        setTimeout(() => placa.classList.add('show'), 50);
+                    }
                 } else {
-                    // Mantém a instrução até o primeiro acendimento bem-sucedido
                     statusTxt.innerHTML = '<span class="destaque">MONTAGEM CONCLUÍDA!</span> LIGUE O DG, O DR E O INTERRUPTOR.';
                 }
             }
