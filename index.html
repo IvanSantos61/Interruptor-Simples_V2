@@ -111,7 +111,7 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             z-index: 300;
             display: none;
-            pointer-events: auto;
+            pointer-events: auto; /* Alterado para permitir clique direto no balão para fechar */
             max-width: 170px;
             line-height: 1.4;
             cursor: pointer;
@@ -218,29 +218,7 @@
         }
 
         #btn-reiniciar { background: #cc0000; }
-        #btn-ajuda { background: #1a2a44; border: 1px solid #00ffff; box-shadow: 0 0 10px rgba(0,255,255,0.3); }
-
-        /* MODAL DE AJUDA */
-        #modal-ajuda {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 380px; background: rgba(5, 10, 20, 0.98);
-            border: 2px solid #00ffff; border-radius: 15px; z-index: 150;
-            display: none; flex-direction: column; padding: 25px;
-            box-shadow: 0 0 30px rgba(0, 255, 255, 0.4);
-        }
-        .ajuda-titulo { color: #00ffff; text-align: center; margin-bottom: 20px; font-weight: bold; }
-        .ajuda-item { background: rgba(0, 255, 255, 0.05); border: 1px solid #00ffff; color: white; padding: 10px; margin-bottom: 10px; border-radius: 5px; cursor: pointer; font-size: 14px; }
-        .btn-fechar { background: #222; color: #aaa; border: 1px solid #444; padding: 8px; margin-top: 5px; border-radius: 5px; cursor: pointer; }
-
-        /* VISUALIZADOR DE IMAGEM */
-        #visualizador-ajuda {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); z-index: 200; display: none;
-            flex-direction: column; justify-content: center; align-items: center;
-            cursor: pointer;
-        }
-        #img-ajuda-grande { max-width: 70%; max-height: 70%; border: 2px solid #00ffff; border-radius: 8px; }
-        .legenda-voltar { color: #00ffff; font-weight: bold; margin-top: 15px; font-size: 14px; letter-spacing: 1px; text-transform: uppercase; }
+        #btn-ajuda { background: #1a2a44; border: 1px solid #00ffff; }
 
         #placa-concluido {
             position: absolute; top: 50%; left: 50%;
@@ -318,22 +296,8 @@
             <div class="texto-concluido">✓ CONCLUÍDO</div>
         </div>
 
-        <div id="modal-ajuda">
-            <div class="ajuda-titulo">AJUDA TÉCNICA</div>
-            <div class="ajuda-item" onclick="mostrarEsquema('ligaint.png')">1. Ligação do Interruptor</div>
-            <div class="ajuda-item" onclick="mostrarEsquema('ligabocal.png')">2. Ligação da Lâmpada</div>
-            <div class="ajuda-item" onclick="mostrarEsquema('emendas2.png')">3. Emendas e conexões</div>
-            <button class="btn-fechar" onclick="fecharAjuda()">FECHAR</button>
-        </div>
-
-        <div id="visualizador-ajuda" onclick="voltarParaMenu()">
-            <img id="img-ajuda-grande" src="">
-            <div class="legenda-voltar">CLIQUE PARA VOLTAR</div>
-        </div>
-
         <div class="controles-inferiores">
             <button id="btn-reiniciar" class="btn-acao" onclick="location.reload(); event.stopPropagation();">REINICIAR</button>
-            <button id="btn-ajuda" class="btn-acao" onclick="abrirAjuda(); event.stopPropagation();">AJUDA</button>
         </div>
     </div>
 
@@ -352,21 +316,6 @@
         const splash = document.getElementById('splash-screen');
         splash.style.opacity = '0';
         setTimeout(() => splash.style.visibility = 'hidden', 800);
-    }
-
-    // FUNÇÕES DE AJUDA
-    function abrirAjuda() { document.getElementById('modal-ajuda').style.display = 'flex'; }
-    function fecharAjuda() { document.getElementById('modal-ajuda').style.display = 'none'; }
-
-    function mostrarEsquema(src) {
-        document.getElementById('img-ajuda-grande').src = src;
-        document.getElementById('visualizador-ajuda').style.display = 'flex';
-        fecharAjuda();
-    }
-
-    function voltarParaMenu() {
-        document.getElementById('visualizador-ajuda').style.display = 'none';
-        abrirAjuda();
     }
 
     function fecharBalaoInformativo() {
