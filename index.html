@@ -172,6 +172,65 @@
             cursor: help;
         }
 
+        /* BALÃO INFORMATIVO NBR COM SETA */
+        #balao-informativo {
+            position: absolute;
+            z-index: 400;
+            background: white;
+            color: black;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            font-weight: bold;
+            font-size: 14px;
+            line-height: 1.4;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            border: 2px solid #333;
+            /* PROPRIEDADES DE POSICIONAMENTO */
+            top: 40%;
+            left: 30%;
+            width: 220px;
+        }
+
+        /* A SETINHA */
+        #balao-informativo::after {
+            content: "";
+            position: absolute;
+            bottom: -12px; /* Ajuste para descer a seta */
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 12px 12px 0; /* Cria o triângulo */
+            border-style: solid;
+            border-color: white transparent transparent;
+            display: block;
+            width: 0;
+            z-index: 1;
+        }
+
+        /* BORDA DA SETINHA */
+        #balao-informativo::before {
+            content: "";
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 13px 13px 0;
+            border-style: solid;
+            border-color: #333 transparent transparent;
+            display: block;
+            width: 0;
+        }
+
+        #balao-informativo .referencia-nbr {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+            display: block;
+        }
+
         /* BOTÕES NA LATERAL ESQUERDA */
         .controles-inferiores {
             position: absolute;
@@ -252,7 +311,7 @@
         #status-mensagem span.destaque { color: #ff9900; }
     </style>
 </head>
-<body>
+<body onclick="fecharBalao()">
 
     <div id="splash-screen" onclick="entrarNoLab()">
         <div class="splash-container">
@@ -260,7 +319,7 @@
             <div class="splash-sub">CIRCUITO MONOFÁSICO - 127V</div>
             <hr class="splash-divisor">
             <div class="splash-creditos">© Desenvolvido por Ivan Santos - ConectaeadPLUS - 2026</div>
-            <div class="splash-entrar">CLIQUE PARA INICIAR O LABORATÓRIO xxx</div>
+            <div class="splash-entrar">CLIQUE PARA INICIAR O LABORATÓRIO</div>
         </div>
     </div>
 
@@ -284,12 +343,16 @@
         <div id="camada-neutro1" class="camada-cabo"></div>
         <div id="camada-neutro2" class="camada-cabo"></div>
 
+        <div id="balao-informativo">
+            A seção mínima dos fios de iluminação é 1,5mm²
+            <span class="referencia-nbr">Item 6.2.6.1.1 da NBR-5410</span>
+        </div>
+
         <img src="lamp_on.png" id="camada-lampada" title="Para interligações consulte em 'AJUDA'">
 
         <img src="al_dg_off.png" id="tecla-dg" class="tecla" style="top: 25%; left: 11.4%; width: 50px;" onclick="toggleDispositivo('dg')">
         <img src="al_dr_off.png" id="tecla-dr" class="tecla" style="top: 28%; left: 23.8%; width: 50px;" onclick="toggleDispositivo('dr')">
         
-        <!-- Interruptor com correção de z-index e cursor para teste -->
         <img src="tec_int_off.png" id="tecla-int" class="tecla" 
              style="top: 73%; left: 72%; width: 53px; z-index: 100; pointer-events: auto; cursor: help;" 
              onclick="toggleDispositivo('int')" 
@@ -338,6 +401,7 @@
     const somDisjuntor = document.getElementById('som-disjuntor');
     const somInterruptor = document.getElementById('som-interruptor');
     const somConexao = document.getElementById('som-conexao');
+    const balao = document.getElementById('balao-informativo');
 
     function entrarNoLab() {
         const splash = document.getElementById('splash-screen');
@@ -345,6 +409,12 @@
         setTimeout(() => {
             splash.style.visibility = 'hidden';
         }, 800);
+    }
+
+    function fecharBalao() {
+        if (balao.style.display === 'flex') {
+            balao.style.display = 'none';
+        }
     }
 
     function abrirAjuda() { document.getElementById('modal-ajuda').style.display = 'flex'; }
@@ -389,8 +459,8 @@
         aguardandoDestino = false;
     }
 
-    elInicio.onclick = () => { elInicio.style.background = "#00ff00"; elFim.style.display = 'block'; aguardandoDestino = true; if(sequencia[etapaAtual].msgDestino) statusTxt.innerHTML = sequencia[etapaAtual].msgDestino; };
-    elFim.onclick = () => { if (aguardandoDestino) animarCabo(sequencia[etapaAtual]); };
+    elInicio.onclick = (e) => { e.stopPropagation(); elInicio.style.background = "#00ff00"; elFim.style.display = 'block'; aguardandoDestino = true; if(sequencia[etapaAtual].msgDestino) statusTxt.innerHTML = sequencia[etapaAtual].msgDestino; };
+    elFim.onclick = (e) => { e.stopPropagation(); if (aguardandoDestino) animarCabo(sequencia[etapaAtual]); };
 
     function animarCabo(cabo) {
         let frame = 0;
@@ -402,6 +472,11 @@
             if (frame >= cabo.max) {
                 clearInterval(loop);
                 somConexao.currentTime = 0; somConexao.play();
+                
+                if (cabo.id === 'FASE1') {
+                    balao.style.display = 'flex';
+                }
+
                 if (cabo.wagoTop) {
                     let idWago = cabo.id.toLowerCase().includes('fase') ? 'wago-fase' : cabo.id.toLowerCase().includes('retorno') ? 'wago-retorno' : 'wago-neutro';
                     const wago = document.getElementById(idWago);
