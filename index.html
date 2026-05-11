@@ -111,9 +111,10 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             z-index: 300;
             display: none;
-            pointer-events: none;
-            max-width: 170px;
+            max-width: 250px;
             line-height: 1.4;
+            cursor: pointer;
+            pointer-events: auto; /* Permite clique no balão */
         }
 
         .balao-informativo::after {
@@ -121,7 +122,7 @@
             position: absolute;
             top: 100%;
             left: 50%;
-            margin-left: -10px;
+            transform: translateX(-50%);
             border-width: 10px;
             border-style: solid;
             border-color: white transparent transparent transparent;
@@ -280,9 +281,9 @@
 
         <img src="lamp_on.png" id="camada-lampada">
 
-        <img src="al_dg_off.png" id="tecla-dg" class="tecla" style="top: 25%; left: 11.4%; width: 50px;" onclick="toggleDispositivo('dg')">
-        <img src="al_dr_off.png" id="tecla-dr" class="tecla" style="top: 28%; left: 23.8%; width: 50px;" onclick="toggleDispositivo('dr')">
-        <img src="tec_int_off.png" id="tecla-int" class="tecla" style="top: 73%; left: 72%; width: 53px; z-index: 100;" onclick="toggleDispositivo('int')">
+        <img src="al_dg_off.png" id="tecla-dg" class="tecla" style="top: 25%; left: 11.4%; width: 50px;" onclick="toggleDispositivo('dg'); event.stopPropagation();">
+        <img src="al_dr_off.png" id="tecla-dr" class="tecla" style="top: 28%; left: 23.8%; width: 50px;" onclick="toggleDispositivo('dr'); event.stopPropagation();">
+        <img src="tec_int_off.png" id="tecla-int" class="tecla" style="top: 73%; left: 72%; width: 53px; z-index: 100;" onclick="toggleDispositivo('int'); event.stopPropagation();">
 
         <img src="con_wago.png" id="wago-fase" class="conector">
         <img src="con_wago.png" id="wago-retorno" class="conector">
@@ -351,12 +352,14 @@
     }
 
     elInicio.onclick = (e) => { 
+        e.stopPropagation(); // Evita fechar o balão ao clicar no ponto
         elInicio.style.background = "#00ff00"; 
         elFim.style.display = 'block'; 
         aguardandoDestino = true; 
     };
 
     elFim.onclick = (e) => { 
+        e.stopPropagation(); // Evita fechar o balão ao clicar no ponto
         if (aguardandoDestino) animarCabo(sequencia[etapaAtual]); 
     };
 
@@ -373,8 +376,8 @@
 
                 if (cabo.id === 'FASE1') {
                     balaoInf.innerHTML = 'A seção mínima dos fios de iluminação é 1,5 mm2.<span class="item-norma">Item 6.2.6.1.1 da NBR-5410</span>';
-                    balaoInf.style.top = '79%'; 
-                    balaoInf.style.left = '42%';
+                    balaoInf.style.top = '23%'; 
+                    balaoInf.style.left = '56.5%';
                     balaoInf.style.transform = 'translate(-50%, -120%)';
                     balaoInf.style.display = 'block';
                 }
