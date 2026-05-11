@@ -199,10 +199,10 @@
         #balao-informativo::after {
             content: "";
             position: absolute;
-            bottom: -12px; /* Ajuste para descer a seta */
+            bottom: -12px;
             left: 50%;
             transform: translateX(-50%);
-            border-width: 12px 12px 0; /* Cria o triângulo */
+            border-width: 12px 12px 0;
             border-style: solid;
             border-color: white transparent transparent;
             display: block;
@@ -411,6 +411,7 @@
         }, 800);
     }
 
+    // Fecha o balão ao clicar em qualquer lugar (padrão body)
     function fecharBalao() {
         if (balao.style.display === 'flex') {
             balao.style.display = 'none';
