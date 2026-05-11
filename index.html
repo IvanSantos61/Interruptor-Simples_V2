@@ -26,22 +26,79 @@
             text-transform: uppercase;
         }
 
+        /* TELA DE SPLASH ORIGINAL */
         #splash-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #050a14; display: flex; justify-content: center;
-            align-items: center; z-index: 500; cursor: pointer;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #050a14;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 500;
+            cursor: pointer;
             transition: opacity 0.8s ease, visibility 0.8s;
         }
 
         .splash-container {
-            width: 80%; max-width: 800px;
+            width: 80%;
+            max-width: 800px;
             background: linear-gradient(145deg, #0a1528, #050a14);
-            border: 3px solid #00ffff; border-radius: 20px;
-            padding: 60px 40px; text-align: center;
-            box-shadow: 0 0 40px rgba(0, 255, 255, 0.4);
+            border: 3px solid #00ffff;
+            border-radius: 20px;
+            padding: 60px 40px;
+            text-align: center;
+            box-shadow: 0 0 40px rgba(0, 255, 255, 0.4), inset 0 0 20px rgba(0, 255, 255, 0.1);
         }
 
-        /* BALÃO DE MENSAGEM */
+        .splash-titulo {
+            color: #00ffff;
+            font-size: 2.8em;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            text-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
+        }
+
+        .splash-sub {
+            color: #00ffff;
+            font-size: 1.5em;
+            letter-spacing: 3px;
+            margin-bottom: 30px;
+        }
+
+        .splash-divisor {
+            width: 150px;
+            height: 2px;
+            background: #00ffff;
+            margin: 30px auto;
+            border: none;
+            opacity: 0.5;
+        }
+
+        .splash-creditos {
+            color: #ffffff;
+            font-size: 1.1em;
+            opacity: 0.8;
+            margin-top: 40px;
+        }
+
+        .splash-entrar {
+            margin-top: 30px;
+            font-size: 0.9em;
+            color: #00ffff;
+            animation: pulsarBotao 1.5s infinite;
+        }
+
+        @keyframes pulsarBotao {
+            0% { opacity: 0.3; }
+            50% { opacity: 1; }
+            100% { opacity: 0.3; }
+        }
+
+        /* BALÃO DE MENSAGEM COM SETA */
         .balao-instrucao {
             position: absolute;
             background: rgba(5, 10, 20, 0.95);
@@ -70,21 +127,51 @@
             border-color: #00ffff transparent transparent transparent;
         }
 
+        /* PAINEL DE STATUS */
         #painel-status {
-            width: 90%; max-width: 950px;
+            width: 90%;
+            max-width: 950px;
             background: rgba(0, 0, 0, 0.4);
-            border: 1px solid #1a2a44; border-radius: 15px;
-            padding: 25px; margin-bottom: 30px; text-align: center;
-            min-height: 80px; display: flex; justify-content: center; align-items: center;
+            border: 1px solid #1a2a44;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            text-align: center;
+            min-height: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        #status-mensagem { font-size: 1.3em; font-weight: bold; text-transform: uppercase; }
+        #status-mensagem {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #ffffff;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
         .cor-alerta { color: #ff0000 !important; }
         .destaque { color: #ff9900; }
 
+        .status-final {
+            padding: 12px 40px;
+            border-radius: 50px;
+            display: inline-block;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            letter-spacing: 1px;
+        }
+
+        .acesa { background: #008000; box-shadow: 0 0 20px #00ff00; border: 1px solid #00ff00; }
+        .apagada { background: #cc0000; box-shadow: 0 0 20px #ff0000; border: 1px solid #ff4444; }
+
         #container-simulador {
-            position: relative; line-height: 0; user-select: none;
-            border-radius: 10px; overflow: hidden; display: inline-block;
+            position: relative;
+            line-height: 0;
+            user-select: none;
+            border-radius: 10px;
+            overflow: hidden;
+            display: inline-block;
         }
 
         #fundo { max-width: 1000px; height: auto; display: block; }
@@ -92,7 +179,19 @@
         .camada-cabo {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background-size: 100% 100%; pointer-events: none; z-index: 5;
-            opacity: 0;
+            opacity: 0; transition: opacity 0.3s;
+        }
+
+        #camada-lampada { 
+            position: absolute; z-index: 30; opacity: 0; 
+            transition: opacity 0.2s; pointer-events: auto;
+            top: 46.5%; left: 75.8%; width: 242px;
+        }
+
+        .tecla { position: absolute; cursor: pointer; z-index: 25; transition: transform 0.1s; }
+        .conector { 
+            position: absolute; width: 72px; display: none; z-index: 15; 
+            transform-origin: center; 
         }
 
         .ponto {
@@ -101,28 +200,18 @@
             border-radius: 50%; cursor: pointer; display: none; z-index: 40;
             transform: translate(-50%, -50%); animation: pulsar 1.2s infinite;
         }
-
-        @keyframes pulsar { 0%, 100% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.3); } }
-
-        #camada-lampada { 
-            position: absolute; z-index: 30; opacity: 0; 
-            top: 46.5%; left: 75.8%; width: 242px; pointer-events: auto;
-        }
-
-        .tecla { position: absolute; cursor: pointer; z-index: 100; }
-        .conector { position: absolute; width: 72px; display: none; z-index: 15; transform-origin: center; }
-
-        .status-final { padding: 10px 30px; border-radius: 50px; font-weight: bold; }
-        .acesa { background: #008000; box-shadow: 0 0 20px #00ff00; }
-        .apagada { background: #cc0000; box-shadow: 0 0 20px #ff0000; }
+        @keyframes pulsar { 0% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.3); } 100% { transform: translate(-50%, -50%) scale(1); } }
     </style>
 </head>
 <body>
 
     <div id="splash-screen" onclick="entrarNoLab()">
         <div class="splash-container">
-            <div style="color: #00ffff; font-size: 2.5em; font-weight: bold;">SMT PRO</div>
-            <div style="margin-top: 40px; color: #fff; opacity: 0.7;">CLIQUE PARA INICIAR</div>
+            <div class="splash-titulo">Interruptor Simples para 1 Lâmpada</div>
+            <div class="splash-sub">CIRCUITO MONOFÁSICO - 127V</div>
+            <hr class="splash-divisor">
+            <div class="splash-creditos">© Desenvolvido por Ivan Santos - ConectaeadPLUS - 2026</div>
+            <div class="splash-entrar">CLIQUE PARA INICIAR O LABORATÓRIO</div>
         </div>
     </div>
 
@@ -146,7 +235,7 @@
 
         <img src="al_dg_off.png" id="tecla-dg" class="tecla" style="top: 25%; left: 11.4%; width: 50px;" onclick="toggleDispositivo('dg')">
         <img src="al_dr_off.png" id="tecla-dr" class="tecla" style="top: 28%; left: 23.8%; width: 50px;" onclick="toggleDispositivo('dr')">
-        <img src="tec_int_off.png" id="tecla-int" class="tecla" style="top: 73%; left: 72%; width: 53px;" onclick="toggleDispositivo('int')">
+        <img src="tec_int_off.png" id="tecla-int" class="tecla" style="top: 73%; left: 72%; width: 53px; z-index: 100;" onclick="toggleDispositivo('int')">
 
         <img src="con_wago.png" id="wago-fase" class="conector">
         <img src="con_wago.png" id="wago-retorno" class="conector">
@@ -169,25 +258,28 @@
     let aguardandoDestino = false;
 
     const sequencia = [
-        { id: 'FASE1', max: 54, pasta: 'FASE1', ini: {t: '38%', l: '27%'}, fim: {t: '23%', l: '56.5%'}, width: '200px', msg: 'CONECTE A FASE.', msgDestino: 'CLIQUE NA CAIXA.' },
-        { id: 'NEUTRO1', max: 78, pasta: 'NEUTRO1', ini: {t: '35%', l: '44.3%'}, fim: {t: '14%', l: '56%'}, width: '200px', msg: 'CONECTE O NEUTRO.', msgDestino: 'CLIQUE NA CAIXA.' },
-        { id: 'FASE2', max: 18, pasta: 'FASE2', ini: {t: '23%', l: '58%'}, fim: {t: '81%', l: '68%'}, width: '200px', wagoTop: '25%', wagoLeft: '57.4%', wagoRot: '90deg', msg: 'CONECTE A FASE.', msgDestino: 'CLIQUE NO INTERRUPTOR.' },
-        { id: 'RETORNO1', max: 18, pasta: 'RETORNO1', ini: {t: '20%', l: '61%'}, fim: {t: '75%', l: '68%'}, width: '200px', msg: 'CONECTE O RETORNO.', msgDestino: 'CLIQUE NO INTERRUPTOR.' },
-        { id: 'RETORNO2', max: 24, pasta: 'RETORNO2', ini: {t: '17%', l: '61%'}, fim: {t: '55%', l: '89%'}, width: '200px', wagoTop: '17.3%', wagoLeft: '60%', wagoRot: '0deg', msg: 'CONECTE O RETORNO.', msgDestino: 'CLIQUE NA LÂMPADA.' },
-        { id: 'NEUTRO2', max: 30, pasta: 'NEUTRO2', ini: {t: '13%', l: '58%'}, fim: {t: '55%', l: '91.3%'}, width: '200px', wagoTop: '14.5%', wagoLeft: '57%', wagoRot: '270deg', msg: 'CONECTE O NEUTRO.', msgDestino: 'CLIQUE NA LÂMPADA.' }
+        { id: 'FASE1', max: 54, pasta: 'FASE1', ini: {t: '38%', l: '27%'}, fim: {t: '23%', l: '56.5%'}, width: '220px', msg: '<span class="destaque"><span class="cor-alerta">REDE:</span> CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA DO DR.', msgDestino: '<span class="destaque"><span class="cor-alerta">REDE:</span> CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.' },
+        { id: 'NEUTRO1', max: 78, pasta: 'NEUTRO1', ini: {t: '35%', l: '44.3%'}, fim: {t: '14%', l: '56%'}, width: '220px', msg: '<span class="destaque"><span class="cor-alerta">REDE:</span> CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA MOSTRADA NO BARRAMENTO (N)', msgDestino: '<span class="destaque"><span class="cor-alerta">REDE:</span> CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM' },
+        { id: 'FASE2', max: 18, pasta: 'FASE2', ini: {t: '23%', l: '58%'}, fim: {t: '81%', l: '68%'}, width: '220px', wagoTop: '25%', wagoLeft: '57.4%', wagoRot: '90deg', msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA MOSTRADA NO INTERRUPTOR.' },
+        { id: 'RETORNO1', max: 18, pasta: 'RETORNO1', ini: {t: '20%', l: '61%'}, fim: {t: '75%', l: '68%'}, width: '220px', msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA DO INTERRUPTOR.' },
+        { id: 'RETORNO2', max: 24, pasta: 'RETORNO2', ini: {t: '17%', l: '61%'}, fim: {t: '55%', l: '89%'}, width: '220px', wagoTop: '17.3%', wagoLeft: '60%', wagoRot: '0deg', msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO</span>: CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA MOSTRADA NA LÂMPADA.' },
+        { id: 'NEUTRO2', max: 30, pasta: 'NEUTRO2', ini: {t: '13%', l: '58%'}, fim: {t: '55%', l: '91.3%'}, width: '220px', wagoTop: '14.5%', wagoLeft: '57%', wagoRot: '270deg', msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO</span>: CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA MOSTRADA NA LÂMPADA' }
     ];
 
-    const statusTxt = document.getElementById('status-mensagem');
     const elInicio = document.getElementById('ponto-inicio');
     const elFim = document.getElementById('ponto-fim');
     const elBalao = document.getElementById('balao-texto');
+    const statusTxt = document.getElementById('status-mensagem');
 
-    function entrarNoLab() { document.getElementById('splash-screen').style.opacity = '0'; setTimeout(() => document.getElementById('splash-screen').style.visibility = 'hidden', 800); }
+    function entrarNoLab() { 
+        document.getElementById('splash-screen').style.opacity = '0'; 
+        setTimeout(() => document.getElementById('splash-screen').style.visibility = 'hidden', 800); 
+    }
 
     function carregarEtapa() {
         if (etapaAtual >= sequencia.length) {
             instalacaoConcluida = true;
-            statusTxt.innerHTML = 'MONTAGEM CONCLUÍDA.';
+            statusTxt.innerHTML = '<span class="destaque">MONTAGEM CONCLUÍDA!</span> LIGUE O DG, O DR E O INTERRUPTOR.';
             elInicio.style.display = 'none'; elFim.style.display = 'none';
             return;
         }
@@ -201,17 +293,18 @@
         aguardandoDestino = false;
     }
 
-    elInicio.onclick = () => {
-        elInicio.style.background = "#00ff00";
-        elFim.style.display = 'block';
-        aguardandoDestino = true;
+    elInicio.onclick = () => { 
+        elInicio.style.background = "#00ff00"; 
+        elFim.style.display = 'block'; 
+        aguardandoDestino = true; 
         const etapa = sequencia[etapaAtual];
+        statusTxt.innerHTML = etapa.msgDestino;
         elBalao.style.width = etapa.width;
         elBalao.innerHTML = etapa.msgDestino;
         elBalao.style.display = 'block';
     };
 
-    elFim.onclick = () => { if(aguardandoDestino) animarCabo(sequencia[etapaAtual]); };
+    elFim.onclick = () => { if (aguardandoDestino) animarCabo(sequencia[etapaAtual]); };
 
     function animarCabo(cabo) {
         let frame = 0;
@@ -220,8 +313,8 @@
         elBalao.style.display = 'none';
 
         const loop = setInterval(() => {
-            const frameStr = Math.min(frame, cabo.max).toString().padStart(4, '0');
-            camada.style.backgroundImage = `url('${cabo.pasta}/quadro${frameStr}.png')`;
+            const frameString = Math.min(frame, cabo.max).toString().padStart(4, '0');
+            camada.style.backgroundImage = `url('${cabo.pasta}/quadro${frameString}.png')`;
             if (frame >= cabo.max) {
                 clearInterval(loop);
                 document.getElementById('som-conexao').play();
@@ -233,10 +326,11 @@
                 }
 
                 if (cabo.wagoTop) {
-                    const idWago = cabo.id.includes('FASE') ? 'wago-fase' : cabo.id.includes('RETORNO') ? 'wago-retorno' : 'wago-neutro';
-                    const w = document.getElementById(idWago);
-                    w.style.top = cabo.wagoTop; w.style.left = cabo.wagoLeft;
-                    w.style.transform = `translate(-50%, -50%) rotate(${cabo.wagoRot})`; w.style.display = 'block';
+                    let idWago = cabo.id.toLowerCase().includes('fase') ? 'wago-fase' : cabo.id.toLowerCase().includes('retorno') ? 'wago-retorno' : 'wago-neutro';
+                    const wago = document.getElementById(idWago);
+                    wago.style.top = cabo.wagoTop; wago.style.left = cabo.wagoLeft;
+                    wago.style.transform = `translate(-50%, -50%) rotate(${cabo.wagoRot})`; 
+                    wago.style.display = 'block';
                 }
                 etapaAtual++; setTimeout(carregarEtapa, 1500);
             }
@@ -254,20 +348,19 @@
             document.getElementById('som-disjuntor').play();
             el.src = estados[tipo] ? `al_${tipo}_on.png` : `al_${tipo}_off.png`;
         }
-        atualizarLampada();
+        atualizarCircuito();
     }
 
-    function atualizarLampada() {
+    function atualizarCircuito() {
         const lamp = document.getElementById('camada-lampada');
         if (instalacaoConcluida && estados.dg && estados.dr && estados.int) {
             lamp.style.opacity = "1";
             statusTxt.innerHTML = '<div class="status-final acesa">LÂMPADA ACESA</div>';
         } else {
             lamp.style.opacity = "0";
-            if(instalacaoConcluida) statusTxt.innerHTML = '<div class="status-final apagada">LÂMPADA APAGADA</div>';
+            if (instalacaoConcluida) statusTxt.innerHTML = '<div class="status-final apagada">LÂMPADA APAGADA</div>';
         }
     }
-
     window.onload = carregarEtapa;
 </script>
 </body>
