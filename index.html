@@ -111,17 +111,18 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             z-index: 300;
             display: none;
-            pointer-events: none;
-            max-width: 170px;
+            max-width: 250px;
             line-height: 1.4;
+            cursor: pointer;
+            pointer-events: auto; /* Permite clique no balão */
         }
 
         .balao-informativo::after {
             content: "";
             position: absolute;
-            top: 99%;
-            left: 42%;
-            margin-left: -10px;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
             border-width: 10px;
             border-style: solid;
             border-color: white transparent transparent transparent;
@@ -163,17 +164,6 @@
             text-shadow: 0 0 5px rgba(255, 0, 0, 0.3);
         }
 
-        .status-final {
-            padding: 12px 40px;
-            border-radius: 50px;
-            display: inline-block;
-            box-shadow: 0 0 15px rgba(0,0,0,0.5);
-            letter-spacing: 1px;
-        }
-
-        .acesa { background: #008000; box-shadow: 0 0 20px #00ff00; border: 1px solid #00ff00; }
-        .apagada { background: #cc0000; box-shadow: 0 0 20px #ff0000; border: 1px solid #ff4444; }
-
         #container-simulador {
             position: relative;
             line-height: 0;
@@ -195,7 +185,6 @@
             position: absolute; z-index: 30; opacity: 0; 
             transition: opacity 0.2s; pointer-events: auto;
             top: 46.5%; left: 75.8%; width: 242px;
-            cursor: help;
         }
 
         .tecla { position: absolute; cursor: pointer; z-index: 25; transition: transform 0.1s; }
@@ -205,7 +194,6 @@
             position: absolute; width: 72px; display: none; z-index: 15; 
             pointer-events: auto;
             transform-origin: center; 
-            cursor: help;
         }
 
         .controles-inferiores {
@@ -230,7 +218,7 @@
         }
 
         #btn-reiniciar { background: #cc0000; }
-        #btn-ajuda { background: #1a2a44; border: 1px solid #00ffff; box-shadow: 0 0 10px rgba(0,255,255,0.3); }
+        #btn-ajuda { background: #1a2a44; border: 1px solid #00ffff; }
 
         #placa-concluido {
             position: absolute; top: 50%; left: 50%;
@@ -239,40 +227,10 @@
             border: 4px solid #333; border-radius: 15px; z-index: 110;
             display: none; flex-direction: column; align-items: center;
             justify-content: center; padding: 60px 40px;
-            box-shadow: 0 0 50px rgba(0,0,0,0.8), inset 0 0 15px rgba(255,255,255,0.1);
-            opacity: 0; transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            opacity: 0; transition: all 0.5s;
         }
         #placa-concluido.show { display: flex; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-        .texto-concluido { color: #00ff00; font-size: 3em; font-weight: 400; text-shadow: 0 0 20px rgba(0, 255, 0, 0.6); display: flex; align-items: center; gap: 20px; letter-spacing: 2px; }
-
-        .parafuso {
-            position: absolute; width: 28px; height: 28px; border-radius: 50%;
-            background: linear-gradient(to bottom, #111 2px, transparent 2px, transparent calc(100% - 2px), #111 calc(100% - 2px)),
-                        linear-gradient(to right, #444 48%, #111 48%, #111 52%, #444 52%);
-            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.6), 0 0 5px rgba(0,0,0,0.8); border: 1px solid #222;
-        }
-        .p-tl { top: 12px; left: 12px; } .p-tr { top: 12px; right: 12px; }
-        .p-bl { bottom: 12px; left: 12px; } .p-br { bottom: 12px; right: 12px; }
-
-        #modal-ajuda {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 380px; background: rgba(5, 10, 20, 0.98);
-            border: 2px solid #00ffff; border-radius: 15px; z-index: 150;
-            display: none; flex-direction: column; padding: 25px;
-            box-shadow: 0 0 30px rgba(0, 255, 255, 0.4);
-        }
-        .ajuda-titulo { color: #00ffff; text-align: center; margin-bottom: 20px; font-weight: bold; }
-        .ajuda-item { background: rgba(0, 255, 255, 0.05); border: 1px solid #00ffff; color: white; padding: 10px; margin-bottom: 10px; border-radius: 5px; cursor: pointer; font-size: 14px; }
-        .btn-fechar { background: #222; color: #aaa; border: 1px solid #444; padding: 8px; margin-top: 5px; border-radius: 5px; cursor: pointer; }
-
-        #visualizador-ajuda {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); z-index: 200; display: none;
-            flex-direction: column; justify-content: center; align-items: center;
-            cursor: pointer;
-        }
-        #img-ajuda-grande { max-width: 70%; max-height: 70%; border: 2px solid #00ffff; border-radius: 8px; }
-        .legenda-voltar { color: #00ffff; font-weight: bold; margin-top: 15px; font-size: 14px; letter-spacing: 1px; text-transform: uppercase; }
+        .texto-concluido { color: #00ff00; font-size: 3em; letter-spacing: 2px; }
 
         .ponto {
             position: absolute; width: 22px; height: 22px;
@@ -282,6 +240,9 @@
         }
         @keyframes pulsar { 0% { transform: translate(-50%, -50%) scale(1); } 70% { transform: translate(-50%, -50%) scale(1.3); } 100% { transform: translate(-50%, -50%) scale(1); } }
         #status-mensagem span.destaque { color: #ff9900; }
+        .status-final { padding: 12px 40px; border-radius: 50px; display: inline-block; }
+        .acesa { background: #008000; box-shadow: 0 0 20px #00ff00; border: 1px solid #00ff00; }
+        .apagada { background: #cc0000; box-shadow: 0 0 20px #ff0000; border: 1px solid #ff4444; }
     </style>
 </head>
 <body onclick="fecharBalaoInformativo()">
@@ -318,15 +279,11 @@
 
         <div id="balao-informativo" class="balao-informativo"></div>
 
-        <img src="lamp_on.png" id="camada-lampada" title="Para interligações consulte em 'AJUDA'">
+        <img src="lamp_on.png" id="camada-lampada">
 
-        <img src="al_dg_off.png" id="tecla-dg" class="tecla" style="top: 25%; left: 11.4%; width: 50px;" onclick="toggleDispositivo('dg')">
-        <img src="al_dr_off.png" id="tecla-dr" class="tecla" style="top: 28%; left: 23.8%; width: 50px;" onclick="toggleDispositivo('dr')">
-        
-        <img src="tec_int_off.png" id="tecla-int" class="tecla" 
-             style="top: 73%; left: 72%; width: 53px; z-index: 100; pointer-events: auto; cursor: help;" 
-             onclick="toggleDispositivo('int')" 
-             title="Para interligações consulte em 'AJUDA'">
+        <img src="al_dg_off.png" id="tecla-dg" class="tecla" style="top: 25%; left: 11.4%; width: 50px;" onclick="toggleDispositivo('dg'); event.stopPropagation();">
+        <img src="al_dr_off.png" id="tecla-dr" class="tecla" style="top: 28%; left: 23.8%; width: 50px;" onclick="toggleDispositivo('dr'); event.stopPropagation();">
+        <img src="tec_int_off.png" id="tecla-int" class="tecla" style="top: 73%; left: 72%; width: 53px; z-index: 100;" onclick="toggleDispositivo('int'); event.stopPropagation();">
 
         <img src="con_wago.png" id="wago-fase" class="conector">
         <img src="con_wago.png" id="wago-retorno" class="conector">
@@ -336,35 +293,17 @@
         <div id="ponto-fim" class="ponto"></div>
 
         <div id="placa-concluido">
-            <div class="parafuso p-tl"></div><div class="parafuso p-tr"></div>
-            <div class="parafuso p-bl"></div><div class="parafuso p-br"></div>
-            <div class="texto-concluido"><span>✓</span> CONCLUÍDO</div>
-        </div>
-
-        <div id="modal-ajuda">
-            <div class="ajuda-titulo">AJUDA TÉCNICA</div>
-            <div class="ajuda-item" onclick="mostrarEsquema('ligaint.png')">1. Ligação do Interruptor</div>
-            <div class="ajuda-item" onclick="mostrarEsquema('ligabocal.png')">2. Ligação da Lâmpada</div>
-            <div class="ajuda-item" onclick="mostrarEsquema('emendas2.png')">3. Emendas e conexões</div>
-            <button class="btn-fechar" onclick="fecharAjuda()">FECHAR</button>
+            <div class="texto-concluido">✓ CONCLUÍDO</div>
         </div>
 
         <div class="controles-inferiores">
             <button id="btn-reiniciar" class="btn-acao" onclick="location.reload()">REINICIAR</button>
-            <button id="btn-ajuda" class="btn-acao" onclick="abrirAjuda()">AJUDA</button>
-        </div>
-
-        <div id="visualizador-ajuda" onclick="voltarParaMenu()">
-            <img id="img-ajuda-grande" src="">
-            <div class="legenda-voltar">CLIQUE PARA VOLTAR</div>
         </div>
     </div>
 
 <script>
     let estados = { dg: false, dr: false, int: false };
     let instalacaoConcluida = false;
-    let primeiroTesteFeito = false; 
-    let placaAtiva = false;
     let etapaAtual = 0;
     let aguardandoDestino = false;
 
@@ -376,23 +315,7 @@
     function entrarNoLab() {
         const splash = document.getElementById('splash-screen');
         splash.style.opacity = '0';
-        setTimeout(() => {
-            splash.style.visibility = 'hidden';
-        }, 800);
-    }
-
-    function abrirAjuda() { document.getElementById('modal-ajuda').style.display = 'flex'; }
-    function fecharAjuda() { document.getElementById('modal-ajuda').style.display = 'none'; }
-
-    function mostrarEsquema(src) {
-        document.getElementById('img-ajuda-grande').src = src;
-        document.getElementById('visualizador-ajuda').style.display = 'flex';
-        fecharAjuda();
-    }
-
-    function voltarParaMenu() {
-        document.getElementById('visualizador-ajuda').style.display = 'none';
-        abrirAjuda();
+        setTimeout(() => splash.style.visibility = 'hidden', 800);
     }
 
     function fecharBalaoInformativo() {
@@ -400,12 +323,12 @@
     }
 
     const sequencia = [
-        { id: 'FASE1', max: 54, pasta: 'FASE1', ini: {t: '38%', l: '27%'}, fim: {t: '23%', l: '56.5%'}, msg: '<span class="destaque"><span class="cor-alerta">REDE:</span> CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA DO DR.', msgDestino: '<span class="destaque"><span class="cor-alerta">REDE:</span> CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.' },
-        { id: 'NEUTRO1', max: 78, pasta: 'NEUTRO1', ini: {t: '35%', l: '44.3%'}, fim: {t: '14%', l: '56%'}, msg: '<span class="destaque"><span class="cor-alerta">REDE:</span> CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA MOSTRADA NO BARRAMENTO (N)', msgDestino: '<span class="destaque"><span class="cor-alerta">REDE:</span> CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM' },
-        { id: 'FASE2', max: 18, pasta: 'FASE2', ini: {t: '23%', l: '58%'}, fim: {t: '81%', l: '68%'}, wagoTop: '25%', wagoLeft: '57.4%', wagoRot: '90deg', msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA MOSTRADA NO INTERRUPTOR.' },
-        { id: 'RETORNO1', max: 18, pasta: 'RETORNO1', ini: {t: '20%', l: '61%'}, fim: {t: '75%', l: '68%'}, msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA DO INTERRUPTOR.' },
-        { id: 'RETORNO2', max: 24, pasta: 'RETORNO2', ini: {t: '17%', l: '61%'}, fim: {t: '55%', l: '89%'}, wagoTop: '17.3%', wagoLeft: '60%', wagoRot: '0deg', msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO</span>: CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA MOSTRADA NA LÂMPADA.' },
-        { id: 'NEUTRO2', max: 30, pasta: 'NEUTRO2', ini: {t: '13%', l: '58%'}, fim: {t: '55%', l: '91.3%'}, wagoTop: '14.5%', wagoLeft: '57%', wagoRot: '270deg', msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO</span>: CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA MOSTRADA NA LÂMPADA' }
+        { id: 'FASE1', max: 54, pasta: 'FASE1', ini: {t: '38%', l: '27%'}, fim: {t: '23%', l: '56.5%'}, msg: '<span class="destaque"><span class="cor-alerta">REDE:</span> CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA DO DR.' },
+        { id: 'NEUTRO1', max: 78, pasta: 'NEUTRO1', ini: {t: '35%', l: '44.3%'}, fim: {t: '14%', l: '56%'}, msg: '<span class="destaque"><span class="cor-alerta">REDE:</span> CONECTE O NEUTRO.</span> CLIQUE NO BARRAMENTO (N)' },
+        { id: 'FASE2', max: 18, pasta: 'FASE2', ini: {t: '23%', l: '58%'}, fim: {t: '81%', l: '68%'}, wagoTop: '25%', wagoLeft: '57.4%', wagoRot: '90deg', msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE A FASE.</span>' },
+        { id: 'RETORNO1', max: 18, pasta: 'RETORNO1', ini: {t: '20%', l: '61%'}, fim: {t: '75%', l: '68%'}, msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O RETORNO.</span>' },
+        { id: 'RETORNO2', max: 24, pasta: 'RETORNO2', ini: {t: '17%', l: '61%'}, fim: {t: '55%', l: '89%'}, wagoTop: '17.3%', wagoLeft: '60%', wagoRot: '0deg', msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O RETORNO NA LÂMPADA.</span>' },
+        { id: 'NEUTRO2', max: 30, pasta: 'NEUTRO2', ini: {t: '13%', l: '58%'}, fim: {t: '55%', l: '91.3%'}, wagoTop: '14.5%', wagoLeft: '57%', wagoRot: '270deg', msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O NEUTRO NA LÂMPADA.</span>' }
     ];
 
     const elInicio = document.getElementById('ponto-inicio');
@@ -415,28 +338,28 @@
     function carregarEtapa() {
         if (etapaAtual >= sequencia.length) {
             instalacaoConcluida = true;
-            statusTxt.innerHTML = '<span class="destaque">MONTAGEM CONCLUÍDA!</span> LIGUE O DG, O DR E O INTERRUPTOR.';
+            statusTxt.innerHTML = 'MONTAGEM CONCLUÍDA! TESTE O CIRCUITO.';
             elInicio.style.display = 'none'; elFim.style.display = 'none';
             return;
         }
         const dados = sequencia[etapaAtual];
         statusTxt.innerHTML = dados.msg;
         elInicio.style.top = dados.ini.t; elInicio.style.left = dados.ini.l;
-        elInicio.style.display = 'block'; elFim.style.top = dados.fim.t;
-        elFim.style.left = dados.fim.l; elFim.style.display = 'none';
+        elInicio.style.display = 'block'; 
+        elFim.style.top = dados.fim.t; elFim.style.left = dados.fim.l;
+        elFim.style.display = 'none';
         aguardandoDestino = false;
     }
 
     elInicio.onclick = (e) => { 
-        e.stopPropagation(); 
+        e.stopPropagation(); // Evita fechar o balão ao clicar no ponto
         elInicio.style.background = "#00ff00"; 
         elFim.style.display = 'block'; 
         aguardandoDestino = true; 
-        if(sequencia[etapaAtual].msgDestino) statusTxt.innerHTML = sequencia[etapaAtual].msgDestino; 
     };
 
     elFim.onclick = (e) => { 
-        e.stopPropagation();
+        e.stopPropagation(); // Evita fechar o balão ao clicar no ponto
         if (aguardandoDestino) animarCabo(sequencia[etapaAtual]); 
     };
 
@@ -445,17 +368,16 @@
         const camada = document.getElementById(`camada-${cabo.id.toLowerCase()}`);
         camada.style.opacity = "1";
         const loop = setInterval(() => {
-            const frameString = Math.min(frame, cabo.max).toString().padStart(4, '0');
+            const frameString = frame.toString().padStart(4, '0');
             camada.style.backgroundImage = `url('${cabo.pasta}/quadro${frameString}.png')`;
             if (frame >= cabo.max) {
                 clearInterval(loop);
                 somConexao.currentTime = 0; somConexao.play();
 
-                // LÓGICA DO BALÃO APÓS CONCLUSÃO DO CABO FASE1
                 if (cabo.id === 'FASE1') {
                     balaoInf.innerHTML = 'A seção mínima dos fios de iluminação é 1,5 mm2.<span class="item-norma">Item 6.2.6.1.1 da NBR-5410</span>';
-                    balaoInf.style.top = '79%'; 
-                    balaoInf.style.left = '41%';
+                    balaoInf.style.top = '23%'; 
+                    balaoInf.style.left = '56.5%';
                     balaoInf.style.transform = 'translate(-50%, -120%)';
                     balaoInf.style.display = 'block';
                 }
@@ -466,7 +388,6 @@
                     wago.style.top = cabo.wagoTop; wago.style.left = cabo.wagoLeft;
                     wago.style.transform = `translate(-50%, -50%) rotate(${cabo.wagoRot})`; 
                     wago.style.display = 'block';
-                    wago.title = "Para interligações consulte em 'AJUDA'";
                 }
                 etapaAtual++; setTimeout(carregarEtapa, 600);
             }
@@ -481,8 +402,7 @@
             somDisjuntor.currentTime = 0; somDisjuntor.play();
             if (tipo === 'dg') el.src = estados.dg ? 'al_dg_on.png' : 'al_dg_off.png';
             if (tipo === 'dr') el.src = estados.dr ? 'al_dr_on.png' : 'al_dr_off.png';
-        }
-        if (tipo === 'int') {
+        } else {
             somInterruptor.currentTime = 0; somInterruptor.play();
             el.src = estados.int ? 'tec_int_on.png' : 'tec_int_off.png';
         }
@@ -492,30 +412,15 @@
     function atualizarCircuito() {
         const lamp = document.getElementById('camada-lampada');
         const placa = document.getElementById('placa-concluido');
-        const tudoLigado = instalacaoConcluida && estados.dg && estados.dr && estados.int;
-
-        if (tudoLigado) {
-            lamp.style.opacity = "1"; primeiroTesteFeito = true; 
+        if (instalacaoConcluida && estados.dg && estados.dr && estados.int) {
+            lamp.style.opacity = "1";
             statusTxt.innerHTML = '<div class="status-final acesa">LÂMPADA ACESA</div>';
-            placa.classList.remove('show'); setTimeout(() => { placa.style.display = 'none'; }, 500);
-            placaAtiva = false;
+            placa.style.display = 'flex'; setTimeout(() => placa.classList.add('show'), 50);
         } else {
             lamp.style.opacity = "0";
-            if (instalacaoConcluida && primeiroTesteFeito) {
+            if (instalacaoConcluida) {
                 statusTxt.innerHTML = '<div class="status-final apagada">LÂMPADA APAGADA</div>';
-                if (!placaAtiva) {
-                    placaAtiva = true;
-                    setTimeout(() => {
-                        if (!estados.dg || !estados.dr || !estados.int) {
-                            placa.style.display = 'flex';
-                            setTimeout(() => placa.classList.add('show'), 50);
-                            setTimeout(() => { 
-                                placa.classList.remove('show'); 
-                                setTimeout(() => { placa.style.display = 'none'; placaAtiva = false; }, 500);
-                            }, 2000); 
-                        } else { placaAtiva = false; }
-                    }, 2000);
-                }
+                placa.classList.remove('show'); setTimeout(() => placa.style.display = 'none', 500);
             }
         }
     }
