@@ -172,7 +172,7 @@
             cursor: help;
         }
 
-        /* BALÃO INFORMATIVO NBR COM SETA */
+        /* BALÃO INFORMATIVO NBR COM SETA PARA BAIXO */
         #balao-informativo {
             position: absolute;
             z-index: 400;
@@ -189,13 +189,11 @@
             align-items: center;
             text-align: center;
             border: 2px solid #333;
-            /* PROPRIEDADES DE POSICIONAMENTO */
             top: 60%;
             left: 31.5%;
             width: 170px;
         }
 
-        /* A SETINHA */
         #balao-informativo::after {
             content: "";
             position: absolute;
@@ -210,7 +208,6 @@
             z-index: 1;
         }
 
-        /* BORDA DA SETINHA */
         #balao-informativo::before {
             content: "";
             position: absolute;
@@ -224,7 +221,56 @@
             width: 0;
         }
 
-        #balao-informativo .referencia-nbr {
+        /* NOVO BALÃO COM SETA PARA A DIREITA */
+        #balao-cor-fase {
+            position: absolute;
+            z-index: 400;
+            background: white;
+            color: black;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            font-weight: bold;
+            font-size: 14px;
+            line-height: 1.4;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            border: 2px solid #333;
+            top: 15%;
+            left: 8%;
+            width: 180px;
+        }
+
+        #balao-cor-fase::after {
+            content: "";
+            position: absolute;
+            right: -12px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-width: 12px 0 12px 12px;
+            border-style: solid;
+            border-color: transparent transparent transparent white;
+            display: block;
+            width: 0;
+            z-index: 1;
+        }
+
+        #balao-cor-fase::before {
+            content: "";
+            position: absolute;
+            right: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-width: 13px 0 13px 13px;
+            border-style: solid;
+            border-color: transparent transparent transparent #333;
+            display: block;
+            width: 0;
+        }
+
+        .referencia-nbr {
             color: red;
             font-size: 12px;
             margin-top: 5px;
@@ -348,6 +394,11 @@
             <span class="referencia-nbr">Item 6.2.6.1.1 da NBR-5410</span>
         </div>
 
+        <div id="balao-cor-fase">
+            A fase poderá ser de qualquer cor
+            <span class="referencia-nbr">(Item 6.1.5.3.4 da NBR-5410)</span>
+        </div>
+
         <img src="lamp_on.png" id="camada-lampada" title="Para interligações consulte em 'AJUDA'">
 
         <img src="al_dg_off.png" id="tecla-dg" class="tecla" style="top: 25%; left: 11.4%; width: 50px;" onclick="toggleDispositivo('dg')">
@@ -402,6 +453,7 @@
     const somInterruptor = document.getElementById('som-interruptor');
     const somConexao = document.getElementById('som-conexao');
     const balao = document.getElementById('balao-informativo');
+    const balaoCor = document.getElementById('balao-cor-fase');
 
     function entrarNoLab() {
         const splash = document.getElementById('splash-screen');
@@ -414,6 +466,9 @@
     function fecharBalao() {
         if (balao.style.display === 'flex') {
             balao.style.display = 'none';
+        }
+        if (balaoCor.style.display === 'flex') {
+            balaoCor.style.display = 'none';
         }
     }
 
@@ -461,7 +516,7 @@
 
     elInicio.onclick = (e) => { 
         e.stopPropagation(); 
-        fecharBalao(); // Garante o fechamento ao iniciar nova interação
+        fecharBalao();
         elInicio.style.background = "#00ff00"; 
         elFim.style.display = 'block'; 
         aguardandoDestino = true; 
@@ -474,7 +529,7 @@
     };
 
     function animarCabo(cabo) {
-        fecharBalao(); // Adicionado para fechar ao prosseguir com o cabo
+        fecharBalao(); 
         let frame = 0;
         const camada = document.getElementById(`camada-${cabo.id.toLowerCase()}`);
         camada.style.opacity = "1";
@@ -487,6 +542,7 @@
                 
                 if (cabo.id === 'FASE1') {
                     balao.style.display = 'flex';
+                    balaoCor.style.display = 'flex';
                 }
 
                 if (cabo.wagoTop) {
