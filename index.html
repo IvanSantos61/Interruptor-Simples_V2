@@ -29,76 +29,22 @@
         /* TELA DE SPLASH */
         #splash-screen {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             background: #050a14;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 500;
-            cursor: pointer;
+            display: flex; justify-content: center; align-items: center;
+            z-index: 500; cursor: pointer;
             transition: opacity 0.8s ease, visibility 0.8s;
         }
 
         .splash-container {
-            width: 80%;
-            max-width: 800px;
+            width: 80%; max-width: 800px;
             background: linear-gradient(145deg, #0a1528, #050a14);
-            border: 3px solid #00ffff;
-            border-radius: 20px;
-            padding: 60px 40px;
-            text-align: center;
-            box-shadow: 0 0 40px rgba(0, 255, 255, 0.4), inset 0 0 20px rgba(0, 255, 255, 0.1);
+            border: 3px solid #00ffff; border-radius: 20px;
+            padding: 60px 40px; text-align: center;
+            box-shadow: 0 0 40px rgba(0, 255, 255, 0.4);
         }
 
-        .splash-titulo {
-            color: #00ffff;
-            font-size: 2.8em;
-            font-weight: bold;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-            text-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
-        }
-
-        .splash-sub {
-            color: #00ffff;
-            font-size: 1.5em;
-            letter-spacing: 3px;
-            margin-bottom: 30px;
-        }
-
-        .splash-divisor {
-            width: 150px;
-            height: 2px;
-            background: #00ffff;
-            margin: 30px auto;
-            border: none;
-            opacity: 0.5;
-        }
-
-        .splash-creditos {
-            color: #ffffff;
-            font-size: 1.1em;
-            opacity: 0.8;
-            margin-top: 40px;
-        }
-
-        .splash-entrar {
-            margin-top: 30px;
-            font-size: 0.9em;
-            color: #00ffff;
-            animation: pulsarBotao 1.5s infinite;
-        }
-
-        @keyframes pulsarBotao {
-            0% { opacity: 0.3; }
-            50% { opacity: 1; }
-            100% { opacity: 0.3; }
-        }
-
-        /* ESTILO DO BALÃO PADRÃO */
+        /* BALÃO INFORMATIVO (Mantido Original) */
         .balao-informativo {
             position: absolute;
             background: white;
@@ -120,81 +66,50 @@
         .balao-informativo::after {
             content: "";
             position: absolute;
-            top: 100%;
-            left: 50%;
-            margin-left: -10px;
-            border-width: 10px;
-            border-style: solid;
+            top: 100%; left: 50%; margin-left: -10px;
+            border-width: 10px; border-style: solid;
             border-color: white transparent transparent transparent;
         }
 
-        .item-norma {
-            color: #ff0000;
-            display: block;
-            font-size: 12px;
-            margin-top: 5px;
-        }
+        .item-norma { color: #ff0000; display: block; font-size: 12px; margin-top: 5px; }
 
-        /* PAINEL DE AJUDA CUSTOMIZADO */
-        #painel-ajuda-visual {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80%;
-            max-width: 700px;
-            background: #0a1528;
-            border: 2px solid #00ffff;
-            border-radius: 15px;
-            z-index: 600;
+        /* TELA DE AJUDA ORIGINAL (MODAL) */
+        #tela-ajuda-original {
             display: none;
-            flex-direction: column;
-            padding: 20px;
-            box-shadow: 0 0 50px rgba(0,0,0,0.9);
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
         }
 
-        .img-ajuda {
-            width: 100%;
+        #foto-ajuda {
+            max-width: 90%;
+            max-height: 85%;
+            border: 3px solid #00ffff;
             border-radius: 10px;
-            margin-bottom: 15px;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
         }
 
         /* PAINEL DE STATUS */
         #painel-status {
-            width: 90%;
-            max-width: 950px;
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid #1a2a44;
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 30px;
-            text-align: center;
-            min-height: 80px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            width: 90%; max-width: 950px;
+            background: rgba(0, 0, 0, 0.4); border: 1px solid #1a2a44;
+            border-radius: 15px; padding: 25px; margin-bottom: 30px;
+            text-align: center; min-height: 80px;
+            display: flex; justify-content: center; align-items: center;
         }
 
-        #status-mensagem {
-            font-size: 1.3em;
-            font-weight: bold;
-            color: #ffffff;
-            text-transform: uppercase;
-            transition: all 0.3s ease;
-        }
-
-        .cor-alerta {
-            color: #ff0000 !important;
-            text-shadow: 0 0 5px rgba(255, 0, 0, 0.3);
-        }
+        #status-mensagem { font-size: 1.3em; font-weight: bold; color: #ffffff; text-transform: uppercase; }
+        .cor-alerta { color: #ff0000 !important; }
+        .destaque { color: #ff9900; }
 
         #container-simulador {
-            position: relative;
-            line-height: 0;
-            user-select: none;
-            border-radius: 10px;
-            overflow: hidden;
-            display: inline-block;
+            position: relative; line-height: 0; user-select: none;
+            border-radius: 10px; overflow: hidden; display: inline-block;
         }
 
         #fundo { max-width: 1000px; height: auto; display: block; }
@@ -207,54 +122,25 @@
 
         #camada-lampada { 
             position: absolute; z-index: 30; opacity: 0; 
-            transition: opacity 0.2s; pointer-events: auto;
             top: 46.5%; left: 75.8%; width: 242px;
         }
 
-        .tecla { position: absolute; cursor: pointer; z-index: 25; transition: transform 0.1s; }
-        .tecla:active { transform: scale(0.95); }
-
-        .conector { 
-            position: absolute; width: 72px; display: none; z-index: 15; 
-            pointer-events: auto;
-            transform-origin: center; 
-        }
+        .tecla { position: absolute; cursor: pointer; z-index: 25; }
+        .conector { position: absolute; width: 72px; display: none; z-index: 15; transform-origin: center; }
 
         .controles-inferiores {
-            position: absolute;
-            bottom: 30px;
-            left: 30px;
-            display: flex;
-            gap: 15px;
-            z-index: 100;
+            position: absolute; bottom: 30px; left: 30px;
+            display: flex; gap: 15px; z-index: 100;
         }
 
         .btn-acao {
-            padding: 8px 25px;
-            border: none;
-            border-radius: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-            font-size: 14px;
-            color: white;
-            text-transform: uppercase;
+            padding: 10px 25px; border: none; border-radius: 20px;
+            font-weight: bold; cursor: pointer; font-size: 14px;
+            color: white; text-transform: uppercase;
         }
 
         #btn-reiniciar { background: #cc0000; }
         #btn-ajuda { background: #1a2a44; border: 1px solid #00ffff; }
-
-        #placa-concluido {
-            position: absolute; top: 50%; left: 50%;
-            transform: translate(-50%, -50%) scale(0.8);
-            width: 500px; background: linear-gradient(145deg, #2c2c2c, #1a1a1a);
-            border: 4px solid #333; border-radius: 15px; z-index: 110;
-            display: none; flex-direction: column; align-items: center;
-            justify-content: center; padding: 60px 40px;
-            opacity: 0; transition: all 0.5s;
-        }
-        #placa-concluido.show { display: flex; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-        .texto-concluido { color: #00ff00; font-size: 3em; letter-spacing: 2px; }
 
         .ponto {
             position: absolute; width: 22px; height: 22px;
@@ -262,35 +148,32 @@
             border-radius: 50%; cursor: pointer; display: none; z-index: 40;
             transform: translate(-50%, -50%); animation: pulsar 1.2s infinite;
         }
-        @keyframes pulsar { 0% { transform: translate(-50%, -50%) scale(1); } 70% { transform: translate(-50%, -50%) scale(1.3); } 100% { transform: translate(-50%, -50%) scale(1); } }
-        #status-mensagem span.destaque { color: #ff9900; }
-        .status-final { padding: 12px 40px; border-radius: 50px; display: inline-block; }
-        .acesa { background: #008000; box-shadow: 0 0 20px #00ff00; border: 1px solid #00ff00; }
-        .apagada { background: #cc0000; box-shadow: 0 0 20px #ff0000; border: 1px solid #ff4444; }
+        @keyframes pulsar { 0%, 100% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.3); } }
+
+        #placa-concluido {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            width: 500px; background: #1a1a1a; border: 4px solid #333;
+            border-radius: 15px; z-index: 110; display: none;
+            flex-direction: column; align-items: center; padding: 60px 40px;
+        }
+        #placa-concluido.show { display: flex; transform: translate(-50%, -50%) scale(1); }
     </style>
 </head>
-<body onclick="fecharBalaoInformativo()">
+<body onclick="fecharBalao()">
 
-    <div id="splash-screen" onclick="entrarNoLab()">
+    <div id="splash-screen" onclick="this.style.opacity='0'; setTimeout(()=>this.style.visibility='hidden', 800)">
         <div class="splash-container">
-            <div class="splash-titulo">Interruptor Simples para 1 Lâmpada</div>
-            <div class="splash-sub">CIRCUITO MONOFÁSICO - 127V</div>
-            <hr class="splash-divisor">
-            <div class="splash-creditos">© Desenvolvido por Ivan Santos - ConectaeadPLUS - 2026</div>
-            <div class="splash-entrar">CLIQUE PARA INICIAR O LABORATÓRIO</div>
+            <h2 style="color:#00ffff">Interruptor Simples para 1 Lâmpada</h2>
+            <p>CLIQUE PARA INICIAR</p>
         </div>
     </div>
 
     <h1>LABORATÓRIO SMT PRO</h1>
 
-    <div id="painel-ajuda-visual" onclick="event.stopPropagation(); this.style.display='none'">
-        <img id="img-ajuda-contexto" src="bl-fase.png" class="img-ajuda">
-        <p style="text-align: center;">Clique em qualquer lugar para fechar.</p>
+    <div id="tela-ajuda-original" onclick="this.style.display='none'">
+        <img id="foto-ajuda" src="">
     </div>
-
-    <audio id="som-disjuntor" src="disj.mp3"></audio>
-    <audio id="som-interruptor" src="int.mp3"></audio>
-    <audio id="som-conexao" src="conexao.mp3"></audio>
 
     <div id="painel-status">
         <div id="status-mensagem">AGUARDANDO INÍCIO...</div>
@@ -307,12 +190,11 @@
         <div id="camada-neutro2" class="camada-cabo"></div>
 
         <div id="balao-informativo" class="balao-informativo"></div>
-
         <img src="lamp_on.png" id="camada-lampada">
 
-        <img src="al_dg_off.png" id="tecla-dg" class="tecla" style="top: 25%; left: 11.4%; width: 50px;" onclick="toggleDispositivo('dg'); event.stopPropagation();">
-        <img src="al_dr_off.png" id="tecla-dr" class="tecla" style="top: 28%; left: 23.8%; width: 50px;" onclick="toggleDispositivo('dr'); event.stopPropagation();">
-        <img src="tec_int_off.png" id="tecla-int" class="tecla" style="top: 73%; left: 72%; width: 53px; z-index: 100;" onclick="toggleDispositivo('int'); event.stopPropagation();">
+        <img src="al_dg_off.png" id="tecla-dg" class="tecla" style="top: 25%; left: 11.4%; width: 50px;" onclick="toggle('dg')">
+        <img src="al_dr_off.png" id="tecla-dr" class="tecla" style="top: 28%; left: 23.8%; width: 50px;" onclick="toggle('dr')">
+        <img src="tec_int_off.png" id="tecla-int" class="tecla" style="top: 73%; left: 72%; width: 53px;" onclick="toggle('int')">
 
         <img src="con_wago.png" id="wago-fase" class="conector">
         <img src="con_wago.png" id="wago-retorno" class="conector">
@@ -322,150 +204,96 @@
         <div id="ponto-fim" class="ponto"></div>
 
         <div id="placa-concluido">
-            <div class="texto-concluido">✓ CONCLUÍDO</div>
+            <h2 style="color:#00ff00">✓ CONCLUÍDO</h2>
         </div>
 
         <div class="controles-inferiores">
-            <button id="btn-reiniciar" class="btn-acao" onclick="location.reload(); event.stopPropagation();">REINICIAR</button>
+            <button id="btn-reiniciar" class="btn-acao" onclick="location.reload()">REINICIAR</button>
             <button id="btn-ajuda" class="btn-acao" onclick="abrirAjuda(); event.stopPropagation();">AJUDA</button>
         </div>
     </div>
 
 <script>
     let estados = { dg: false, dr: false, int: false };
-    let instalacaoConcluida = false;
     let etapaAtual = 0;
-    let aguardandoDestino = false;
-
-    const somDisjuntor = document.getElementById('som-disjuntor');
-    const somInterruptor = document.getElementById('som-interruptor');
-    const somConexao = document.getElementById('som-conexao');
-    const balaoInf = document.getElementById('balao-informativo');
-    const painelAjuda = document.getElementById('painel-ajuda-visual');
-    const imgAjudaCont = document.getElementById('img-ajuda-contexto');
-
-    function entrarNoLab() {
-        const splash = document.getElementById('splash-screen');
-        splash.style.opacity = '0';
-        setTimeout(() => splash.style.visibility = 'hidden', 800);
-    }
-
-    function fecharBalaoInformativo() {
-        balaoInf.style.display = 'none';
-        painelAjuda.style.display = 'none';
-    }
-
-    function abrirAjuda() {
-        // Define a foto baseada na etapa atual
-        if(etapaAtual === 0) imgAjudaCont.src = 'bl-fase.png';
-        else if(etapaAtual === 1) imgAjudaCont.src = 'bl-neutro.png';
-        else imgAjudaCont.src = 'bl-fase.png'; // Fallback
-        
-        painelAjuda.style.display = 'flex';
-    }
+    let concluido = false;
 
     const sequencia = [
-        { id: 'FASE1', max: 54, pasta: 'FASE1', ini: {t: '38%', l: '27%'}, fim: {t: '23%', l: '56.5%'}, msg: '<span class="destaque"><span class="cor-alerta">REDE:</span> CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA DO DR.' },
-        { id: 'NEUTRO1', max: 78, pasta: 'NEUTRO1', ini: {t: '35%', l: '44.3%'}, fim: {t: '14%', l: '56%'}, msg: '<span class="destaque"><span class="cor-alerta">REDE:</span> CONECTE O NEUTRO.</span> CLIQUE NO BARRAMENTO (N)' },
-        { id: 'FASE2', max: 18, pasta: 'FASE2', ini: {t: '23%', l: '58%'}, fim: {t: '81%', l: '68%'}, wagoTop: '25%', wagoLeft: '57.4%', wagoRot: '90deg', msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE A FASE.</span>' },
-        { id: 'RETORNO1', max: 18, pasta: 'RETORNO1', ini: {t: '20%', l: '61%'}, fim: {t: '75%', l: '68%'}, msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O RETORNO.</span>' },
-        { id: 'RETORNO2', max: 24, pasta: 'RETORNO2', ini: {t: '17%', l: '61%'}, fim: {t: '55%', l: '89%'}, wagoTop: '17.3%', wagoLeft: '60%', wagoRot: '0deg', msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O RETORNO NA LÂMPADA.</span>' },
-        { id: 'NEUTRO2', max: 30, pasta: 'NEUTRO2', ini: {t: '13%', l: '58%'}, fim: {t: '55%', l: '91.3%'}, wagoTop: '14.5%', wagoLeft: '57%', wagoRot: '270deg', msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O NEUTRO NA LÂMPADA.</span>' }
+        { id: 'FASE1', max: 54, pasta: 'FASE1', ini: {t:'38%', l:'27%'}, fim: {t:'23%', l:'56.5%'}, msg: '<span class="destaque"><span class="cor-alerta">REDE:</span> CONECTE A FASE.</span> CLIQUE NO DR.' },
+        { id: 'NEUTRO1', max: 78, pasta: 'NEUTRO1', ini: {t:'35%', l:'44.3%'}, fim: {t:'14%', l:'56%'}, msg: '<span class="destaque"><span class="cor-alerta">REDE:</span> CONECTE O NEUTRO.</span> CLIQUE NO BARRAMENTO.' },
+        { id: 'FASE2', max: 18, pasta: 'FASE2', ini: {t:'23%', l:'58%'}, fim: {t:'81%', l:'68%'}, wTop: '25%', wLeft: '57.4%', wRot: '90deg', msg: '<span class="destaque">CONECTE A FASE NO INTERRUPTOR.</span>' },
+        { id: 'RETORNO1', max: 18, pasta: 'RETORNO1', ini: {t:'20%', l:'61%'}, fim: {t:'75%', l:'68%'}, msg: '<span class="destaque">CONECTE O RETORNO.</span>' },
+        { id: 'RETORNO2', max: 24, pasta: 'RETORNO2', ini: {t:'17%', l:'61%'}, fim: {t:'55%', l:'89%'}, wTop: '17.3%', wLeft: '60%', wRot: '0deg', msg: '<span class="destaque">RETORNO NA LÂMPADA.</span>' },
+        { id: 'NEUTRO2', max: 30, pasta: 'NEUTRO2', ini: {t:'13%', l:'58%'}, fim: {t:'55%', l:'91.3%'}, wTop: '14.5%', wLeft: '57%', wRot: '270deg', msg: '<span class="destaque">NEUTRO NA LÂMPADA.</span>' }
     ];
 
-    const elInicio = document.getElementById('ponto-inicio');
-    const elFim = document.getElementById('ponto-fim');
-    const statusTxt = document.getElementById('status-mensagem');
+    function abrirAjuda() {
+        const tela = document.getElementById('tela-ajuda-original');
+        const img = document.getElementById('foto-ajuda');
+        // Carrega a foto baseada na etapa
+        img.src = (etapaAtual === 0) ? 'bl-fase.png' : (etapaAtual === 1) ? 'bl-neutro.png' : 'bl-fase.png';
+        tela.style.display = 'flex';
+    }
+
+    function fecharBalao() { document.getElementById('balao-informativo').style.display = 'none'; }
 
     function carregarEtapa() {
         if (etapaAtual >= sequencia.length) {
-            instalacaoConcluida = true;
-            statusTxt.innerHTML = 'MONTAGEM CONCLUÍDA! TESTE O CIRCUITO.';
-            elInicio.style.display = 'none'; elFim.style.display = 'none';
+            concluido = true;
+            document.getElementById('status-mensagem').innerHTML = 'TESTE O CIRCUITO!';
+            document.getElementById('ponto-inicio').style.display = 'none';
+            document.getElementById('ponto-fim').style.display = 'none';
             return;
         }
-        const dados = sequencia[etapaAtual];
-        statusTxt.innerHTML = dados.msg;
-        elInicio.style.top = dados.ini.t; elInicio.style.left = dados.ini.l;
-        elInicio.style.display = 'block'; 
-        elFim.style.top = dados.fim.t; elFim.style.left = dados.fim.l;
-        elFim.style.display = 'none';
-        aguardandoDestino = false;
+        const d = sequencia[etapaAtual];
+        document.getElementById('status-mensagem').innerHTML = d.msg;
+        const pI = document.getElementById('ponto-inicio');
+        const pF = document.getElementById('ponto-fim');
+        pI.style.top = d.ini.t; pI.style.left = d.ini.l; pI.style.display = 'block';
+        pF.style.top = d.fim.t; pF.style.left = d.fim.l; pF.style.display = 'none';
+        pI.onclick = (e) => { e.stopPropagation(); pF.style.display = 'block'; };
+        pF.onclick = (e) => { e.stopPropagation(); animar(d); };
     }
 
-    elInicio.onclick = (e) => { 
-        e.stopPropagation();
-        elInicio.style.background = "#00ff00"; 
-        elFim.style.display = 'block'; 
-        aguardandoDestino = true; 
-    };
-
-    elFim.onclick = (e) => { 
-        e.stopPropagation();
-        if (aguardandoDestino) animarCabo(sequencia[etapaAtual]); 
-    };
-
-    function animarCabo(cabo) {
-        let frame = 0;
-        const camada = document.getElementById(`camada-${cabo.id.toLowerCase()}`);
-        camada.style.opacity = "1";
-        const loop = setInterval(() => {
-            const frameString = frame.toString().padStart(4, '0');
-            camada.style.backgroundImage = `url('${cabo.pasta}/quadro${frameString}.png')`;
-            if (frame >= cabo.max) {
-                clearInterval(loop);
-                somConexao.currentTime = 0; somConexao.play();
-
-                if (cabo.id === 'FASE1') {
-                    balaoInf.innerHTML = 'A seção mínima dos fios de iluminação é 1,5 mm2.<span class="item-norma">Item 6.2.6.1.1 da NBR-5410</span>';
-                    balaoInf.style.top = '79%'; 
-                    balaoInf.style.left = '42%';
-                    balaoInf.style.transform = 'translate(-50%, -120%)';
-                    balaoInf.style.display = 'block';
+    function animar(c) {
+        let f = 0;
+        const cam = document.getElementById(`camada-${c.id.toLowerCase()}`);
+        cam.style.opacity = "1";
+        const t = setInterval(() => {
+            cam.style.backgroundImage = `url('${c.pasta}/quadro${f.toString().padStart(4, '0')}.png')`;
+            if (f >= c.max) {
+                clearInterval(t);
+                if (c.id === 'FASE1') {
+                    const b = document.getElementById('balao-informativo');
+                    b.innerHTML = 'Seção mínima 1,5 mm².<span class="item-norma">NBR-5410</span>';
+                    b.style.top = '79%'; b.style.left = '42%'; b.style.display = 'block';
                 }
-
-                if (cabo.wagoTop) {
-                    let idWago = cabo.id.toLowerCase().includes('fase') ? 'wago-fase' : cabo.id.toLowerCase().includes('retorno') ? 'wago-retorno' : 'wago-neutro';
-                    const wago = document.getElementById(idWago);
-                    wago.style.top = cabo.wagoTop; wago.style.left = cabo.wagoLeft;
-                    wago.style.transform = `translate(-50%, -50%) rotate(${cabo.wagoRot})`; 
-                    wago.style.display = 'block';
+                if (c.wTop) {
+                    const w = document.getElementById(c.id.includes('FASE') ? 'wago-fase' : c.id.includes('RETORNO') ? 'wago-retorno' : 'wago-neutro');
+                    w.style.top = c.wTop; w.style.left = c.wLeft; w.style.transform = `translate(-50%,-50%) rotate(${c.wRot})`; w.style.display = 'block';
                 }
-                etapaAtual++; setTimeout(carregarEtapa, 600);
+                etapaAtual++; carregarEtapa();
             }
-            frame += 6;
+            f += 6;
         }, 70);
     }
 
-    function toggleDispositivo(tipo) {
-        estados[tipo] = !estados[tipo];
-        const el = document.getElementById(`tecla-${tipo}`);
-        if (tipo === 'dg' || tipo === 'dr') {
-            somDisjuntor.currentTime = 0; somDisjuntor.play();
-            if (tipo === 'dg') el.src = estados.dg ? 'al_dg_on.png' : 'al_dg_off.png';
-            if (tipo === 'dr') el.src = estados.dr ? 'al_dr_on.png' : 'al_dr_off.png';
+    function toggle(t) {
+        estados[t] = !estados[t];
+        const e = document.getElementById(`tecla-${t}`);
+        if(t==='dg') e.src = estados.dg ? 'al_dg_on.png' : 'al_dg_off.png';
+        if(t==='dr') e.src = estados.dr ? 'al_dr_on.png' : 'al_dr_off.png';
+        if(t==='int') e.src = estados.int ? 'tec_int_on.png' : 'tec_int_off.png';
+        
+        const L = document.getElementById('camada-lampada');
+        if (concluido && estados.dg && estados.dr && estados.int) {
+            L.style.opacity = "1";
+            document.getElementById('placa-concluido').classList.add('show');
         } else {
-            somInterruptor.currentTime = 0; somInterruptor.play();
-            el.src = estados.int ? 'tec_int_on.png' : 'tec_int_off.png';
+            L.style.opacity = "0";
         }
-        atualizarCircuito();
     }
 
-    function atualizarCircuito() {
-        const lamp = document.getElementById('camada-lampada');
-        const placa = document.getElementById('placa-concluido');
-        if (instalacaoConcluida && estados.dg && estados.dr && estados.int) {
-            lamp.style.opacity = "1";
-            statusTxt.innerHTML = '<div class="status-final acesa">LÂMPADA ACESA</div>';
-            placa.style.display = 'flex'; setTimeout(() => placa.classList.add('show'), 50);
-        } else {
-            lamp.style.opacity = "0";
-            if (instalacaoConcluida) {
-                statusTxt.innerHTML = '<div class="status-final apagada">LÂMPADA APAGADA</div>';
-                placa.classList.remove('show'); setTimeout(() => placa.style.display = 'none', 500);
-            }
-        }
-    }
     window.onload = carregarEtapa;
 </script>
 </body>
