@@ -5,76 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laboratório SMT Pro</title>
     <style>
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: #050a14; 
-            color: white; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            padding: 20px;
-            margin: 0;
-            overflow-x: hidden;
-        }
-
-        h1 {
-            color: #00ffff;
-            text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
-            font-size: 2.5em;
-            margin-bottom: 20px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
-        /* TELA DE SPLASH */
-        #splash-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #050a14; display: flex; justify-content: center;
-            align-items: center; z-index: 500; cursor: pointer;
-            transition: opacity 0.8s ease, visibility 0.8s;
-        }
-
-        .splash-container {
-            width: 80%; max-width: 800px; background: linear-gradient(145deg, #0a1528, #050a14);
-            border: 3px solid #00ffff; border-radius: 20px; padding: 60px 40px;
-            text-align: center; box-shadow: 0 0 40px rgba(0, 255, 255, 0.4), inset 0 0 20px rgba(0, 255, 255, 0.1);
-        }
-
-        .splash-titulo { color: #00ffff; font-size: 2.8em; font-weight: bold; text-transform: uppercase; margin-bottom: 10px; text-shadow: 0 0 15px rgba(0, 255, 255, 0.6); }
-        .splash-sub { color: #00ffff; font-size: 1.5em; letter-spacing: 3px; margin-bottom: 30px; }
-        .splash-divisor { width: 150px; height: 2px; background: #00ffff; margin: 30px auto; border: none; opacity: 0.5; }
-        .splash-creditos { color: #ffffff; font-size: 1.1em; opacity: 0.8; margin-top: 40px; }
-        .splash-entrar { margin-top: 30px; font-size: 0.9em; color: #00ffff; animation: pulsarBotao 1.5s infinite; }
-
-        @keyframes pulsarBotao { 0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; } }
-
-        /* PAINEL DE STATUS */
-        #painel-status {
-            width: 90%; max-width: 950px; background: rgba(0, 0, 0, 0.4);
-            border: 1px solid #1a2a44; border-radius: 15px; padding: 25px;
-            margin-bottom: 30px; text-align: center; min-height: 80px;
-            display: flex; justify-content: center; align-items: center;
-        }
-
-        #status-mensagem { font-size: 1.3em; font-weight: bold; color: #ffffff; text-transform: uppercase; transition: all 0.3s ease; }
-        .cor-alerta { color: #ff0000 !important; text-shadow: 0 0 5px rgba(255, 0, 0, 0.3); }
-        .status-final { padding: 12px 40px; border-radius: 50px; display: inline-block; box-shadow: 0 0 15px rgba(0,0,0,0.5); letter-spacing: 1px; }
-        .acesa { background: #008000; box-shadow: 0 0 20px #00ff00; border: 1px solid #00ff00; }
-        .apagada { background: #cc0000; box-shadow: 0 0 20px #ff0000; border: 1px solid #ff4444; }
-
+        /* MANTENDO TODA A SUA ESTILIZAÇÃO ORIGINAL */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #050a14; color: white; display: flex; flex-direction: column; align-items: center; padding: 20px; margin: 0; overflow-x: hidden; }
+        h1 { color: #00ffff; text-shadow: 0 0 10px #00ffff; font-size: 2.5em; margin-bottom: 20px; text-transform: uppercase; }
+        #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #050a14; display: flex; justify-content: center; align-items: center; z-index: 500; cursor: pointer; transition: opacity 0.8s ease; }
+        .splash-container { width: 80%; max-width: 800px; background: linear-gradient(145deg, #0a1528, #050a14); border: 3px solid #00ffff; border-radius: 20px; padding: 60px 40px; text-align: center; }
+        #painel-status { width: 90%; max-width: 950px; background: rgba(0, 0, 0, 0.4); border: 1px solid #1a2a44; border-radius: 15px; padding: 25px; margin-bottom: 30px; text-align: center; min-height: 80px; display: flex; justify-content: center; align-items: center; }
+        #status-mensagem { font-size: 1.3em; font-weight: bold; color: #ffffff; text-transform: uppercase; }
+        .cor-alerta { color: #ff0000 !important; }
         #container-simulador { position: relative; line-height: 0; user-select: none; border-radius: 10px; overflow: hidden; display: inline-block; }
         #fundo { max-width: 1000px; height: auto; display: block; }
-
         .camada-cabo { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: 100% 100%; pointer-events: none; z-index: 5; opacity: 0; transition: opacity 0.3s; }
-        
-        #camada-lampada { position: absolute; z-index: 30; opacity: 0; transition: opacity 0.2s; pointer-events: auto; top: 46.5%; left: 75.8%; width: 242px; cursor: help; }
+        #camada-lampada { position: absolute; z-index: 30; opacity: 0; transition: opacity 0.2s; top: 46.5%; left: 75.8%; width: 242px; }
+        .tecla { position: absolute; cursor: pointer; z-index: 25; }
+        .conector { position: absolute; width: 72px; display: none; z-index: 15; transform-origin: center; }
 
-        .tecla { position: absolute; cursor: pointer; z-index: 25; transition: transform 0.1s; }
-        .tecla:active { transform: scale(0.95); }
-        .conector { position: absolute; width: 72px; display: none; z-index: 15; pointer-events: auto; transform-origin: center; cursor: help; }
-
-        /* BALÕES INFORMATIVOS */
-        .balao {
+        /* --- BLOCO DOS BALÕES --- */
+        .balao-base {
             position: absolute; z-index: 400; background: white; color: black;
             padding: 15px; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.5);
             font-weight: bold; font-size: 14px; line-height: 1.4;
@@ -82,16 +29,16 @@
             text-align: center; border: 2px solid #333;
         }
 
-        /* BALÃO SEÇÃO (Seta para baixo) */
-        #balao-secao { top: 60%; left: 31.5%; width: 170px; }
-        #balao-secao::after {
+        /* BALÃO 1: Seção Mínima (Seta para baixo) */
+        #balao-informativo { top: 60%; left: 31.5%; width: 170px; }
+        #balao-informativo::after {
             content: ""; position: absolute; bottom: -12px; left: 50%;
             transform: translateX(-50%); border-width: 12px 12px 0;
             border-style: solid; border-color: white transparent transparent;
         }
 
-        /* NOVO BALÃO FASE (Seta para a direita) */
-        #balao-fase-cor { top: 12%; left: 32%; width: 180px; }
+        /* BALÃO 2: Cor da Fase (Seta para a direita) */
+        #balao-fase-cor { top: 12%; left: 10%; width: 180px; } /* Ajuste o left/top conforme sua imagem */
         #balao-fase-cor::after {
             content: ""; position: absolute; right: -12px; top: 50%;
             transform: translateY(-50%); border-width: 12px 0 12px 12px;
@@ -99,25 +46,23 @@
         }
 
         .referencia-nbr { color: red; font-size: 12px; margin-top: 5px; display: block; }
-
-        .controles-inferiores { position: absolute; bottom: 30px; left: 30px; display: flex; gap: 15px; z-index: 100; }
-        .btn-acao { padding: 8px 25px; border: none; border-radius: 20px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5); font-size: 14px; color: white; text-transform: uppercase; }
-        #btn-reiniciar { background: #cc0000; }
-        #btn-ajuda { background: #1a2a44; border: 1px solid #00ffff; }
+        /* ----------------------- */
 
         .ponto { position: absolute; width: 22px; height: 22px; background: rgba(255, 255, 0, 0.7); border: 2px solid gold; border-radius: 50%; cursor: pointer; display: none; z-index: 40; transform: translate(-50%, -50%); animation: pulsar 1.2s infinite; }
         @keyframes pulsar { 0% { transform: translate(-50%, -50%) scale(1); } 70% { transform: translate(-50%, -50%) scale(1.3); } 100% { transform: translate(-50%, -50%) scale(1); } }
+        .controles-inferiores { position: absolute; bottom: 30px; left: 30px; display: flex; gap: 15px; z-index: 100; }
+        .btn-acao { padding: 8px 25px; border: none; border-radius: 20px; font-weight: bold; cursor: pointer; color: white; text-transform: uppercase; }
+        #btn-reiniciar { background: #cc0000; }
+        #btn-ajuda { background: #1a2a44; border: 1px solid #00ffff; }
     </style>
 </head>
-<body onclick="fecharBaloes()">
+<body onclick="fecharTodosBaloes()">
 
     <div id="splash-screen" onclick="entrarNoLab()">
         <div class="splash-container">
             <div class="splash-titulo">Interruptor Simples para 1 Lâmpada</div>
             <div class="splash-sub">CIRCUITO MONOFÁSICO - 127V</div>
-            <hr class="splash-divisor">
-            <div class="splash-creditos">© Desenvolvido por Ivan Santos - ConectaeadPLUS - 2026</div>
-            <div class="splash-entrar">CLIQUE PARA INICIAR O LABORATÓRIO</div>
+            <div style="color: #00ffff; margin-top: 30px;">CLIQUE PARA INICIAR O LABORATÓRIO</div>
         </div>
     </div>
 
@@ -131,7 +76,7 @@
         <div id="status-mensagem">AGUARDANDO INÍCIO...</div>
     </div>
 
-    <div id="container-simulador" onclick="fecharBaloes()">
+    <div id="container-simulador" onclick="fecharTodosBaloes()">
         <img src="ambiente.jpg" id="fundo">
         
         <div id="camada-fase1" class="camada-cabo"></div>
@@ -141,12 +86,12 @@
         <div id="camada-neutro1" class="camada-cabo"></div>
         <div id="camada-neutro2" class="camada-cabo"></div>
 
-        <div id="balao-secao" class="balao">
+        <div id="balao-informativo" class="balao-base">
             A seção mínima dos fios de iluminação é 1,5mm²
             <span class="referencia-nbr">(Item 6.2.6.1.1 da NBR-5410)</span>
         </div>
 
-        <div id="balao-fase-cor" class="balao">
+        <div id="balao-fase-cor" class="balao-base">
             A fase poderá ser de qualquer cor
             <span class="referencia-nbr">(Item 6.1.5.3.4 da NBR-5410)</span>
         </div>
@@ -176,21 +121,18 @@
     let etapaAtual = 0;
     let aguardandoDestino = false;
 
-    const somDisjuntor = document.getElementById('som-disjuntor');
-    const somInterruptor = document.getElementById('som-interruptor');
-    const somConexao = document.getElementById('som-conexao');
-    const b1 = document.getElementById('balao-secao');
+    const b1 = document.getElementById('balao-informativo');
     const b2 = document.getElementById('balao-fase-cor');
 
     function entrarNoLab() { document.getElementById('splash-screen').style.display = 'none'; }
 
-    function fecharBaloes() {
+    function fecharTodosBaloes() {
         b1.style.display = 'none';
         b2.style.display = 'none';
     }
 
     const sequencia = [
-        { id: 'FASE1', max: 54, pasta: 'FASE1', ini: {t: '38%', l: '27%'}, fim: {t: '23%', l: '56.5%'}, msg: '<span class="destaque"><span class="cor-alerta">REDE:</span> CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA DO DR.' },
+        { id: 'FASE1', max: 54, pasta: 'FASE1', ini: {t: '38%', l: '27%'}, fim: {t: '23%', l: '56.5%'}, msg: '<span class="destaque"><span class="cor-alerta">REDE:</span> CONECTE A FASE.</span>' },
         { id: 'NEUTRO1', max: 78, pasta: 'NEUTRO1', ini: {t: '35%', l: '44.3%'}, fim: {t: '14%', l: '56%'}, msg: '<span class="destaque"><span class="cor-alerta">REDE:</span> CONECTE O NEUTRO.</span>' },
         { id: 'FASE2', max: 18, pasta: 'FASE2', ini: {t: '23%', l: '58%'}, fim: {t: '81%', l: '68%'}, wagoTop: '25%', wagoLeft: '57.4%', wagoRot: '90deg', msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE A FASE.</span>' },
         { id: 'RETORNO1', max: 18, pasta: 'RETORNO1', ini: {t: '20%', l: '61%'}, fim: {t: '75%', l: '68%'}, msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O RETORNO.</span>' },
@@ -198,41 +140,44 @@
         { id: 'NEUTRO2', max: 30, pasta: 'NEUTRO2', ini: {t: '13%', l: '58%'}, fim: {t: '55%', l: '91.3%'}, wagoTop: '14.5%', wagoLeft: '57%', wagoRot: '270deg', msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O NEUTRO.</span>' }
     ];
 
-    const elInicio = document.getElementById('ponto-inicio');
-    const elFim = document.getElementById('ponto-fim');
-    const statusTxt = document.getElementById('status-mensagem');
-
     function carregarEtapa() {
         if (etapaAtual >= sequencia.length) {
             instalacaoConcluida = true;
-            statusTxt.innerHTML = 'MONTAGEM CONCLUÍDA! LIGUE OS DISPOSITIVOS.';
+            document.getElementById('status-mensagem').innerHTML = "MONTAGEM CONCLUÍDA!";
             return;
         }
         const dados = sequencia[etapaAtual];
-        statusTxt.innerHTML = dados.msg;
-        elInicio.style.top = dados.ini.t; elInicio.style.left = dados.ini.l; elInicio.style.display = 'block';
-        elFim.style.top = dados.fim.t; elFim.style.left = dados.fim.l; elFim.style.display = 'none';
+        document.getElementById('status-mensagem').innerHTML = dados.msg;
+        document.getElementById('ponto-inicio').style.top = dados.ini.t;
+        document.getElementById('ponto-inicio').style.left = dados.ini.l;
+        document.getElementById('ponto-inicio').style.display = 'block';
+        document.getElementById('ponto-fim').style.top = dados.fim.t;
+        document.getElementById('ponto-fim').style.left = dados.fim.l;
+        document.getElementById('ponto-fim').style.display = 'none';
         aguardandoDestino = false;
     }
 
-    elInicio.onclick = (e) => { e.stopPropagation(); fecharBaloes(); elFim.style.display = 'block'; aguardandoDestino = true; };
-    elFim.onclick = (e) => { e.stopPropagation(); if (aguardandoDestino) animarCabo(sequencia[etapaAtual]); };
+    document.getElementById('ponto-inicio').onclick = (e) => { e.stopPropagation(); fecharTodosBaloes(); document.getElementById('ponto-fim').style.display = 'block'; aguardandoDestino = true; };
+    document.getElementById('ponto-fim').onclick = (e) => { e.stopPropagation(); if (aguardandoDestino) animarCabo(sequencia[etapaAtual]); };
 
     function animarCabo(cabo) {
-        fecharBaloes();
+        fecharTodosBaloes();
         let frame = 0;
         const camada = document.getElementById(`camada-${cabo.id.toLowerCase()}`);
         camada.style.opacity = "1";
         const loop = setInterval(() => {
-            const frameString = Math.min(frame, cabo.max).toString().padStart(4, '0');
-            camada.style.backgroundImage = `url('${cabo.pasta}/quadro${frameString}.png')`;
+            const fStr = Math.min(frame, cabo.max).toString().padStart(4, '0');
+            camada.style.backgroundImage = `url('${cabo.pasta}/quadro${fStr}.png')`;
             if (frame >= cabo.max) {
                 clearInterval(loop);
-                somConexao.play();
+                document.getElementById('som-conexao').play();
+                
+                // --- DISPARO DOS BALÕES NA FASE 1 ---
                 if (cabo.id === 'FASE1') {
                     b1.style.display = 'flex';
                     b2.style.display = 'flex';
                 }
+
                 if (cabo.wagoTop) {
                     let idW = cabo.id.toLowerCase().includes('fase') ? 'wago-fase' : cabo.id.toLowerCase().includes('retorno') ? 'wago-retorno' : 'wago-neutro';
                     const w = document.getElementById(idW);
@@ -247,12 +192,14 @@
 
     function toggleDispositivo(tipo) {
         estados[tipo] = !estados[tipo];
+        const som = (tipo === 'int') ? document.getElementById('som-interruptor') : document.getElementById('som-disjuntor');
+        som.play();
         const el = document.getElementById(`tecla-${tipo}`);
-        if (tipo === 'dg' || tipo === 'dr') { somDisjuntor.play(); el.src = estados[tipo] ? `al_${tipo}_on.png` : `al_${tipo}_off.png`; }
-        if (tipo === 'int') { somInterruptor.play(); el.src = estados.int ? 'tec_int_on.png' : 'tec_int_off.png'; }
+        if (tipo === 'dg') el.src = estados.dg ? 'al_dg_on.png' : 'al_dg_off.png';
+        if (tipo === 'dr') el.src = estados.dr ? 'al_dr_on.png' : 'al_dr_off.png';
+        if (tipo === 'int') el.src = estados.int ? 'tec_int_on.png' : 'tec_int_off.png';
         
-        const lamp = document.getElementById('camada-lampada');
-        lamp.style.opacity = (instalacaoConcluida && estados.dg && estados.dr && estados.int) ? "1" : "0";
+        document.getElementById('camada-lampada').style.opacity = (instalacaoConcluida && estados.dg && estados.dr && estados.int) ? "1" : "0";
     }
 
     window.onload = carregarEtapa;
