@@ -190,19 +190,19 @@
             text-align: center;
             border: 2px solid #333;
             /* PROPRIEDADES DE POSICIONAMENTO */
-            top: 40%;
-            left: 30%;
-            width: 220px;
+            top: 60%;
+            left: 31.5%;
+            width: 170px;
         }
 
         /* A SETINHA */
         #balao-informativo::after {
             content: "";
             position: absolute;
-            bottom: -12px; /* Ajuste para descer a seta */
+            bottom: -12px;
             left: 50%;
             transform: translateX(-50%);
-            border-width: 12px 12px 0; /* Cria o triângulo */
+            border-width: 12px 12px 0;
             border-style: solid;
             border-color: white transparent transparent;
             display: block;
@@ -333,7 +333,7 @@
         <div id="status-mensagem">AGUARDANDO INÍCIO...</div>
     </div>
 
-    <div id="container-simulador">
+    <div id="container-simulador" onclick="fecharBalao()">
         <img src="ambiente.jpg" id="fundo">
         
         <div id="camada-fase1" class="camada-cabo"></div>
@@ -459,10 +459,22 @@
         aguardandoDestino = false;
     }
 
-    elInicio.onclick = (e) => { e.stopPropagation(); elInicio.style.background = "#00ff00"; elFim.style.display = 'block'; aguardandoDestino = true; if(sequencia[etapaAtual].msgDestino) statusTxt.innerHTML = sequencia[etapaAtual].msgDestino; };
-    elFim.onclick = (e) => { e.stopPropagation(); if (aguardandoDestino) animarCabo(sequencia[etapaAtual]); };
+    elInicio.onclick = (e) => { 
+        e.stopPropagation(); 
+        fecharBalao(); // Garante o fechamento ao iniciar nova interação
+        elInicio.style.background = "#00ff00"; 
+        elFim.style.display = 'block'; 
+        aguardandoDestino = true; 
+        if(sequencia[etapaAtual].msgDestino) statusTxt.innerHTML = sequencia[etapaAtual].msgDestino; 
+    };
+    
+    elFim.onclick = (e) => { 
+        e.stopPropagation(); 
+        if (aguardandoDestino) animarCabo(sequencia[etapaAtual]); 
+    };
 
     function animarCabo(cabo) {
+        fecharBalao(); // Adicionado para fechar ao prosseguir com o cabo
         let frame = 0;
         const camada = document.getElementById(`camada-${cabo.id.toLowerCase()}`);
         camada.style.opacity = "1";
