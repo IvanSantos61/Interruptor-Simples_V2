@@ -172,7 +172,7 @@
             cursor: help;
         }
 
-        /* BALÃO INFORMATIVO NBR */
+        /* BALÃO INFORMATIVO NBR COM SETA */
         #balao-informativo {
             position: absolute;
             z-index: 400;
@@ -189,10 +189,39 @@
             align-items: center;
             text-align: center;
             border: 2px solid #333;
-            /* AJUSTE AS PROPRIEDADES ABAIXO PARA POSICIONAR */
+            /* PROPRIEDADES DE POSICIONAMENTO */
             top: 40%;
             left: 30%;
             width: 220px;
+        }
+
+        /* A SETINHA */
+        #balao-informativo::after {
+            content: "";
+            position: absolute;
+            bottom: -12px; /* Ajuste para descer a seta */
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 12px 12px 0; /* Cria o triângulo */
+            border-style: solid;
+            border-color: white transparent transparent;
+            display: block;
+            width: 0;
+            z-index: 1;
+        }
+
+        /* BORDA DA SETINHA */
+        #balao-informativo::before {
+            content: "";
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 13px 13px 0;
+            border-style: solid;
+            border-color: #333 transparent transparent;
+            display: block;
+            width: 0;
         }
 
         #balao-informativo .referencia-nbr {
@@ -382,7 +411,6 @@
         }, 800);
     }
 
-    // FECHAR BALÃO AO CLIQUE
     function fecharBalao() {
         if (balao.style.display === 'flex') {
             balao.style.display = 'none';
@@ -445,7 +473,6 @@
                 clearInterval(loop);
                 somConexao.currentTime = 0; somConexao.play();
                 
-                // DISPARAR BALÃO AO FINALIZAR FASE1
                 if (cabo.id === 'FASE1') {
                     balao.style.display = 'flex';
                 }
