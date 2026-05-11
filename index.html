@@ -111,9 +111,10 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             z-index: 300;
             display: none;
-            pointer-events: none;
+            pointer-events: auto; /* Alterado para permitir clique direto no balão para fechar */
             max-width: 170px;
             line-height: 1.4;
+            cursor: pointer;
         }
 
         .balao-informativo::after {
@@ -280,9 +281,9 @@
 
         <img src="lamp_on.png" id="camada-lampada">
 
-        <img src="al_dg_off.png" id="tecla-dg" class="tecla" style="top: 25%; left: 11.4%; width: 50px;" onclick="toggleDispositivo('dg')">
-        <img src="al_dr_off.png" id="tecla-dr" class="tecla" style="top: 28%; left: 23.8%; width: 50px;" onclick="toggleDispositivo('dr')">
-        <img src="tec_int_off.png" id="tecla-int" class="tecla" style="top: 73%; left: 72%; width: 53px; z-index: 100;" onclick="toggleDispositivo('int')">
+        <img src="al_dg_off.png" id="tecla-dg" class="tecla" style="top: 25%; left: 11.4%; width: 50px;" onclick="toggleDispositivo('dg'); event.stopPropagation();">
+        <img src="al_dr_off.png" id="tecla-dr" class="tecla" style="top: 28%; left: 23.8%; width: 50px;" onclick="toggleDispositivo('dr'); event.stopPropagation();">
+        <img src="tec_int_off.png" id="tecla-int" class="tecla" style="top: 73%; left: 72%; width: 53px; z-index: 100;" onclick="toggleDispositivo('int'); event.stopPropagation();">
 
         <img src="con_wago.png" id="wago-fase" class="conector">
         <img src="con_wago.png" id="wago-retorno" class="conector">
@@ -296,7 +297,7 @@
         </div>
 
         <div class="controles-inferiores">
-            <button id="btn-reiniciar" class="btn-acao" onclick="location.reload()">REINICIAR</button>
+            <button id="btn-reiniciar" class="btn-acao" onclick="location.reload(); event.stopPropagation();">REINICIAR</button>
         </div>
     </div>
 
@@ -351,12 +352,14 @@
     }
 
     elInicio.onclick = (e) => { 
+        e.stopPropagation();
         elInicio.style.background = "#00ff00"; 
         elFim.style.display = 'block'; 
         aguardandoDestino = true; 
     };
 
     elFim.onclick = (e) => { 
+        e.stopPropagation();
         if (aguardandoDestino) animarCabo(sequencia[etapaAtual]); 
     };
 
