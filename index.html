@@ -98,7 +98,7 @@
             100% { opacity: 0.3; }
         }
 
-        /* ESTILO DO BALÃO PADRÃO (BASEADO NA GRAVURA) */
+        /* ESTILO DO BALÃO PADRÃO */
         .balao-informativo {
             position: absolute;
             background: white;
@@ -112,8 +112,8 @@
             z-index: 300;
             display: none;
             pointer-events: none;
-            max-width: 220px;
-            line-height: 1.3;
+            max-width: 250px;
+            line-height: 1.4;
         }
 
         .balao-informativo::after {
@@ -125,6 +125,13 @@
             border-width: 10px;
             border-style: solid;
             border-color: white transparent transparent transparent;
+        }
+
+        .item-norma {
+            color: #ff0000;
+            display: block;
+            font-size: 12px;
+            margin-top: 5px;
         }
 
         /* PAINEL DE STATUS */
@@ -421,7 +428,7 @@
     }
 
     elInicio.onclick = (e) => { 
-        e.stopPropagation(); // Evita fechar o balão ao clicar no ponto
+        e.stopPropagation(); 
         elInicio.style.background = "#00ff00"; 
         elFim.style.display = 'block'; 
         aguardandoDestino = true; 
@@ -444,10 +451,10 @@
                 clearInterval(loop);
                 somConexao.currentTime = 0; somConexao.play();
 
-                // LÓGICA DO BALÃO APÓS CONCLUSÃO DO CABO
+                // LÓGICA DO BALÃO APÓS CONCLUSÃO DO CABO FASE1
                 if (cabo.id === 'FASE1') {
-                    balaoInf.innerHTML = 'A seção minima dos fios, na iluminação, é 1,5mm2';
-                    balaoInf.style.top = '23%'; // Alinhado ao fim do cabo FASE1
+                    balaoInf.innerHTML = 'A seção mínima dos fios de iluminação é 1,5 mm2.<span class="item-norma">Item 6.2.6.1.1 da NBR-5410</span>';
+                    balaoInf.style.top = '23%'; 
                     balaoInf.style.left = '56.5%';
                     balaoInf.style.transform = 'translate(-50%, -120%)';
                     balaoInf.style.display = 'block';
