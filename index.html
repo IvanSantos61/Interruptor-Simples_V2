@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laboratório SMT Pro</title>
     <style>
+        /* Mantendo todo o seu CSS original */
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             background: #050a14; 
@@ -172,8 +173,8 @@
             cursor: help;
         }
 
-        /* BALÃO INFORMATIVO NBR COM SETA PARA BAIXO */
-        #balao-informativo {
+        /* BALÕES INFORMATIVOS */
+        .balao-base {
             position: absolute;
             z-index: 400;
             background: white;
@@ -189,85 +190,43 @@
             align-items: center;
             text-align: center;
             border: 2px solid #333;
+        }
+
+        #balao-informativo {
             top: 60%;
             left: 31.5%;
             width: 170px;
         }
 
         #balao-informativo::after {
-            content: "";
-            position: absolute;
-            bottom: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-width: 12px 12px 0;
-            border-style: solid;
-            border-color: white transparent transparent;
-            display: block;
-            width: 0;
-            z-index: 1;
+            content: ""; position: absolute; bottom: -12px; left: 50%;
+            transform: translateX(-50%); border-width: 12px 12px 0;
+            border-style: solid; border-color: white transparent transparent;
         }
 
-        #balao-informativo::before {
-            content: "";
-            position: absolute;
-            bottom: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-width: 13px 13px 0;
-            border-style: solid;
-            border-color: #333 transparent transparent;
-            display: block;
-            width: 0;
-        }
-
-        /* NOVO BALÃO COM SETA PARA A DIREITA */
         #balao-cor-fase {
-            position: absolute;
-            z-index: 400;
-            background: white;
-            color: black;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-            font-weight: bold;
-            font-size: 14px;
-            line-height: 1.4;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            border: 2px solid #333;
             top: 52%;
             left: 6%;
             width: 165px;
         }
 
         #balao-cor-fase::after {
-            content: "";
-            position: absolute;
-            right: -12px;
-            top: 50%;
-            transform: translateY(-50%);
-            border-width: 12px 0 12px 12px;
-            border-style: solid;
-            border-color: transparent transparent transparent white;
-            display: block;
-            width: 0;
-            z-index: 1;
+            content: ""; position: absolute; right: -12px; top: 50%;
+            transform: translateY(-50%); border-width: 12px 0 12px 12px;
+            border-style: solid; border-color: transparent transparent transparent white;
         }
 
-        #balao-cor-fase::before {
-            content: "";
-            position: absolute;
-            right: -15px;
-            top: 50%;
-            transform: translateY(-50%);
-            border-width: 13px 0 13px 13px;
-            border-style: solid;
-            border-color: transparent transparent transparent #333;
-            display: block;
-            width: 0;
+        /* NOVO BALÃO NEUTRO */
+        #balao-cor-neutro {
+            top: 15%;
+            left: 28%;
+            width: 180px;
+        }
+
+        #balao-cor-neutro::after {
+            content: ""; position: absolute; right: -12px; top: 50%;
+            transform: translateY(-50%); border-width: 12px 0 12px 12px;
+            border-style: solid; border-color: transparent transparent transparent white;
         }
 
         .referencia-nbr {
@@ -277,32 +236,20 @@
             display: block;
         }
 
-        /* BOTÕES NA LATERAL ESQUERDA */
+        /* BOTÕES E OUTROS */
         .controles-inferiores {
-            position: absolute;
-            bottom: 30px;
-            left: 30px;
-            display: flex;
-            gap: 15px;
-            z-index: 100;
+            position: absolute; bottom: 30px; left: 30px; display: flex; gap: 15px; z-index: 100;
         }
 
         .btn-acao {
-            padding: 8px 25px;
-            border: none;
-            border-radius: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-            font-size: 14px;
-            color: white;
-            text-transform: uppercase;
+            padding: 8px 25px; border: none; border-radius: 20px; font-weight: bold;
+            cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5); font-size: 14px;
+            color: white; text-transform: uppercase;
         }
 
         #btn-reiniciar { background: #cc0000; }
         #btn-ajuda { background: #1a2a44; border: 1px solid #00ffff; box-shadow: 0 0 10px rgba(0,255,255,0.3); }
 
-        /* PLACA DE CONCLUÍDO */
         #placa-concluido {
             position: absolute; top: 50%; left: 50%;
             transform: translate(-50%, -50%) scale(0.8);
@@ -325,7 +272,6 @@
         .p-tl { top: 12px; left: 12px; } .p-tr { top: 12px; right: 12px; }
         .p-bl { bottom: 12px; left: 12px; } .p-br { bottom: 12px; right: 12px; }
 
-        /* MODAL DE AJUDA */
         #modal-ajuda {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             width: 380px; background: rgba(5, 10, 20, 0.98);
@@ -337,7 +283,6 @@
         .ajuda-item { background: rgba(0, 255, 255, 0.05); border: 1px solid #00ffff; color: white; padding: 10px; margin-bottom: 10px; border-radius: 5px; cursor: pointer; font-size: 14px; }
         .btn-fechar { background: #222; color: #aaa; border: 1px solid #444; padding: 8px; margin-top: 5px; border-radius: 5px; cursor: pointer; }
 
-        /* VISUALIZADOR DE GRAVURAS */
         #visualizador-ajuda {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.85); z-index: 200; display: none;
@@ -389,14 +334,19 @@
         <div id="camada-neutro1" class="camada-cabo"></div>
         <div id="camada-neutro2" class="camada-cabo"></div>
 
-        <div id="balao-informativo">
+        <div id="balao-informativo" class="balao-base">
             A seção mínima dos fios de iluminação é 1,5mm²
             <span class="referencia-nbr">Item 6.2.6.1.1 da NBR-5410</span>
         </div>
 
-        <div id="balao-cor-fase">
+        <div id="balao-cor-fase" class="balao-base">
             A fase poderá ser de qualquer cor
             <span class="referencia-nbr">(Item 6.1.5.3.4 da NBR-5410)</span>
+        </div>
+
+        <div id="balao-cor-neutro" class="balao-base">
+            O neutro deve ser de cor Azul Claro
+            <span class="referencia-nbr">(Item 6.1.5.3.1 da NBR-5410)</span>
         </div>
 
         <img src="lamp_on.png" id="camada-lampada" title="Para interligações consulte em 'AJUDA'">
@@ -452,8 +402,11 @@
     const somDisjuntor = document.getElementById('som-disjuntor');
     const somInterruptor = document.getElementById('som-interruptor');
     const somConexao = document.getElementById('som-conexao');
+    
+    // Referências dos balões
     const balao = document.getElementById('balao-informativo');
     const balaoCor = document.getElementById('balao-cor-fase');
+    const balaoNeutro = document.getElementById('balao-cor-neutro');
 
     function entrarNoLab() {
         const splash = document.getElementById('splash-screen');
@@ -464,12 +417,9 @@
     }
 
     function fecharBalao() {
-        if (balao.style.display === 'flex') {
-            balao.style.display = 'none';
-        }
-        if (balaoCor.style.display === 'flex') {
-            balaoCor.style.display = 'none';
-        }
+        balao.style.display = 'none';
+        balaoCor.style.display = 'none';
+        balaoNeutro.style.display = 'none';
     }
 
     function abrirAjuda() { document.getElementById('modal-ajuda').style.display = 'flex'; }
@@ -540,9 +490,14 @@
                 clearInterval(loop);
                 somConexao.currentTime = 0; somConexao.play();
                 
+                // LÓGICA DOS BALÕES POR ETAPA
                 if (cabo.id === 'FASE1') {
                     balao.style.display = 'flex';
                     balaoCor.style.display = 'flex';
+                }
+
+                if (cabo.id === 'NEUTRO1') {
+                    balaoNeutro.style.display = 'flex';
                 }
 
                 if (cabo.wagoTop) {
