@@ -102,7 +102,9 @@
 
         .tecla { position: absolute; cursor: pointer; z-index: 25; transition: transform 0.1s; }
         .tecla:active { transform: scale(0.95); }
-        .conector { position: absolute; width: 72px; display: none; z-index: 15; pointer-events: auto; transform-origin: center; cursor: help; }
+        
+        /* Removido o width fixo daqui para respeitar o inline */
+        .conector { position: absolute; display: none; z-index: 15; pointer-events: auto; transform-origin: center; cursor: help; }
 
         .balao-base {
             position: absolute; z-index: 400; background: white; color: black;
@@ -246,9 +248,10 @@
         <img src="al_dr_off.png" id="tecla-dr" class="tecla" style="top: 28%; left: 23.8%; width: 50px;" onclick="toggleDispositivo('dr')">
         <img src="tec_int_off.png" id="tecla-int" class="tecla" style="top: 73%; left: 72%; width: 53px; z-index: 100; pointer-events: auto; cursor: help;" onclick="toggleDispositivo('int')" title="Para interligações consulte em 'AJUDA'">
 
-        <img src="con_wago.png" id="wago-fase" class="conector">
-        <img src="con_wago.png" id="wago-retorno" class="conector">
-        <img src="con_wago.png" id="wago-neutro" class="conector">
+        <!-- PROPRIEDADES width, top E left ADICIONADAS EM CADA CONECTOR ABAIXO -->
+        <img src="con_wago.png" id="wago-fase" class="conector" style="width: 65px; top: 25%; left: 57.4%;">
+        <img src="con_wago.png" id="wago-retorno" class="conector" style="width: 65px; top: 17.3%; left: 60%;">
+        <img src="con_wago.png" id="wago-neutro" class="conector" style="width: 65px; top: 14.5%; left: 57%;">
 
         <div id="ponto-inicio" class="ponto"></div>
         <div id="ponto-fim" class="ponto"></div>
@@ -317,13 +320,12 @@
     function mostrarEsquema(src) { document.getElementById('img-ajuda-grande').src = src; document.getElementById('visualizador-ajuda').style.display = 'flex'; fecharAjuda(); }
     function voltarParaMenu() { document.getElementById('visualizador-ajuda').style.display = 'none'; abrirAjuda(); }
 
-    // Adicionado coordenadas explícitas de wagoTop e wagoLeft nas etapas FASE1 e NEUTRO1
     const sequencia = [
-        { id: 'FASE1', cor: '#ff0000', max: 54, pasta: 'FASE1', ini: {t: '38%', l: '27%'}, fim: {t: '23%', l: '56.5%'}, wagoTop: '25%', wagoLeft: '57.4%', wagoRot: '90deg', msg: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NA REFERENCIA INDICADA NO DR, PARA INICIAR A PASSAGEM DA FASE</span>', msgDestino: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NO PONTO INDICADO NA CAIXA DE PASSAGEM, PARA LEVAR A FASE</span>' },
-        { id: 'NEUTRO1', cor: '#00bfff', max: 78, pasta: 'NEUTRO1', ini: {t: '35%', l: '44.3%'}, fim: {t: '14%', l: '56%'}, wagoTop: '14.5%', wagoLeft: '57%', wagoRot: '270deg', msg: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NA REFERÊNCIA INDICADA NO BARRAMENTO PARA INICIAR A PASSAGEM DO NEUTRO</span>', msgDestino: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NO PONTO INDICADO NA CAIXA DE PASSAGEM, PARA LEVAR O NEUTRO</span>' },
+        { id: 'FASE1', cor: '#ff0000', max: 54, pasta: 'FASE1', ini: {t: '38%', l: '27%'}, fim: {t: '23%', l: '56.5%'}, wagoRot: '90deg', msg: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NA REFERENCIA INDICADA NO DR, PARA INICIAR A PASSAGEM DA FASE</span>', msgDestino: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NO PONTO INDICADO NA CAIXA DE PASSAGEM, PARA LEVAR A FASE</span>' },
+        { id: 'NEUTRO1', cor: '#00bfff', max: 78, pasta: 'NEUTRO1', ini: {t: '35%', l: '44.3%'}, fim: {t: '14%', l: '56%'}, wagoRot: '270deg', msg: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NA REFERÊNCIA INDICADA NO BARRAMENTO PARA INICIAR A PASSAGEM DO NEUTRO</span>', msgDestino: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NO PONTO INDICADO NA CAIXA DE PASSAGEM, PARA LEVAR O NEUTRO</span>' },
         { id: 'FASE2', cor: '#ff0000', max: 18, pasta: 'FASE2', ini: {t: '23%', l: '58%'}, fim: {t: '81%', l: '68%'}, msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA MOSTRADA NO INTERRUPTOR.' },
         { id: 'RETORNO1', cor: '#111111', max: 18, pasta: 'RETORNO1', ini: {t: '20%', l: '61%'}, fim: {t: '75%', l: '68%'}, msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA DO INTERRUPTOR.' },
-        { id: 'RETORNO2', cor: '#111111', max: 24, pasta: 'RETORNO2', ini: {t: '17%', l: '61%'}, fim: {t: '55%', l: '89%'}, wagoTop: '17.3%', wagoLeft: '60%', wagoRot: '0deg', msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO</span>: CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA MOSTRADA NA LÂMPADA.' },
+        { id: 'RETORNO2', cor: '#111111', max: 24, pasta: 'RETORNO2', ini: {t: '17%', l: '61%'}, fim: {t: '55%', l: '89%'}, wagoRot: '0deg', msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO</span>: CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA MOSTRADA NA LÂMPADA.' },
         { id: 'NEUTRO2', cor: '#00bfff', max: 30, pasta: 'NEUTRO2', ini: {t: '13%', l: '58%'}, fim: {t: '55%', l: '91.3%'}, msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO</span>: CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA MOSTRADA NA LÂMPADA.' }
     ];
 
@@ -381,21 +383,17 @@
                 if (cabo.id === 'FASE2') { balaoSeccionar.style.display = 'flex'; }
                 if (cabo.id === 'RETORNO1') { balaoRetorno.style.display = 'flex'; }
 
-                // NOVA LÓGICA DE RENDERIZAÇÃO DOS CONECTORES
-                if (cabo.wagoTop) {
-                    let idWago;
-                    if (cabo.id === 'FASE1') idWago = 'wago-fase';
-                    else if (cabo.id === 'NEUTRO1') idWago = 'wago-neutro';
-                    else if (cabo.id.toLowerCase().includes('retorno')) idWago = 'wago-retorno';
+                // O JavaScript agora apenas ativa o display e rotaciona com base no estilo inline que você definiu
+                let idWago;
+                if (cabo.id === 'FASE1') idWago = 'wago-fase';
+                else if (cabo.id === 'NEUTRO1') idWago = 'wago-neutro';
+                else if (cabo.id === 'RETORNO2') idWago = 'wago-retorno'; // Ativa na etapa da lâmpada
 
-                    if (idWago) {
-                        const wago = document.getElementById(idWago);
-                        wago.style.top = cabo.wagoTop; 
-                        wago.style.left = cabo.wagoLeft;
-                        wago.style.transform = `translate(-50%, -50%) rotate(${cabo.wagoRot})`; 
-                        wago.style.display = 'block';
-                        wago.title = "Para interligações consulte em 'AJUDA'";
-                    }
+                if (idWago) {
+                    const wago = document.getElementById(idWago);
+                    wago.style.transform = `translate(-50%, -50%) rotate(${cabo.wagoRot})`; 
+                    wago.style.display = 'block';
+                    wago.title = "Para interligações consulte em 'AJUDA'";
                 }
 
                 etapaAtual++; setTimeout(carregarEtapa, 600);
