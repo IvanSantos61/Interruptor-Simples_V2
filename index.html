@@ -26,59 +26,92 @@
             text-transform: uppercase;
         }
 
-        /* --- TELA DE SPLASH IGUAL AO CÓDIGO ANTERIOR --- */
-        #splash-screen {
+        /* --- TELA DE ENTRADA ORIGINAL REPLICADA --- */
+        #tela-entrada {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: #060b13;
-            display: flex; justify-content: center; align-items: center;
-            z-index: 500; cursor: pointer;
-            transition: opacity 0.8s ease, visibility 0.8s;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #060b13;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease, visibility 0.5s;
         }
 
-        .splash-container {
-            width: 80%; max-width: 800px;
-            background: linear-gradient(145deg, #0a1528, #060b13);
-            border: 3px solid #00f0ff; border-radius: 20px;
-            padding: 60px 40px; text-align: center;
-            box-shadow: 0 0 40px rgba(0, 255, 255, 0.4), inset 0 0 20px rgba(0, 255, 255, 0.1);
+        .moldura-entrada {
+            width: 80%;
+            max-width: 900px;
+            height: 70%;
+            max-height: 450px;
+            border: 3px solid #00f0ff;
+            border-radius: 25px;
+            box-shadow: 0 0 50px rgba(0, 240, 255, 0.4), inset 0 0 20px rgba(0, 240, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
         }
 
-        .splash-titulo { 
-            color: #00f0ff; 
-            font-size: 2.8em; 
-            font-weight: bold; 
-            text-transform: uppercase; 
-            margin-bottom: 10px; 
-            text-shadow: 0 0 15px rgba(0, 255, 255, 0.6); 
-        }
-        
-        .splash-sub { 
-            color: #ffd700; 
-            font-size: 1.5em; 
-            letter-spacing: 3px; 
-            margin-bottom: 30px; 
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
-        }
-        
-        .splash-divisor { width: 150px; height: 2px; background: #00f0ff; margin: 30px auto; border: none; opacity: 0.5; }
-
-        .splash-creditos {
-            color: #ffffff;
-            font-size: 1.1em;
-            opacity: 0.3; 
-            margin-top: 40px;
-        }
-
-        .splash-entrar { 
-            margin-top: 30px; 
-            font-size: 0.9em; 
-            color: #00f0ff; 
-            text-transform: uppercase;
+        .intro-entrada {
+            color: #008b8b;
+            font-size: 55px;
+            font-weight: 400;
+            line-height: 1.1;
             letter-spacing: 1px;
-            animation: pulsarBotao 1.5s infinite; 
+            text-transform: uppercase;
+            text-shadow: 0 0 15px rgba(0, 139, 139, 0.5);
+            margin: 0 0 10px 0;
         }
-        @keyframes pulsarBotao { 0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; } }
+
+        .titulo-entrada {
+            color: #00f0ff;
+            font-size: 38px;
+            font-weight: 400;
+            line-height: 1.2;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-shadow: 0 0 25px rgba(0, 240, 255, 0.6);
+            margin: 0 0 25px 0;
+        }
+
+        .subtitulo-entrada {
+            color: #00f0ff;
+            font-size: 24px;
+            font-weight: 450;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            margin: 0 0 50px 0;
+        }
+
+        .creditos-entrada {
+            color: #445566;
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 50px;
+        }
+
+        .btn-iniciar-lab {
+            background: transparent;
+            border: 2px solid #00f0ff;
+            border-radius: 50px;
+            color: #00f0ff;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            padding: 12px 35px;
+            cursor: pointer;
+            letter-spacing: 1px;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+            transition: all 0.3s ease;
+            animation: pulsarBotao 1.5s infinite;
+        }
+        @keyframes pulsarBotao { 0% { opacity: 0.5; box-shadow: 0 0 10px rgba(0,240,255,0.2); } 50% { opacity: 1; box-shadow: 0 0 25px rgba(0,240,255,0.6); } 100% { opacity: 0.5; box-shadow: 0 0 10px rgba(0,240,255,0.2); } }
+        .btn-iniciar-lab:hover { background: #00f0ff; color: #060b13; }
 
         /* --- INTERFACE DO SIMULADOR --- */
         #painel-status {
@@ -162,14 +195,14 @@
 </head>
 <body onclick="fecharBalao()">
 
-    <!-- TELA DE SPLASH COM A IDENTIDADE DO SEU SEGUNDO PROJETO -->
-    <div id="splash-screen" onclick="entrarNoLab()">
-        <div class="splash-container">
-            <div class="splash-titulo">Interruptor Simples para 1 Lâmpada</div>
-            <div class="splash-sub">CIRCUITO MONOFÁSICO - 127V</div>
-            <hr class="splash-divisor">
-            <div class="splash-creditos">© Desenvolvido por Ivan Santos - ConectaeadPLUS - 2026</div>
-            <div class="splash-entrar">Clique para iniciar o Laboratório</div>
+    <!-- TELA DE ENTRADA IDÊNTICA AO SEU OUTRO APP -->
+    <div id="tela-entrada">
+        <div class="moldura-entrada">
+            <div class="intro-entrada">Laboratório SMT Pro</div>
+            <h1 class="titulo-entrada">INTERRUPTOR SIMPLES PARA 1<br>LÂMPADA</h1>
+            <h2 class="subtitulo-entrada">CIRCUITO MONOFÁSICO - 127V</h2>
+            <div class="creditos-entrada">© Desenvolvido por Ivan Santos - ConectaeadPLUS - 2026</div>
+            <button class="btn-iniciar-lab" onclick="iniciarLaboratorio()">Clique para iniciar o Laboratório</button>
         </div>
     </div>
 
@@ -197,7 +230,6 @@
         <div id="balao-cor-fase" class="balao-base">A fase poderá ser de qualquer cor<span class="referencia-nbr">(Item 6.1.5.3.4 da NBR-5410)</span></div>
         <div id="balao-cor-neutro" class="balao-base">O neutro deve ser de cor Azul Claro<span class="referencia-nbr">(Item 6.1.5.3.1 da NBR-5410)</span></div>
         <div id="balao-seccionar-fase" class="balao-base">O interruptor deve seccionar o condutor vivo (fase)<span class="referencia-nbr">(Item 6.3.7.2.1 da NBR-5410)</span></div>
-         
         <div id="balao-cor-retorno" class="balao-base">O retorno também pode ser de qualquer cor.<span class="referencia-nbr">(continuidade da fase NBR-5410)</span></div>
 
         <img src="lamp_on.png" id="camada-lampada" title="Para interligações consulte em 'AJUDA'">
@@ -255,14 +287,15 @@
     const balaoSeccionar = document.getElementById('balao-seccionar-fase');
     const balaoRetorno = document.getElementById('balao-cor-retorno');
 
-    // TRANSICÃO DA SPLASH SCREEN PARA O INÍCIO DO LAB
-    function entrarNoLab() { 
-        const splash = document.getElementById('splash-screen'); 
-        splash.style.opacity = '0'; 
+    // REFERÊNCIA DE ACESSO DA TELA DE ENTRADA ORIGINAL
+    const telaEntrada = document.getElementById('tela-entrada');
+
+    function iniciarLaboratorio() { 
+        telaEntrada.style.opacity = '0'; 
         setTimeout(() => { 
-            splash.style.visibility = 'hidden'; 
-            carregarEtapa(); // Sincroniza o carregamento da primeira etapa somente após sumir o Splash
-        }, 800); 
+            telaEntrada.style.visibility = 'hidden'; 
+            carregarEtapa(); 
+        }, 500); 
     }
 
     function fecharBalao() {
