@@ -7,7 +7,7 @@
     <style>
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: #050a14; 
+            background: #060b13; 
             color: white; 
             display: flex; 
             flex-direction: column; 
@@ -18,45 +18,71 @@
         }
 
         h1 {
-            color: #00ffff;
-            text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+            color: #00f0ff;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.5), 0 0 20px rgba(0, 240, 255, 0.3);
             font-size: 2.5em;
             margin-bottom: 20px;
             letter-spacing: 2px;
             text-transform: uppercase;
         }
 
+        /* --- TELA DE SPLASH PROFISSIONAL (LABORATÓRIO SMT PRO) --- */
         #splash-screen {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: #050a14;
+            background: #060b13;
             display: flex; justify-content: center; align-items: center;
             z-index: 500; cursor: pointer;
-            transition: opacity 0.8s ease, visibility 0.8s;
+            transition: opacity 0.6s ease, visibility 0.6s;
         }
 
         .splash-container {
-            width: 80%; max-width: 800px;
-            background: linear-gradient(145deg, #0a1528, #050a14);
-            border: 3px solid #00ffff; border-radius: 20px;
-            padding: 60px 40px; text-align: center;
-            box-shadow: 0 0 40px rgba(0, 255, 255, 0.4), inset 0 0 20px rgba(0, 255, 255, 0.1);
+            width: 85%; max-width: 750px;
+            background: linear-gradient(145deg, #0b1528, #040810);
+            border: 2px solid #00f0ff; border-radius: 12px;
+            padding: 50px 30px; text-align: center;
+            box-shadow: 0 0 40px rgba(0, 240, 255, 0.25), inset 0 0 20px rgba(0, 240, 255, 0.05);
         }
 
-        .splash-titulo { color: #00ffff; font-size: 2.8em; font-weight: bold; text-transform: uppercase; margin-bottom: 10px; text-shadow: 0 0 15px rgba(0, 255, 255, 0.6); }
-        .splash-sub { color: #00ffff; font-size: 1.5em; letter-spacing: 3px; margin-bottom: 30px; }
-        .splash-divisor { width: 150px; height: 2px; background: #00ffff; margin: 30px auto; border: none; opacity: 0.5; }
+        .splash-titulo { 
+            color: #ffd700; 
+            font-size: 2.4em; 
+            font-weight: bold; 
+            text-transform: uppercase; 
+            margin-bottom: 5px; 
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.4); 
+        }
+        
+        .splash-sub { 
+            color: #00f0ff; 
+            font-size: 1.3em; 
+            letter-spacing: 3px; 
+            margin-bottom: 15px; 
+            font-weight: 600;
+        }
+        
+        .splash-divisor { width: 100px; height: 2px; background: #00f0ff; margin: 25px auto; border: none; opacity: 0.4; }
 
         .splash-creditos {
             color: #ffffff;
-            font-size: 1.1em;
-            opacity: 0.3; 
-            margin-top: 40px;
+            font-size: 1em;
+            opacity: 0.4; 
+            margin-top: 35px;
+            letter-spacing: 1px;
         }
 
-        .splash-entrar { margin-top: 30px; font-size: 0.9em; color: #00ffff; animation: pulsarBotao 1.5s infinite; }
-        @keyframes pulsarBotao { 0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; } }
+        .splash-entrar { 
+            margin-top: 30px; 
+            font-size: 1.1em; 
+            font-weight: bold;
+            color: #00f0ff; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            animation: pulsarBotao 1.8s infinite ease-in-out; 
+        }
+        @keyframes pulsarBotao { 0% { opacity: 0.3; } 50% { opacity: 1; text-shadow: 0 0 10px rgba(0, 240, 255, 0.5); } 100% { opacity: 0.3; } }
 
+        /* --- COMPONENTES DA INTERFACE DO SIMULADOR --- */
         #painel-status {
             width: 90%; max-width: 950px;
             background: rgba(0, 0, 0, 0.4); border: 1px solid #1a2a44;
@@ -105,7 +131,7 @@
         .controles-inferiores { position: absolute; bottom: 30px; left: 30px; display: flex; gap: 15px; z-index: 100; }
         .btn-acao { padding: 8px 25px; border: none; border-radius: 20px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5); font-size: 14px; color: white; text-transform: uppercase; }
         #btn-reiniciar { background: #cc0000; }
-        #btn-ajuda { background: #1a2a44; border: 1px solid #00ffff; box-shadow: 0 0 10px rgba(0,255,255,0.3); }
+        #btn-ajuda { background: #1a2a44; border: 1px solid #00f0ff; box-shadow: 0 0 10px rgba(0,240,255,0.3); }
 
         #placa-concluido {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8);
@@ -122,14 +148,14 @@
         .p-tl { top: 12px; left: 12px; } .p-tr { top: 12px; right: 12px; }
         .p-bl { bottom: 12px; left: 12px; } .p-br { bottom: 12px; right: 12px; }
 
-        #modal-ajuda { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 380px; background: rgba(5, 10, 20, 0.98); border: 2px solid #00ffff; border-radius: 15px; z-index: 150; display: none; flex-direction: column; padding: 25px; box-shadow: 0 0 30px rgba(0, 255, 255, 0.4); }
-        .ajuda-titulo { color: #00ffff; text-align: center; margin-bottom: 20px; font-weight: bold; }
-        .ajuda-item { background: rgba(0, 255, 255, 0.05); border: 1px solid #00ffff; color: white; padding: 10px; margin-bottom: 10px; border-radius: 5px; cursor: pointer; font-size: 14px; }
+        #modal-ajuda { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 380px; background: rgba(5, 10, 20, 0.98); border: 2px solid #00f0ff; border-radius: 15px; z-index: 150; display: none; flex-direction: column; padding: 25px; box-shadow: 0 0 30px rgba(0, 240, 255, 0.4); }
+        .ajuda-titulo { color: #00f0ff; text-align: center; margin-bottom: 20px; font-weight: bold; }
+        .ajuda-item { background: rgba(0, 240, 255, 0.05); border: 1px solid #00f0ff; color: white; padding: 10px; margin-bottom: 10px; border-radius: 5px; cursor: pointer; font-size: 14px; }
         .btn-fechar { background: #222; color: #aaa; border: 1px solid #444; padding: 8px; margin-top: 5px; border-radius: 5px; cursor: pointer; }
 
         #visualizador-ajuda { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 200; display: none; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; }
-        #img-ajuda-grande { max-width: 70%; max-height: 70%; border: 2px solid #00ffff; border-radius: 8px; }
-        .legenda-voltar { color: #00ffff; font-weight: bold; margin-top: 15px; font-size: 14px; letter-spacing: 1px; text-transform: uppercase; }
+        #img-ajuda-grande { max-width: 70%; max-height: 70%; border: 2px solid #00f0ff; border-radius: 8px; }
+        .legenda-voltar { color: #00f0ff; font-weight: bold; margin-top: 15px; font-size: 14px; letter-spacing: 1px; text-transform: uppercase; }
 
         .ponto { position: absolute; width: 22px; height: 22px; background: rgba(255, 255, 0, 0.7); border: 2px solid gold; border-radius: 50%; cursor: pointer; display: none; z-index: 40; transform: translate(-50%, -50%); animation: pulsar 1.2s infinite; }
         @keyframes pulsar { 0% { transform: translate(-50%, -50%) scale(1); } 70% { transform: translate(-50%, -50%) scale(1.3); } 100% { transform: translate(-50%, -50%) scale(1); } }
@@ -138,6 +164,7 @@
 </head>
 <body onclick="fecharBalao()">
 
+    <!-- SPLASH SCREEN ATUALIZADA (LABORATÓRIO SMT PRO) -->
     <div id="splash-screen" onclick="entrarNoLab()">
         <div class="splash-container">
             <div class="splash-titulo">Interruptor Simples para 1 Lâmpada</div>
@@ -160,7 +187,7 @@
 
     <div id="container-simulador" onclick="fecharBalao()">
         <img src="ambiente.jpg" id="fundo">
-        
+         
         <div id="camada-fase1" class="camada-cabo"></div>
         <div id="camada-fase2" class="camada-cabo"></div>
         <div id="camada-retorno1" class="camada-cabo"></div>
@@ -172,7 +199,7 @@
         <div id="balao-cor-fase" class="balao-base">A fase poderá ser de qualquer cor<span class="referencia-nbr">(Item 6.1.5.3.4 da NBR-5410)</span></div>
         <div id="balao-cor-neutro" class="balao-base">O neutro deve ser de cor Azul Claro<span class="referencia-nbr">(Item 6.1.5.3.1 da NBR-5410)</span></div>
         <div id="balao-seccionar-fase" class="balao-base">O interruptor deve seccionar o condutor vivo (fase)<span class="referencia-nbr">(Item 6.3.7.2.1 da NBR-5410)</span></div>
-        
+         
         <div id="balao-cor-retorno" class="balao-base">O retorno também pode ser de qualquer cor.<span class="referencia-nbr">(continuidade da fase NBR-5410)</span></div>
 
         <img src="lamp_on.png" id="camada-lampada" title="Para interligações consulte em 'AJUDA'">
@@ -223,14 +250,22 @@
     const somDisjuntor = document.getElementById('som-disjuntor');
     const somInterruptor = document.getElementById('som-interruptor');
     const somConexao = document.getElementById('som-conexao');
-    
+     
     const balao = document.getElementById('balao-informativo');
     const balaoCor = document.getElementById('balao-cor-fase');
     const balaoNeutro = document.getElementById('balao-cor-neutro');
     const balaoSeccionar = document.getElementById('balao-seccionar-fase');
     const balaoRetorno = document.getElementById('balao-cor-retorno');
 
-    function entrarNoLab() { const splash = document.getElementById('splash-screen'); splash.style.opacity = '0'; setTimeout(() => { splash.style.visibility = 'hidden'; }, 800); }
+    // TRANSICÃO DA SPLASH SCREEN PARA O INÍCIO DO LAB
+    function entrarNoLab() { 
+        const splash = document.getElementById('splash-screen'); 
+        splash.style.opacity = '0'; 
+        setTimeout(() => { 
+            splash.style.visibility = 'hidden'; 
+            carregarEtapa(); // Inicia a lógica das etapas e pontos somente após sumir o Splash
+        }, 600); 
+    }
 
     function fecharBalao() {
         balao.style.display = 'none';
@@ -337,7 +372,7 @@
             }
         }
     }
-    window.onload = carregarEtapa;
+    // Removemos o gatilho automático do onload para esperar o clique da Splash Screen.
 </script>
 </body>
 </html>
