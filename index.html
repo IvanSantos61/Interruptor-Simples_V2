@@ -103,7 +103,6 @@
         .tecla { position: absolute; cursor: pointer; z-index: 25; transition: transform 0.1s; }
         .tecla:active { transform: scale(0.95); }
         
-        /* Removido o width fixo daqui para respeitar o inline */
         .conector { position: absolute; display: none; z-index: 15; pointer-events: auto; transform-origin: center; cursor: help; }
 
         .balao-base {
@@ -248,10 +247,10 @@
         <img src="al_dr_off.png" id="tecla-dr" class="tecla" style="top: 28%; left: 23.8%; width: 50px;" onclick="toggleDispositivo('dr')">
         <img src="tec_int_off.png" id="tecla-int" class="tecla" style="top: 73%; left: 72%; width: 53px; z-index: 100; pointer-events: auto; cursor: help;" onclick="toggleDispositivo('int')" title="Para interligações consulte em 'AJUDA'">
 
-        <!-- PROPRIEDADES width, top E left ADICIONADAS EM CADA CONECTOR ABAIXO -->
-        <img src="con_wago.png" id="wago-fase" class="conector" style="width: 65px; top: 25%; left: 57.4%;">
-        <img src="con_wago.png" id="wago-retorno" class="conector" style="width: 65px; top: 17.3%; left: 60%;">
-        <img src="con_wago.png" id="wago-neutro" class="conector" style="width: 65px; top: 14.5%; left: 57%;">
+        <!-- Conectores Wago com propriedades de tamanho e posicionamento manuais -->
+        <img src="con_wago.png" id="wago-fase" class="conector" style="width: 72px; top: 25%; left: 57.4%;">
+        <img src="con_wago.png" id="wago-retorno" class="conector" style="width: 72px; top: 17.3%; left: 60%;">
+        <img src="con_wago.png" id="wago-neutro" class="conector" style="width: 72px; top: 14.5%; left: 57%;">
 
         <div id="ponto-inicio" class="ponto"></div>
         <div id="ponto-fim" class="ponto"></div>
@@ -383,17 +382,20 @@
                 if (cabo.id === 'FASE2') { balaoSeccionar.style.display = 'flex'; }
                 if (cabo.id === 'RETORNO1') { balaoRetorno.style.display = 'flex'; }
 
-                // O JavaScript agora apenas ativa o display e rotaciona com base no estilo inline que você definiu
+                // Identifica se o condutor finalizado necessita renderizar um Wago
                 let idWago;
                 if (cabo.id === 'FASE1') idWago = 'wago-fase';
                 else if (cabo.id === 'NEUTRO1') idWago = 'wago-neutro';
-                else if (cabo.id === 'RETORNO2') idWago = 'wago-retorno'; // Ativa na etapa da lâmpada
+                else if (cabo.id === 'RETORNO2') idWago = 'wago-retorno';
 
+                // AGUARDA 1,5 SEGUNDOS (1500ms) SE HOUVER UM CONECTOR PARA ESTA ETAPA
                 if (idWago) {
-                    const wago = document.getElementById(idWago);
-                    wago.style.transform = `translate(-50%, -50%) rotate(${cabo.wagoRot})`; 
-                    wago.style.display = 'block';
-                    wago.title = "Para interligações consulte em 'AJUDA'";
+                    setTimeout(() => {
+                        const wago = document.getElementById(idWago);
+                        wago.style.transform = `translate(-50%, -50%) rotate(${cabo.wagoRot})`; 
+                        wago.style.display = 'block';
+                        wago.title = "Para interligações consulte em 'AJUDA'";
+                    }, 1500);
                 }
 
                 etapaAtual++; setTimeout(carregarEtapa, 600);
