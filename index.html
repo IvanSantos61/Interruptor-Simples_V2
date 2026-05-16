@@ -317,13 +317,14 @@
     function mostrarEsquema(src) { document.getElementById('img-ajuda-grande').src = src; document.getElementById('visualizador-ajuda').style.display = 'flex'; fecharAjuda(); }
     function voltarParaMenu() { document.getElementById('visualizador-ajuda').style.display = 'none'; abrirAjuda(); }
 
+    // Adicionado coordenadas explícitas de wagoTop e wagoLeft nas etapas FASE1 e NEUTRO1
     const sequencia = [
-        { id: 'FASE1', cor: '#ff0000', max: 54, pasta: 'FASE1', ini: {t: '38%', l: '27%'}, fim: {t: '23%', l: '56.5%'}, msg: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NA REFERENCIA INDICADA NO DR, PARA INICIAR A PASSAGEM DA FASE</span>', msgDestino: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NO PONTO INDICADO NA CAIXA DE PASSAGEM, PARA LEVAR A FASE</span>' },
-        { id: 'NEUTRO1', cor: '#00bfff', max: 78, pasta: 'NEUTRO1', ini: {t: '35%', l: '44.3%'}, fim: {t: '14%', l: '56%'}, msg: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NA REFERÊNCIA INDICADA NO BARRAMENTO PARA INICIAR A PASSAGEM DO NEUTRO</span>', msgDestino: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NO PONTO INDICADO NA CAIXA DE PASSAGEM, PARA LEVAR O NEUTRO</span>' },
-        { id: 'FASE2', cor: '#ff0000', max: 18, pasta: 'FASE2', ini: {t: '23%', l: '58%'}, fim: {t: '81%', l: '68%'}, wagoTop: '25%', wagoLeft: '57.4%', wagoRot: '90deg', msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA MOSTRADA NO INTERRUPTOR.' },
+        { id: 'FASE1', cor: '#ff0000', max: 54, pasta: 'FASE1', ini: {t: '38%', l: '27%'}, fim: {t: '23%', l: '56.5%'}, wagoTop: '25%', wagoLeft: '57.4%', wagoRot: '90deg', msg: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NA REFERENCIA INDICADA NO DR, PARA INICIAR A PASSAGEM DA FASE</span>', msgDestino: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NO PONTO INDICADO NA CAIXA DE PASSAGEM, PARA LEVAR A FASE</span>' },
+        { id: 'NEUTRO1', cor: '#00bfff', max: 78, pasta: 'NEUTRO1', ini: {t: '35%', l: '44.3%'}, fim: {t: '14%', l: '56%'}, wagoTop: '14.5%', wagoLeft: '57%', wagoRot: '270deg', msg: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NA REFERÊNCIA INDICADA NO BARRAMENTO PARA INICIAR A PASSAGEM DO NEUTRO</span>', msgDestino: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NO PONTO INDICADO NA CAIXA DE PASSAGEM, PARA LEVAR O NEUTRO</span>' },
+        { id: 'FASE2', cor: '#ff0000', max: 18, pasta: 'FASE2', ini: {t: '23%', l: '58%'}, fim: {t: '81%', l: '68%'}, msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA MOSTRADA NO INTERRUPTOR.' },
         { id: 'RETORNO1', cor: '#111111', max: 18, pasta: 'RETORNO1', ini: {t: '20%', l: '61%'}, fim: {t: '75%', l: '68%'}, msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA DO INTERRUPTOR.' },
         { id: 'RETORNO2', cor: '#111111', max: 24, pasta: 'RETORNO2', ini: {t: '17%', l: '61%'}, fim: {t: '55%', l: '89%'}, wagoTop: '17.3%', wagoLeft: '60%', wagoRot: '0deg', msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO</span>: CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA MOSTRADA NA LÂMPADA.' },
-        { id: 'NEUTRO2', cor: '#00bfff', max: 30, pasta: 'NEUTRO2', ini: {t: '13%', l: '58%'}, fim: {t: '55%', l: '91.3%'}, wagoTop: '14.5%', wagoLeft: '57%', wagoRot: '270deg', msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO</span>: CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA MOSTRADA NA LÂMPADA.' }
+        { id: 'NEUTRO2', cor: '#00bfff', max: 30, pasta: 'NEUTRO2', ini: {t: '13%', l: '58%'}, fim: {t: '55%', l: '91.3%'}, msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO</span>: CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA MOSTRADA NA LÂMPADA.' }
     ];
 
     const elInicio = document.getElementById('ponto-inicio');
@@ -380,33 +381,21 @@
                 if (cabo.id === 'FASE2') { balaoSeccionar.style.display = 'flex'; }
                 if (cabo.id === 'RETORNO1') { balaoRetorno.style.display = 'flex'; }
 
-                // LOGICA ALTERADA: Quando finaliza FASE2, renderiza o wago-fase E o wago-neutro antecipadamente
-                if (cabo.id === 'FASE2') {
-                    // Renderiza o Wago da Fase
-                    const wagoFase = document.getElementById('wago-fase');
-                    wagoFase.style.top = cabo.wagoTop; 
-                    wagoFase.style.left = cabo.wagoLeft;
-                    wagoFase.style.transform = `translate(-50%, -50%) rotate(${cabo.wagoRot})`; 
-                    wagoFase.style.display = 'block';
-                    wagoFase.title = "Para interligações consulte em 'AJUDA'";
+                // NOVA LÓGICA DE RENDERIZAÇÃO DOS CONECTORES
+                if (cabo.wagoTop) {
+                    let idWago;
+                    if (cabo.id === 'FASE1') idWago = 'wago-fase';
+                    else if (cabo.id === 'NEUTRO1') idWago = 'wago-neutro';
+                    else if (cabo.id.toLowerCase().includes('retorno')) idWago = 'wago-retorno';
 
-                    // Busca os dados do NEUTRO2 na sequencia para posicionar o conector Wago do Neutro corretamente
-                    const dadosNeutro2 = sequencia.find(s => s.id === 'NEUTRO2');
-                    if (dadosNeutro2) {
-                        const wagoNeutro = document.getElementById('wago-neutro');
-                        wagoNeutro.style.top = dadosNeutro2.wagoTop; 
-                        wagoNeutro.style.left = dadosNeutro2.wagoLeft;
-                        wagoNeutro.style.transform = `translate(-50%, -50%) rotate(${dadosNeutro2.wagoRot})`; 
-                        wagoNeutro.style.display = 'block';
-                        wagoNeutro.title = "Para interligações consulte em 'AJUDA'";
+                    if (idWago) {
+                        const wago = document.getElementById(idWago);
+                        wago.style.top = cabo.wagoTop; 
+                        wago.style.left = cabo.wagoLeft;
+                        wago.style.transform = `translate(-50%, -50%) rotate(${cabo.wagoRot})`; 
+                        wago.style.display = 'block';
+                        wago.title = "Para interligações consulte em 'AJUDA'";
                     }
-                } else if (cabo.wagoTop && cabo.id !== 'NEUTRO2') {
-                    // Renderiza normalmente o Wago do Retorno quando for a sua respectiva etapa
-                    let idWago = cabo.id.toLowerCase().includes('retorno') ? 'wago-retorno' : 'wago-neutro';
-                    const wago = document.getElementById(idWago);
-                    wago.style.top = cabo.wagoTop; wago.style.left = cabo.wagoLeft;
-                    wago.style.transform = `translate(-50%, -50%) rotate(${cabo.wagoRot})`; wago.style.display = 'block';
-                    wago.title = "Para interligações consulte em 'AJUDA'";
                 }
 
                 etapaAtual++; setTimeout(carregarEtapa, 600);
