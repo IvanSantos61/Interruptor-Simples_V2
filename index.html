@@ -117,9 +117,8 @@
 
         .referencia-nbr { color: red; font-size: 12px; margin-top: 5px; display: block; }
 
-        /* Estilo base compartilhado pelos botões de ação */
         .btn-acao { 
-            position: absolute; /* Permite o reposicionamento manual */
+            position: absolute; 
             padding: 8px 25px; 
             width: 130px; 
             border: none; 
@@ -134,19 +133,18 @@
             z-index: 100;
         }
 
-        /* PROPRIEDADES MANUAIS DE POSICIONAMENTO */
         #btn-ajuda { 
             background: #1a2a44; 
             border: 1px solid #00f0ff; 
             box-shadow: 0 0 10px rgba(0,255,255,0.3); 
-            top: 79%;   /* Altere este valor para mover verticalmente */
-            left: 15%; /* Altere este valor para mover horizontalmente */
+            top: 86%;   
+            left: 5.5%; 
         }
 
         #btn-reiniciar { 
             background: #cc0000; 
-            top: 87%;   /* Altere este valor para mover verticalmente */
-            left: 15%; /* Altere este valor para mover horizontalmente */
+            top: 92%;   
+            left: 5.5%; 
         }
 
         #placa-concluido {
@@ -160,9 +158,18 @@
         #placa-concluido.show { display: flex; opacity: 1; transform: translate(-50%, -50%) scale(1); }
         .texto-concluido { color: #00ff00; font-size: 3em; font-weight: 400; text-shadow: 0 0 20px rgba(0, 255, 0, 0.6); display: flex; align-items: center; gap: 20px; letter-spacing: 2px; }
 
-        .parafuso { position: absolute; width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(to bottom, #111 2px, transparent 2px, transparent calc(100% - 2px), #111 calc(100% - 2px)), linear-gradient(to right, #444 48%, #111 48%, #111 52%, #444 52%); box-shadow: inset 2px 2px 5px rgba(0,0,0,0.6), 0 0 5px rgba(0,0,0,0.8); border: 1px solid #222; }
-        .p-tl { top: 12px; left: 12px; } .p-tr { top: 12px; right: 12px; }
-        .p-bl { bottom: 12px; left: 12px; } .p-br { bottom: 12px; right: 12px; }
+        /* PARAFUSOS REDUZIDOS (DE 28px PARA 18px) */
+        .parafuso { 
+            position: absolute; 
+            width: 18px; 
+            height: 18px; 
+            border-radius: 50%; 
+            background: linear-gradient(to bottom, #111 2px, transparent 2px, transparent calc(100% - 2px), #111 calc(100% - 2px)), linear-gradient(to right, #444 48%, #111 48%, #111 52%, #444 52%); 
+            box-shadow: inset 1px 1px 3px rgba(0,0,0,0.6), 0 0 4px rgba(0,0,0,0.8); 
+            border: 1px solid #222; 
+        }
+        .p-tl { top: 8px; left: 8px; } .p-tr { top: 8px; right: 8px; }
+        .p-bl { bottom: 8px; left: 8px; } .p-br { bottom: 8px; right: 8px; }
 
         #modal-ajuda { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 380px; background: rgba(5, 10, 20, 0.98); border: 2px solid #00f0ff; border-radius: 15px; z-index: 150; display: none; flex-direction: column; padding: 25px; box-shadow: 0 0 30px rgba(0, 255, 255, 0.4); }
         .ajuda-titulo { color: #00f0ff; text-align: center; margin-bottom: 20px; font-weight: bold; }
@@ -250,7 +257,6 @@
             <button class="btn-fechar" onclick="fecharAjuda()">FECHAR</button>
         </div>
 
-        <!-- BOTÕES INDEPENDENTES COM POSITION ABSOLUTE -->
         <button id="btn-ajuda" class="btn-acao" onclick="abrirAjuda()">AJUDA</button>
         <button id="btn-reiniciar" class="btn-acao" onclick="location.reload()">REINICIAR</button>
 
