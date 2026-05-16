@@ -239,10 +239,10 @@
         <div id="camada-neutro2" class="camada-cabo"></div>
 
         <div id="balao-informativo" class="balao-base">A seção mínima dos fios de iluminação é 1,5mm²<span class="referencia-nbr">(Item 6.2.6.1.1 da NBR-5410)</span></div>
-        <div id="balao-cor-fase" class="balao-base">A fase poderá ser de qualquer cor<span class="referencia-nbr">(Item 6.1.5.3.4 da NBR-5410)</span></div>
+        <div id="balao-cor-fase" class="balao-base">A fase poderá ser de any cor<span class="referencia-nbr">(Item 6.1.5.3.4 da NBR-5410)</span></div>
         <div id="balao-cor-neutro" class="balao-base">O neutro deve ser de cor Azul Claro<span class="referencia-nbr">(Item 6.1.5.3.1 da NBR-5410)</span></div>
         <div id="balao-seccionar-fase" class="balao-base">O interruptor deve seccionar o condutor vivo (fase)<span class="referencia-nbr">(Item 6.3.7.2.1 da NBR-5410)</span></div>
-        <div id="balao-cor-retorno" class="balao-base">O retorno também pode ser de qualquer cor.<span class="referencia-nbr">(continuidade da fase NBR-5410)</span></div>
+        <div id="balao-cor-retorno" class="balao-base">O retorno também pode ser de any cor.<span class="referencia-nbr">(continuidade da fase NBR-5410)</span></div>
 
         <img src="lamp_on.png" id="camada-lampada" title="Para interligações consulte em 'AJUDA'">
 
@@ -322,8 +322,8 @@
     function voltarParaMenu() { document.getElementById('visualizador-ajuda').style.display = 'none'; abrirAjuda(); }
 
     const sequencia = [
-        { id: 'FASE1', cor: '#ff0000', max: 54, pasta: 'FASE1', ini: {t: '38%', l: '27%'}, fim: {t: '23%', l: '56.5%'}, msg: '<span class="destaque"><span class="cor-alerta">REDE:</span> CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA DO DR.', msgDestino: '<span class="destaque"><span class="cor-alerta">REDE:</span> CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.' },
-        { id: 'NEUTRO1', cor: '#00bfff', max: 78, pasta: 'NEUTRO1', ini: {t: '35%', l: '44.3%'}, fim: {t: '14%', l: '56%'}, msg: '<span class="destaque"><span class="cor-alerta">REDE:</span> CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA MOSTRADA NO BARRAMENTO (N)', msgDestino: '<span class="destaque"><span class="cor-alerta">REDE:</span> CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.' },
+        { id: 'FASE1', cor: '#ff0000', max: 54, pasta: 'FASE1', ini: {t: '38%', l: '27%'}, fim: {t: '23%', l: '56.5%'}, msg: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NA REFERENCIA INDICADA NO DR, PARA INICIAR A PASSAGEM DA FASE</span>', msgDestino: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NO PONTO INDICADO NA CAIXA DE PASSAGEM, PARA LEVAR A FASE</span>' },
+        { id: 'NEUTRO1', cor: '#00bfff', max: 78, pasta: 'NEUTRO1', ini: {t: '35%', l: '44.3%'}, fim: {t: '14%', l: '56%'}, msg: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NA REFERÊNCIA INDICADA NO BARRAMENTO PARA INICIAR A PASSAGEM DO NEUTRO</span>', msgDestino: '<span class="destaque"><span class="cor-alerta">REDE:</span> CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.' },
         { id: 'FASE2', cor: '#ff0000', max: 18, pasta: 'FASE2', ini: {t: '23%', l: '58%'}, fim: {t: '81%', l: '68%'}, wagoTop: '25%', wagoLeft: '57.4%', wagoRot: '90deg', msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA MOSTRADA NO INTERRUPTOR.' },
         { id: 'RETORNO1', cor: '#111111', max: 18, pasta: 'RETORNO1', ini: {t: '20%', l: '61%'}, fim: {t: '75%', l: '68%'}, msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA DO INTERRUPTOR.' },
         { id: 'RETORNO2', cor: '#111111', max: 24, pasta: 'RETORNO2', ini: {t: '17%', l: '61%'}, fim: {t: '55%', l: '89%'}, wagoTop: '17.3%', wagoLeft: '60%', wagoRot: '0deg', msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA DENTRO DA CAIXA DE PASSAGEM.', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO</span>: CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA MOSTRADA NA LÂMPADA.' },
