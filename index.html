@@ -117,17 +117,9 @@
 
         .referencia-nbr { color: red; font-size: 12px; margin-top: 5px; display: block; }
 
-        .controles-inferiores { 
-            position: absolute; 
-            bottom: 35px; 
-            left: 55px; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center;
-            gap: 12px; 
-            z-index: 100; 
-        }
+        /* Estilo base compartilhado pelos botões de ação */
         .btn-acao { 
+            position: absolute; /* Permite o reposicionamento manual */
             padding: 8px 25px; 
             width: 130px; 
             border: none; 
@@ -139,9 +131,23 @@
             color: white; 
             text-transform: uppercase;
             text-align: center;
+            z-index: 100;
         }
-        #btn-reiniciar { background: #cc0000; }
-        #btn-ajuda { background: #1a2a44; border: 1px solid #00f0ff; box-shadow: 0 0 10px rgba(0,255,255,0.3); }
+
+        /* PROPRIEDADES MANUAIS DE POSICIONAMENTO */
+        #btn-ajuda { 
+            background: #1a2a44; 
+            border: 1px solid #00f0ff; 
+            box-shadow: 0 0 10px rgba(0,255,255,0.3); 
+            top: 86%;   /* Altere este valor para mover verticalmente */
+            left: 5.5%; /* Altere este valor para mover horizontalmente */
+        }
+
+        #btn-reiniciar { 
+            background: #cc0000; 
+            top: 92%;   /* Altere este valor para mover verticalmente */
+            left: 5.5%; /* Altere este valor para mover horizontalmente */
+        }
 
         #placa-concluido {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8);
@@ -240,15 +246,13 @@
             <div class="ajuda-item" onclick="mostrarEsquema('ligaint.png')">1. Ligação do Interruptor</div>
             <div class="ajuda-item" onclick="mostrarEsquema('ligabocal.png')">2. Ligação da Lâmpada</div>
             <div class="ajuda-item" onclick="mostrarEsquema('emendas2.png')">3. Emendas e conexões</div>
-            <!-- NOVO ITEM ADICIONADO ABAIXO -->
             <div class="ajuda-item" onclick="mostrarEsquema('listamat.png')">4. Lista de material</div>
             <button class="btn-fechar" onclick="fecharAjuda()">FECHAR</button>
         </div>
 
-        <div class="controles-inferiores">
-            <button id="btn-ajuda" class="btn-acao" onclick="abrirAjuda()">AJUDA</button>
-            <button id="btn-reiniciar" class="btn-acao" onclick="location.reload()">REINICIAR</button>
-        </div>
+        <!-- BOTÕES INDEPENDENTES COM POSITION ABSOLUTE -->
+        <button id="btn-ajuda" class="btn-acao" onclick="abrirAjuda()">AJUDA</button>
+        <button id="btn-reiniciar" class="btn-acao" onclick="location.reload()">REINICIAR</button>
 
         <div id="visualizador-ajuda" onclick="voltarParaMenu()">
             <img id="img-ajuda-grande" src=""><div class="legenda-voltar">CLIQUE PARA VOLTAR</div>
