@@ -117,8 +117,30 @@
 
         .referencia-nbr { color: red; font-size: 12px; margin-top: 5px; display: block; }
 
-        .controles-inferiores { position: absolute; bottom: 30px; left: 30px; display: flex; gap: 15px; z-index: 100; }
-        .btn-acao { padding: 8px 25px; border: none; border-radius: 20px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5); font-size: 14px; color: white; text-transform: uppercase; }
+        /* --- AJUSTE: CONTROLES VERTICAIS, CENTRALIZADOS E AFASTADOS DA MARGEM --- */
+        .controles-inferiores { 
+            position: absolute; 
+            bottom: 35px; 
+            left: 55px; /* Afastado da quina esquerda para não cobrir a imagem */
+            display: flex; 
+            flex-direction: column; /* Organização vertical */
+            align-items: center;
+            gap: 12px; 
+            z-index: 100; 
+        }
+        .btn-acao { 
+            padding: 8px 25px; 
+            width: 130px; /* Garante tamanho idêntico e centralização harmônica */
+            border: none; 
+            border-radius: 20px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5); 
+            font-size: 14px; 
+            color: white; 
+            text-transform: uppercase;
+            text-align: center;
+        }
         #btn-reiniciar { background: #cc0000; }
         #btn-ajuda { background: #1a2a44; border: 1px solid #00f0ff; box-shadow: 0 0 10px rgba(0,255,255,0.3); }
 
@@ -146,7 +168,6 @@
         #img-ajuda-grande { max-width: 70%; max-height: 70%; border: 2px solid #00f0ff; border-radius: 8px; }
         .legenda-voltar { color: #00f0ff; font-weight: bold; margin-top: 15px; font-size: 14px; letter-spacing: 1px; text-transform: uppercase; }
 
-        /* --- AJUSTE: BOLINHA MENOR (14px) --- */
         .ponto { 
             position: absolute; width: 14px; height: 14px; 
             border: 2px solid #ffffff; border-radius: 50%; 
@@ -223,9 +244,10 @@
             <button class="btn-fechar" onclick="fecharAjuda()">FECHAR</button>
         </div>
 
+        <!-- BOTÕES VERTICAIS ALINHADOS E AFASTADOS DA ESQUERDA -->
         <div class="controles-inferiores">
-            <button id="btn-reiniciar" class="btn-acao" onclick="location.reload()">REINICIAR</button>
             <button id="btn-ajuda" class="btn-acao" onclick="abrirAjuda()">AJUDA</button>
+            <button id="btn-reiniciar" class="btn-acao" onclick="location.reload()">REINICIAR</button>
         </div>
 
         <div id="visualizador-ajuda" onclick="voltarParaMenu()">
@@ -297,12 +319,10 @@
         const dados = sequencia[etapaAtual];
         statusTxt.innerHTML = dados.msg;
         
-        // Configura o ponto inicial com a cor do condutor da etapa
         elInicio.style.top = dados.ini.t; elInicio.style.left = dados.ini.l; 
         elInicio.style.background = dados.cor; elInicio.style.borderColor = "#ffffff";
         elInicio.style.display = 'block'; 
 
-        // Configura o ponto final com a mesma cor oculta até o clique inicial
         elFim.style.top = dados.fim.t; elFim.style.left = dados.fim.l; 
         elFim.style.background = dados.cor; elFim.style.borderColor = "#ffffff";
         elFim.style.display = 'none';
@@ -311,7 +331,7 @@
 
     elInicio.onclick = (e) => { 
         e.stopPropagation(); fecharBalao(); 
-        elInicio.style.background = "#00ff00"; // Fica verde indicando seleção
+        elInicio.style.background = "#00ff00"; 
         elFim.style.display = 'block'; 
         aguardandoDestino = true; 
         if(sequencia[etapaAtual].msgDestino) statusTxt.innerHTML = sequencia[etapaAtual].msgDestino; 
@@ -320,7 +340,7 @@
     elFim.onclick = (e) => { 
         e.stopPropagation(); 
         if (aguardandoDestino) {
-            elFim.style.background = "#00ff00"; // Destino fica verde ao fechar a conexão
+            elFim.style.background = "#00ff00"; 
             animarCabo(sequencia[etapaAtual]);
         }
     };
