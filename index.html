@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laboratório SMT Pro</title>
+    <!-- Importando a fonte estilo visor digital/tecnológico 'Orbitron' -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
@@ -82,10 +84,11 @@
         }
 
         #status-mensagem { 
-            font-family: 'Arial Narrow', Arial, sans-serif;
-            font-size: 1.4em; 
+            font-family: 'Orbitron', Arial, sans-serif; /* Aplicada fonte estilo visor digital */
+            font-size: 1.3em; 
             font-weight: bold; 
             color: #ffffff; 
+            letter-spacing: 1px;
             text-transform: uppercase; 
             transition: all 0.3s ease; 
         }
@@ -104,6 +107,46 @@
         .tecla:active { transform: scale(0.95); }
         
         .conector { position: absolute; display: none; z-index: 15; pointer-events: auto; transform-origin: center; cursor: help; }
+
+        /* Novo Painel de Monitoramento dos Equipamentos (Perfumaria Técnica) */
+        #painel-equipamentos {
+            position: absolute;
+            top: 25%;
+            left: 36%;
+            width: 170px;
+            background: rgba(6, 11, 19, 0.85);
+            border: 2px solid #00f0ff;
+            border-radius: 10px;
+            padding: 12px 15px;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+            font-family: 'Orbitron', sans-serif;
+            z-index: 90;
+            display: none; /* Inicialmente oculto, aparece no fim da fiação */
+            flex-direction: column;
+            gap: 8px;
+            line-height: 1.4;
+        }
+        .titulo-painel-equip {
+            font-size: 11px;
+            color: #00f0ff;
+            text-align: center;
+            font-weight: bold;
+            border-bottom: 1px solid rgba(0, 240, 255, 0.3);
+            padding-bottom: 4px;
+            margin-bottom: 2px;
+            letter-spacing: 1px;
+        }
+        .item-equip {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .nome-equip { color: #aaa; }
+        .status-equip-simbolo { font-size: 16px; }
+        .simbolo-ligado { color: #00ff00; text-shadow: 0 0 5px #00ff00; }
+        .simbolo-desligado { color: #ff0000; text-shadow: 0 0 5px #ff0000; }
 
         .balao-base {
             position: absolute; z-index: 400; background: white; color: black;
@@ -254,6 +297,23 @@
         <img src="con_wago.png" id="wago-retorno" class="conector" style="width: 65px; top: 17.7%; left: 59.6%;">
         <img src="con_wago.png" id="wago-neutro" class="conector" style="width: 65px; top: 14%; left: 57%;">
 
+        <!-- NOVO: Painel Dinâmico de Monitoramento dos Equipamentos -->
+        <div id="painel-equipamentos">
+            <div class="titulo-painel-equip">STATUS DO CIRCUITO</div>
+            <div class="item-equip">
+                <span class="nome-equip">DISJ. GERAL (DG):</span>
+                <span id="status-dg-painel" class="status-equip-simbolo simbolo-desligado">✘</span>
+            </div>
+            <div class="item-equip">
+                <span class="nome-equip">DISP. DR (DR):</span>
+                <span id="status-dr-painel" class="status-equip-simbolo simbolo-desligado">✘</span>
+            </div>
+            <div class="item-equip">
+                <span class="nome-equip">INTERRUPT. (INT):</span>
+                <span id="status-int-painel" class="status-equip-simbolo simbolo-desligado">✘</span>
+            </div>
+        </div>
+
         <div id="ponto-inicio" class="ponto"></div>
         <div id="ponto-fim" class="ponto"></div>
 
@@ -334,12 +394,17 @@
     const elInicio = document.getElementById('ponto-inicio');
     const elFim = document.getElementById('ponto-fim');
     const statusTxt = document.getElementById('status-mensagem');
+    const painelEquip = document.getElementById('painel-equipamentos');
 
     function carregarEtapa() {
         if (etapaAtual >= sequencia.length) {
             instalacaoConcluida = true;
             statusTxt.innerHTML = '<span class="destaque">FIAÇÃO CONCLUÍDA!</span> LIGUE O DG, O DR E O INTERRUPTOR. TESTE O CIRCUITO';
             elInicio.style.display = 'none'; elFim.style.display = 'none';
+            
+            // Ativa a exibição do novo mini painel de status assim que a fiação acaba
+            painelEquip.style.display = 'flex';
+            atualizarSimbolosPainel();
             return;
         }
         const dados = sequencia[etapaAtual];
@@ -357,7 +422,7 @@
 
     elInicio.onclick = (e) => { 
         e.stopPropagation(); fecharBalao(); 
-        elInicio.style.background = "#00ff00"; // Sempre fica verde ao clicar
+        elInicio.style.background = "#00ff00"; 
         elFim.style.display = 'block'; 
         aguardandoDestino = true; 
         if(sequencia[etapaAtual].msgDestino) statusTxt.innerHTML = sequencia[etapaAtual].msgDestino; 
@@ -366,7 +431,7 @@
     elFim.onclick = (e) => { 
         e.stopPropagation(); 
         if (aguardandoDestino) {
-            elFim.style.background = "#00ff00"; // Sempre fica verde ao clicar
+            elFim.style.background = "#00ff00"; 
             animarCabo(sequencia[etapaAtual]);
         }
     };
@@ -385,14 +450,12 @@
                 if (cabo.id === 'FASE2') { balaoSeccionar.style.display = 'flex'; }
                 if (cabo.id === 'RETORNO1') { balaoRetorno.style.display = 'flex'; }
 
-                // Identifica se o condutor finalizado necessita renderizar um Wago
                 let idWago;
                 if (cabo.id === 'FASE1') idWago = 'wago-fase';
                 else if (cabo.id === 'NEUTRO1') idWago = 'wago-neutro';
                 else if (cabo.id === 'RETORNO1') idWago = 'wago-retorno'; 
                 else if (cabo.id === 'RETORNO2') idWago = 'wago-retorno';
 
-                // AGUARDA 1,5 SEGUNDOS (1500ms) SE HOUVER UM CONECTOR PARA ESTA ETAPA
                 if (idWago) {
                     setTimeout(() => {
                         const wago = document.getElementById(idWago);
@@ -417,7 +480,28 @@
             if (tipo === 'dr') el.src = estados.dr ? 'al_dr_on.png' : 'al_dr_off.png';
         }
         if (tipo === 'int') { somInterruptor.currentTime = 0; somInterruptor.play(); el.src = estados.int ? 'tec_int_on.png' : 'tec_int_off.png'; }
+        
+        // Atualiza os checks/X do painel se ele já estiver visível
+        if (instalacaoConcluida) {
+            atualizarSimbolosPainel();
+        }
         atualizarCircuito();
+    }
+
+    // Função para atualizar dinamicamente as marcações do painel de monitoramento
+    function atualizarSimbolosPainel() {
+        const elDg = document.getElementById('status-dg-painel');
+        const elDr = document.getElementById('status-dr-painel');
+        const elInt = document.getElementById('status-int-painel');
+
+        if(estados.dg) { elDg.innerHTML = "✔"; elDg.className = "status-equip-simbolo simbolo-ligado"; }
+        else { elDg.innerHTML = "✘"; elDg.className = "status-equip-simbolo simbolo-desligado"; }
+
+        if(estados.dr) { elDr.innerHTML = "✔"; elDr.className = "status-equip-simbolo simbolo-ligado"; }
+        else { elDr.innerHTML = "✘"; elDr.className = "status-equip-simbolo simbolo-desligado"; }
+
+        if(estados.int) { elInt.innerHTML = "✔"; elInt.className = "status-equip-simbolo simbolo-ligado"; }
+        else { elInt.innerHTML = "✘"; elInt.className = "status-equip-simbolo simbolo-desligado"; }
     }
 
     function atualizarCircuito() {
