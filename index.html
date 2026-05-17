@@ -443,6 +443,8 @@
 
     function animarCabo(cabo) {
         fecharBalao(); 
+        
+        // CORREÇÃO: Reseta o estado físico do container antes de começar
         let frame = 0;
         const camada = document.getElementById(`camada-${cabo.id.toLowerCase()}`);
         camada.style.opacity = "1";
@@ -484,7 +486,7 @@
 
                 etapaAtual++; 
                 setTimeout(carregarEtapa, 600);
-                return;
+                return; // Trava mantida com segurança para o cache
             }
             
             frame += 1;
