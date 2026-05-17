@@ -473,7 +473,7 @@
                 etapaAtual++; setTimeout(carregarEtapa, 600);
             }
             frame += 1;
-        }, 30);
+        }, 35);
     }
 
     function toggleDispositivo(tipo) {
@@ -489,7 +489,7 @@
         if (instalacaoConcluida) {
             atualizarSimbolosPainel();
         }
-        atualizarCircuito();
+        atualicarCircuito();
     }
 
     function atualizarSimbolosPainel() {
@@ -507,7 +507,7 @@
         else { elInt.innerHTML = "✘"; elInt.className = "status-equip-simbolo simbolo-desligado"; }
     }
 
-    function atualizarCircuito() {
+    function atualicarCircuito() {
         const lamp = document.getElementById('camada-lampada');
         const placa = document.getElementById('placa-concluido');
         const tudoLigado = instalacaoConcluida && estados.dg && estados.dr && estados.int;
