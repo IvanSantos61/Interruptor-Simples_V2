@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laboratório SMT Pro</title>
-    <!-- Importando a fonte estilo visor digital/tecnológico 'Orbitron' -->
+    <!-- Mantida a importação apenas para o mini painel técnico se desejar -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body { 
@@ -74,7 +74,7 @@
         @keyframes pulsarBotao { 0% { opacity: 0.5; box-shadow: 0 0 10px rgba(0,240,255,0.2); } 50% { opacity: 1; box-shadow: 0 0 25px rgba(0,240,255,0.6); } 100% { opacity: 0.5; box-shadow: 0 0 10px rgba(0,240,255,0.2); } }
         .btn-iniciar-lab:hover { background: #00f0ff; color: #060b13; }
 
-        /* --- INTERFACE DO SIMULADOR --- */
+        /* --- INTERFACE DO SIMULADOR ORIGINAL (RETORNADO PARA ARIAL NARROW) --- */
         #painel-status {
             width: 90%; max-width: 950px;
             background: rgba(0, 0, 0, 0.4); border: 1px solid #1a2a44;
@@ -84,7 +84,7 @@
         }
 
         #status-mensagem { 
-            font-family: 'Orbitron', Arial, sans-serif; /* Aplicada fonte estilo visor digital */
+            font-family: 'Arial Narrow', Arial, sans-serif; /* Retornado para a fonte original */
             font-size: 1.3em; 
             font-weight: bold; 
             color: #ffffff; 
@@ -108,7 +108,7 @@
         
         .conector { position: absolute; display: none; z-index: 15; pointer-events: auto; transform-origin: center; cursor: help; }
 
-        /* Novo Painel de Monitoramento dos Equipamentos (Perfumaria Técnica) */
+        /* Painel de Monitoramento dos Equipamentos */
         #painel-equipamentos {
             position: absolute;
             top: 25%;
@@ -121,7 +121,7 @@
             box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
             font-family: 'Orbitron', sans-serif;
             z-index: 90;
-            display: none; /* Inicialmente oculto, aparece no fim da fiação */
+            display: none; 
             flex-direction: column;
             gap: 8px;
             line-height: 1.4;
@@ -297,19 +297,19 @@
         <img src="con_wago.png" id="wago-retorno" class="conector" style="width: 65px; top: 17.7%; left: 59.6%;">
         <img src="con_wago.png" id="wago-neutro" class="conector" style="width: 65px; top: 14%; left: 57%;">
 
-        <!-- NOVO: Painel Dinâmico de Monitoramento dos Equipamentos -->
+        <!-- Painel Dinâmico de Monitoramento dos Equipamentos -->
         <div id="painel-equipamentos">
             <div class="titulo-painel-equip">STATUS DO CIRCUITO</div>
             <div class="item-equip">
-                <span class="nome-equip">DISJ. GERAL (DG):</span>
+                <span class="nome-equip">DG:</span>
                 <span id="status-dg-painel" class="status-equip-simbolo simbolo-desligado">✘</span>
             </div>
             <div class="item-equip">
-                <span class="nome-equip">DISP. DR (DR):</span>
+                <span class="nome-equip">DR:</span>
                 <span id="status-dr-painel" class="status-equip-simbolo simbolo-desligado">✘</span>
             </div>
             <div class="item-equip">
-                <span class="nome-equip">INTERRUPT. (INT):</span>
+                <span class="nome-equip">INT:</span>
                 <span id="status-int-painel" class="status-equip-simbolo simbolo-desligado">✘</span>
             </div>
         </div>
@@ -381,7 +381,6 @@
     function mostrarEsquema(src) { document.getElementById('img-ajuda-grande').src = src; document.getElementById('visualizador-ajuda').style.display = 'flex'; fecharAjuda(); }
     function voltarParaMenu() { document.getElementById('visualizador-ajuda').style.display = 'none'; abrirAjuda(); }
 
-    // Sequência com Retornos Amarelos (#ffff00)
     const sequencia = [
         { id: 'FASE1', cor: '#ff0000', max: 54, pasta: 'FASE1', ini: {t: '38%', l: '27%'}, fim: {t: '23%', l: '56.5%'}, wagoRot: '90deg', msg: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NA REFERENCIA INDICADA NO DR, PARA INICIAR A PASSAGEM DA FASE</span>', msgDestino: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NO PONTO INDICADO NA CAIXA DE PASSAGEM, PARA LEVAR A FASE</span>' },
         { id: 'NEUTRO1', cor: '#00bfff', max: 78, pasta: 'NEUTRO1', ini: {t: '35%', l: '44.3%'}, fim: {t: '14%', l: '56%'}, wagoRot: '270deg', msg: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NA REFERÊNCIA INDICADA NO BARRAMENTO PARA INICIAR A PASSAGEM DO NEUTRO</span>', msgDestino: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NO PONTO INDICADO NA CAIXA DE PASSAGEM, PARA LEVAR O NEUTRO</span>' },
@@ -399,10 +398,10 @@
     function carregarEtapa() {
         if (etapaAtual >= sequencia.length) {
             instalacaoConcluida = true;
-            statusTxt.innerHTML = '<span class="destaque">FIAÇÃO CONCLUÍDA!</span> LIGUE O DG, O DR E O INTERRUPTOR. TESTE O CIRCUITO';
+            statusTxt.innerHTML = 'FIAÇÃO CONCLUÍDA! LIGUE O DG, O DR E O INTERRUPTOR PARA TESTAR.';
             elInicio.style.display = 'none'; elFim.style.display = 'none';
             
-            // Ativa a exibição do novo mini painel de status assim que a fiação acaba
+            // Exibe o mini painel com as siglas solicitadas
             painelEquip.style.display = 'flex';
             atualizarSimbolosPainel();
             return;
@@ -481,14 +480,12 @@
         }
         if (tipo === 'int') { somInterruptor.currentTime = 0; somInterruptor.play(); el.src = estados.int ? 'tec_int_on.png' : 'tec_int_off.png'; }
         
-        // Atualiza os checks/X do painel se ele já estiver visível
         if (instalacaoConcluida) {
             atualizarSimbolosPainel();
         }
         atualizarCircuito();
     }
 
-    // Função para atualizar dinamicamente as marcações do painel de monitoramento
     function atualizarSimbolosPainel() {
         const elDg = document.getElementById('status-dg-painel');
         const elDr = document.getElementById('status-dr-painel');
