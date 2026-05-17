@@ -448,14 +448,16 @@
         camada.style.opacity = "1";
 
         const loop = setInterval(() => {
+            if (frame > cabo.max) {
+                clearInterval(loop);
+                return;
+            }
+
             const frameString = frame.toString().padStart(4, '0');
             camada.style.backgroundImage = `url('${cabo.pasta}/quadro${frameString}.png')`;
 
-            if (frame >= cabo.max) {
+            if (frame === cabo.max) {
                 clearInterval(loop);
-                
-                const finalFrameString = cabo.max.toString().padStart(4, '0');
-                camada.style.backgroundImage = `url('${cabo.pasta}/quadro${finalFrameString}.png')`;
 
                 somConexao.currentTime = 0; 
                 somConexao.play();
@@ -482,6 +484,7 @@
 
                 etapaAtual++; 
                 setTimeout(carregarEtapa, 600);
+                return;
             }
             
             frame += 1;
