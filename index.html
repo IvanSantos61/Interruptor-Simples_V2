@@ -73,7 +73,7 @@
         @keyframes pulsarBotao { 0% { opacity: 0.5; box-shadow: 0 0 10px rgba(0,240,255,0.2); } 50% { opacity: 1; box-shadow: 0 0 25px rgba(0,240,255,0.6); } 100% { opacity: 0.5; box-shadow: 0 0 10px rgba(0,240,255,0.2); } }
         .btn-iniciar-lab:hover { background: #00f0ff; color: #060b13; }
 
-        /* --- INTERFACE DO SIMULADOR ORIGINAL (STATUS EM ARIAL NARROW) --- */
+        /* --- INTERFACE DO SIMULADOR --- */
         #painel-status {
             width: 90%; max-width: 950px;
             background: rgba(0, 0, 0, 0.4); border: 1px solid #1a2a44;
@@ -107,7 +107,7 @@
         
         .conector { position: absolute; display: none; z-index: 15; pointer-events: auto; transform-origin: center; cursor: help; }
 
-        /* --- PAINEL DE MONITORAMENTO COM O EFEITO DE MOLDURAS (IGUAL À AJUDA) --- */
+        /* --- PAINEL DE MONITORAMENTO --- */
         #painel-equipamentos {
             position: absolute;
             top: 22%;
@@ -300,7 +300,7 @@
         <img src="con_wago.png" id="wago-retorno" class="conector" style="width: 65px; top: 17.7%; left: 59.6%;">
         <img src="con_wago.png" id="wago-neutro" class="conector" style="width: 65px; top: 14%; left: 57%;">
 
-        <!-- Painel de Monitoramento Modificado -->
+        <!-- Painel de Monitoramento -->
         <div id="painel-equipamentos">
             <div class="titulo-painel-equip">STATUS DO CIRCUITO</div>
             
@@ -350,7 +350,7 @@
     let estados = { dg: false, dr: false, int: false };
     let instalacaoConcluida = false;
     let primeiroTesteFeito = false; 
-    let placaJaExibida = false; // NOVA VARIÁVEL: Garante que a placa apareça uma única vez
+    let placaJaExibida = false; 
     let placaAtiva = false;
     let etapaAtual = 0;
     let aguardandoDestino = false;
@@ -442,14 +442,24 @@
     };
 
     function animarCabo(cabo) {
-        fecharBalao(); let frame = 0;
+        fecharBalao(); 
+        let frame = 0;
         const camada = document.getElementById(`camada-${cabo.id.toLowerCase()}`);
         camada.style.opacity = "1";
+
         const loop = setInterval(() => {
-            const frameString = Math.min(frame, cabo.max).toString().padStart(4, '0');
+            const frameString = frame.toString().padStart(4, '0');
             camada.style.backgroundImage = `url('${cabo.pasta}/quadro${frameString}.png')`;
+
             if (frame >= cabo.max) {
-                clearInterval(loop); somConexao.currentTime = 0; somConexao.play();
+                clearInterval(loop);
+                
+                const finalFrameString = cabo.max.toString().padStart(4, '0');
+                camada.style.backgroundImage = `url('${cabo.pasta}/quadro${finalFrameString}.png')`;
+
+                somConexao.currentTime = 0; 
+                somConexao.play();
+
                 if (cabo.id === 'FASE1') { balao.style.display = 'flex'; balaoCor.style.display = 'flex'; }
                 if (cabo.id === 'NEUTRO1') { balaoNeutro.style.display = 'flex'; }
                 if (cabo.id === 'FASE2') { balaoSeccionar.style.display = 'flex'; }
@@ -470,10 +480,12 @@
                     }, 1500);
                 }
 
-                etapaAtual++; setTimeout(carregarEtapa, 600);
+                etapaAtual++; 
+                setTimeout(carregarEtapa, 600);
             }
+            
             frame += 1;
-        }, 35);
+        }, 30);
     }
 
     function toggleDispositivo(tipo) {
@@ -514,10 +526,9 @@
         
         if (tudoLigado) {
             lamp.style.opacity = "1"; 
-            primeiroTesteFeito = true; // Identifica que o circuito funcionou
+            primeiroTesteFeito = true;
             statusTxt.innerHTML = '<div class="status-final acesa">LÂMPADA ACESA</div>';
             
-            // Caso o usuário ligue tudo de novo após a exibição única, garante que a placa suma sumariamente
             placa.classList.remove('show'); 
             setTimeout(() => { placa.style.display = 'none'; }, 500); 
             placaAtiva = false;
@@ -526,18 +537,15 @@
             if (instalacaoConcluida && primeiroTesteFeito) {
                 statusTxt.innerHTML = '<div class="status-final apagada">LÂMPADA APAGADA</div>';
                 
-                // CONDIÇÃO MODIFICADA: Só executa se for a PRIMEIRA vez que o circuito desliga após ligar completamente
                 if (!placaAtiva && !placaJaExibida) {
                     placaAtiva = true;
-                    placaJaExibida = true; // Trava o gatilho para sempre
+                    placaJaExibida = true;
                     
                     setTimeout(() => {
-                        // Verifica se continua desligado para renderizar o efeito da placa
                         if (!estados.dg || !estados.dr || !estados.int) {
                             placa.style.display = 'flex'; 
                             setTimeout(() => placa.classList.add('show'), 50);
                             
-                            // Remove a placa após 2 segundos e encerra as atividades dela
                             setTimeout(() => { 
                                 placa.classList.remove('show'); 
                                 setTimeout(() => { 
@@ -548,7 +556,7 @@
                         } else { 
                             placaAtiva = false; 
                         }
-                    }, 500); // Reduzido o delay inicial para a resposta ficar mais rápida e direta
+                    }, 500);
                 }
             }
         }
