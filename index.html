@@ -111,7 +111,7 @@
         #painel-equipamentos {
             position: absolute;
             top: 22%;
-            left: 35%;
+            left: 66.3%;
             width: 190px;
             background: rgba(5, 10, 20, 0.95);
             border: 2px solid #00f0ff;
@@ -391,10 +391,10 @@
     const sequencia = [
         { id: 'FASE1', cor: '#ff0000', max: 54, pasta: 'FASE1', ini: {t: '38%', l: '27%'}, fim: {t: '23%', l: '56.5%'}, wagoRot: '90deg', msg: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NA REFERENCIA INDICADA NO DR, PARA INICIAR A PASSAGEM DA FASE</span>', msgDestino: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NO PONTO INDICADO NA CAIXA DE PASSAGEM, PARA LEVAR A FASE</span>' },
         { id: 'NEUTRO1', cor: '#00bfff', max: 78, pasta: 'NEUTRO1', ini: {t: '35%', l: '44.3%'}, fim: {t: '14%', l: '56%'}, wagoRot: '270deg', msg: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NA REFERÊNCIA INDICADA NO BARRAMENTO PARA INICIAR A PASSAGEM DO NEUTRO</span>', msgDestino: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NO PONTO INDICADO NA CAIXA DE PASSAGEM, PARA LEVAR O NEUTRO</span>' },
-        { id: 'FASE2', cor: '#ff0000', max: 18, pasta: 'FASE2', ini: {t: '32%', l: '58.5%'}, fim: {t: '81%', l: '68%'}, msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA MOSTRADA NO CONECTOR WAGO.', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA MOSTRADA NO INTERRUPTOR.' },
-        { id: 'RETORNO1', cor: '#ffff00', max: 18, pasta: 'RETORNO1', ini: {t: '19.3%', l: '63%'}, fim: {t: '75%', l: '68%'}, wagoRot: '0deg', msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA INDICADA NA CAIXA.', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA DO INTERRUPTOR.' },
-        { id: 'RETORNO2', cor: '#ffff00', max: 24, pasta: 'RETORNO2', ini: {t: '16.3%', l: '63%'}, fim: {t: '55%', l: '89%'}, wagoRot: '0deg', msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> LEVE O RETORNO À LÂMPADA.</span> CLIQUE NA REFERÊNCIA INDICADA NO CONECTOR.', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO</span>: CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA MOSTRADA NA LÂMPADA.' },
-        { id: 'NEUTRO2', cor: '#00bfff', max: 30, pasta: 'NEUTRO2', ini: {t: '8%', l: '58%'}, fim: {t: '55%', l: '91.3%'}, msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA INDICADA NO CONECTOR WAGO.', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO</span>: CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA MOSTRADA NA LÂMPADA.' }
+        { id: 'FASE2', cor: '#ff0000', max: 18, pasta: 'FASE2', ini: {t: '32%', l: '58.5%'}, fim: {t: '81%', l: '68%'}, msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA MOSTRADA NO CONECTOR DE EMENDA', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA MOSTRADA NO INTERRUPTOR' },
+        { id: 'RETORNO1', cor: '#ffff00', max: 18, pasta: 'RETORNO1', ini: {t: '19.3%', l: '63%'}, fim: {t: '75%', l: '68%'}, wagoRot: '0deg', msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA INDICADA NA CAIXA', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA DO INTERRUPTOR' },
+        { id: 'RETORNO2', cor: '#ffff00', max: 24, pasta: 'RETORNO2', ini: {t: '16.3%', l: '63%'}, fim: {t: '55%', l: '89%'}, wagoRot: '0deg', msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> LEVE O RETORNO À LÂMPADA.</span> CLIQUE NA REFERÊNCIA INDICADA NO CONECTOR', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO</span>: CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA MOSTRADA NA LÂMPADA' },
+        { id: 'NEUTRO2', cor: '#00bfff', max: 30, pasta: 'NEUTRO2', ini: {t: '8%', l: '58%'}, fim: {t: '55%', l: '91.3%'}, msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA INDICADA NO CONECTOR DE EMENDA', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO</span>: CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA MOSTRADA NA LÂMPADA.' }
     ];
 
     const elInicio = document.getElementById('ponto-inicio');
