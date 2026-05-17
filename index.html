@@ -134,7 +134,6 @@
             margin-bottom: 4px;
             letter-spacing: 1px;
         }
-        /* Molduras individuais para DG, DR e INT baseadas no padrão da ajuda */
         .item-equip-moldura {
             background: rgba(0, 255, 255, 0.05); 
             border: 1px solid #00f0ff; 
@@ -301,7 +300,7 @@
         <img src="con_wago.png" id="wago-retorno" class="conector" style="width: 65px; top: 17.7%; left: 59.6%;">
         <img src="con_wago.png" id="wago-neutro" class="conector" style="width: 65px; top: 14%; left: 57%;">
 
-        <!-- PAINEL COM AS MOLDURAS INDIVIDUAIS ESTILO AJUDA TÉCNICA -->
+        <!-- Painel de Monitoramento Modificado -->
         <div id="painel-equipamentos">
             <div class="titulo-painel-equip">STATUS DO CIRCUITO</div>
             
@@ -351,6 +350,7 @@
     let estados = { dg: false, dr: false, int: false };
     let instalacaoConcluida = false;
     let primeiroTesteFeito = false; 
+    let placaJaExibida = false; // NOVA VARIÁVEL: Garante que a placa apareça uma única vez
     let placaAtiva = false;
     let etapaAtual = 0;
     let aguardandoDestino = false;
@@ -511,21 +511,44 @@
         const lamp = document.getElementById('camada-lampada');
         const placa = document.getElementById('placa-concluido');
         const tudoLigado = instalacaoConcluida && estados.dg && estados.dr && estados.int;
+        
         if (tudoLigado) {
-            lamp.style.opacity = "1"; primeiroTesteFeito = true; statusTxt.innerHTML = '<div class="status-final acesa">LÂMPADA ACESA</div>';
-            placa.classList.remove('show'); setTimeout(() => { placa.style.display = 'none'; }, 500); placaAtiva = false;
+            lamp.style.opacity = "1"; 
+            primeiroTesteFeito = true; // Identifica que o circuito funcionou
+            statusTxt.innerHTML = '<div class="status-final acesa">LÂMPADA ACESA</div>';
+            
+            // Caso o usuário ligue tudo de novo após a exibição única, garante que a placa suma sumariamente
+            placa.classList.remove('show'); 
+            setTimeout(() => { placa.style.display = 'none'; }, 500); 
+            placaAtiva = false;
         } else {
             lamp.style.opacity = "0";
             if (instalacaoConcluida && primeiroTesteFeito) {
                 statusTxt.innerHTML = '<div class="status-final apagada">LÂMPADA APAGADA</div>';
-                if (!placaAtiva) {
+                
+                // CONDIÇÃO MODIFICADA: Só executa se for a PRIMEIRA vez que o circuito desliga após ligar completamente
+                if (!placaAtiva && !placaJaExibida) {
                     placaAtiva = true;
+                    placaJaExibida = true; // Trava o gatilho para sempre
+                    
                     setTimeout(() => {
+                        // Verifica se continua desligado para renderizar o efeito da placa
                         if (!estados.dg || !estados.dr || !estados.int) {
-                            placa.style.display = 'flex'; setTimeout(() => placa.classList.add('show'), 50);
-                            setTimeout(() => { placa.classList.remove('show'); setTimeout(() => { placa.style.display = 'none'; placaAtiva = false; }, 500); }, 2000);
-                        } else { placaAtiva = false; }
-                    }, 2000);
+                            placa.style.display = 'flex'; 
+                            setTimeout(() => placa.classList.add('show'), 50);
+                            
+                            // Remove a placa após 2 segundos e encerra as atividades dela
+                            setTimeout(() => { 
+                                placa.classList.remove('show'); 
+                                setTimeout(() => { 
+                                    placa.style.display = 'none'; 
+                                    placaAtiva = false; 
+                                }, 500); 
+                            }, 2000);
+                        } else { 
+                            placaAtiva = false; 
+                        }
+                    }, 500); // Reduzido o delay inicial para a resposta ficar mais rápida e direta
                 }
             }
         }
