@@ -434,28 +434,39 @@
         elFim.style.pointerEvents = 'none';
         
         aguardandoDestino = false;
+
+        // CRÍTICO: Remove listeners antigos para evitar acúmulo em reinicializações/viradas de etapas
+        elInicio.onclick = null;
+        elFim.onclick = null;
+
+        // Reaplica o listener de clique inicial de forma limpa
+        elInicio.onclick = (e) => { 
+            e.stopPropagation(); 
+            fecharBalao(); 
+            elInicio.style.background = "#00ff00"; 
+            
+            elFim.style.opacity = '1';
+            elFim.style.pointerEvents = 'auto';
+            
+            aguardandoDestino = true; 
+            if(sequencia[etapaAtual].msgDestino) statusTxt.innerHTML = sequencia[etapaAtual].msgDestino; 
+        };
+
+        // Reaplica o listener de destino final de forma limpa
+        elFim.onclick = (e) => { 
+            e.stopPropagation(); 
+            if (aguardandoDestino) {
+                elFim.style.background = "#00ff00"; 
+                elFim.style.pointerEvents = 'none';
+                
+                // Trava cliques imediatamente para impedir múltiplos loops em cliques rápidos
+                elInicio.onclick = null;
+                elFim.onclick = null;
+                
+                animarCabo(sequencia[etapaAtual]);
+            }
+        };
     }
-
-    elInicio.onclick = (e) => { 
-        e.stopPropagation(); 
-        fecharBalao(); 
-        elInicio.style.background = "#00ff00"; 
-        
-        elFim.style.opacity = '1';
-        elFim.style.pointerEvents = 'auto';
-        
-        aguardandoDestino = true; 
-        if(sequencia[etapaAtual].msgDestino) statusTxt.innerHTML = sequencia[etapaAtual].msgDestino; 
-    };
-
-    elFim.onclick = (e) => { 
-        e.stopPropagation(); 
-        if (aguardandoDestino) {
-            elFim.style.background = "#00ff00"; 
-            elFim.style.pointerEvents = 'none';
-            animarCabo(sequencia[etapaAtual]);
-        }
-    };
 
     function animarCabo(cabo) {
         fecharBalao(); 
@@ -463,6 +474,7 @@
         const camada = document.getElementById(`camada-${cabo.id.toLowerCase()}`);
         camada.style.opacity = "1";
 
+        // Mantido em 25ms estáveis para o cabo correr fluido, visível e sem saltos
         const loop = setInterval(() => {
             if (frame > cabo.max) {
                 clearInterval(loop);
@@ -504,7 +516,7 @@
             }
             
             frame += 1;
-        }, 15);
+        }, 25);
     }
 
     function toggleDispositivo(tipo) {
