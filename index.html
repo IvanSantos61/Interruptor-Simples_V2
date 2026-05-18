@@ -435,10 +435,11 @@
         
         aguardandoDestino = false;
 
-        // Limpa handlers antigos
+        // CRÍTICO: Remove listeners antigos para evitar acúmulo em reinicializações/viradas de etapas
         elInicio.onclick = null;
         elFim.onclick = null;
 
+        // Reaplica o listener de clique inicial de forma limpa
         elInicio.onclick = (e) => { 
             e.stopPropagation(); 
             fecharBalao(); 
@@ -451,13 +452,14 @@
             if(sequencia[etapaAtual].msgDestino) statusTxt.innerHTML = sequencia[etapaAtual].msgDestino; 
         };
 
+        // Reaplica o listener de destino final de forma limpa
         elFim.onclick = (e) => { 
             e.stopPropagation(); 
             if (aguardandoDestino) {
                 elFim.style.background = "#00ff00"; 
                 elFim.style.pointerEvents = 'none';
                 
-                // Desativa cliques imediatamente para evitar disparos em lote
+                // Trava cliques imediatamente para impedir múltiplos loops em cliques rápidos
                 elInicio.onclick = null;
                 elFim.onclick = null;
                 
@@ -470,20 +472,31 @@
         fecharBalao(); 
         let frame = 0;
         const camada = document.getElementById(`camada-${cabo.id.toLowerCase()}`);
+        
+        // Correção de Flicker para FASE1: Pre-carregamento básico ou garantir transição suave
+        if (cabo.id === 'FASE1') {
+            camada.style.transition = "none"; // Remove transições durante animação de frames
+        }
+        
         camada.style.opacity = "1";
 
         const loop = setInterval(() => {
-            // Se passou do limite máximo por erro de concorrência, corta imediatamente
             if (frame > cabo.max) {
                 clearInterval(loop);
                 return;
             }
 
             const frameString = frame.toString().padStart(4, '0');
-            camada.style.backgroundImage = `url('${cabo.pasta}/quadro${frameString}.png')`;
+            const imgUrl = `${cabo.pasta}/quadro${frameString}.png`;
+            
+            // Cria um objeto de imagem para garantir que o frame está carregado antes de exibir (reduz flicker)
+            const imgPreload = new Image();
+            imgPreload.src = imgUrl;
+            imgPreload.onload = () => {
+                camada.style.backgroundImage = `url('${imgUrl}')`;
+            };
 
             if (frame === cabo.max) {
-                // CORREÇÃO CRÍTICA DO FLICKER: O loop é limpo na primeira linha do bloco de término
                 clearInterval(loop);
 
                 somConexao.currentTime = 0; 
@@ -511,7 +524,7 @@
 
                 etapaAtual++; 
                 setTimeout(carregarEtapa, 600);
-                return; // Corta a execução aqui para não deixar o frame incrementar falsamente
+                return;
             }
             
             frame += 1;
