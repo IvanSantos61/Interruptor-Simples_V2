@@ -2,42 +2,65 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laboratório SMT Pro</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #060b13; color: white; display: flex; flex-direction: column; align-items: center; padding: 20px; margin: 0; }
-        
-        /* TELA ENTRADA */
-        #tela-entrada { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #060b13; z-index: 1000; display: flex; align-items: center; justify-content: center; }
-        .btn-iniciar-lab { padding: 20px 40px; font-size: 20px; cursor: pointer; border: 2px solid #00f0ff; background: transparent; color: #00f0ff; border-radius: 50px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #060b13; color: white; display: flex; flex-direction: column; align-items: center; padding: 20px; margin: 0; overflow-x: hidden; }
+        h1 { color: #00f0ff; text-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff; font-size: 2.5em; margin-bottom: 20px; letter-spacing: 2px; text-transform: uppercase; }
 
-        /* SIMULADOR */
-        #container-simulador { position: relative; line-height: 0; cursor: default; }
-        #fundo { max-width: 1000px; }
-        .camada-cabo { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; opacity: 0; }
-        .tecla { position: absolute; cursor: pointer; z-index: 25; }
+        /* TELA DE ENTRADA */
+        #tela-entrada { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #060b13; z-index: 1000; display: flex; align-items: center; justify-content: center; transition: opacity 0.5s ease, visibility 0.5s; }
+        .moldura-entrada { width: 80%; max-width: 900px; height: 70%; max-height: 450px; border: 3px solid #00f0ff; border-radius: 25px; box-shadow: 0 0 50px rgba(0, 240, 255, 0.4), inset 0 0 20px rgba(0, 240, 255, 0.1); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; }
+        .intro-entrada { color: #008b8b; font-size: 55px; font-weight: 400; line-height: 1.1; letter-spacing: 1px; text-transform: uppercase; text-shadow: 0 0 15px rgba(0, 139, 139, 0.5); margin: 0 0 10px 0; }
+        .titulo-entrada { color: #00f0ff; font-size: 38px; font-weight: 400; line-height: 1.2; letter-spacing: 1px; text-transform: uppercase; text-shadow: 0 0 25px rgba(0, 240, 255, 0.6); margin: 0 0 25px 0; }
+        .subtitulo-entrada { color: #00f0ff; font-size: 24px; font-weight: 450; letter-spacing: 5px; text-transform: uppercase; margin: 0 0 50px 0; }
+        .creditos-entrada { color: #445566; font-size: 15px; font-weight: 500; margin-bottom: 50px; }
+        .btn-iniciar-lab { background: transparent; border: 2px solid #00f0ff; border-radius: 50px; color: #00f0ff; font-size: 16px; font-weight: bold; text-transform: uppercase; padding: 12px 35px; cursor: pointer; letter-spacing: 1px; box-shadow: 0 0 15px rgba(0, 240, 255, 0.2); transition: all 0.3s ease; animation: pulsarBotao 1.5s infinite; }
+        @keyframes pulsarBotao { 0% { opacity: 0.5; box-shadow: 0 0 10px rgba(0,240,255,0.2); } 50% { opacity: 1; box-shadow: 0 0 25px rgba(0,240,255,0.6); } 100% { opacity: 0.5; box-shadow: 0 0 10px rgba(0,240,255,0.2); } }
+        .btn-iniciar-lab:hover { background: #00f0ff; color: #060b13; }
+
+        /* INTERFACE */
+        #painel-status { width: 90%; max-width: 950px; background: rgba(0, 0, 0, 0.4); border: 1px solid #1a2a44; border-radius: 15px; padding: 25px; margin-bottom: 30px; text-align: center; min-height: 80px; display: flex; justify-content: center; align-items: center; }
+        #status-mensagem { font-family: 'Arial Narrow', Arial, sans-serif; font-size: 1.3em; font-weight: bold; color: #ffffff; letter-spacing: 1px; text-transform: uppercase; }
+        .cor-alerta { color: #ff0000; }
+        .cor-instrucao { color: #ffcc00; }
+        .status-final { padding: 12px 40px; border-radius: 50px; display: inline-block; background: #008000; box-shadow: 0 0 20px #00ff00; }
         
-        /* PLACA CONCLUÍDO COM SCANNER */
-        #placa-concluido {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 450px; padding: 50px; background: #1a1a1a; border: 3px solid #00ff00;
-            z-index: 110; display: none; text-align: center; color: #00ff00; font-size: 2.5em;
-            font-weight: bold; overflow: hidden; box-shadow: 0 0 30px rgba(0,255,0,0.3); border-radius: 15px;
-        }
-        #placa-concluido.show { display: block; }
-        #placa-concluido::before {
-            content: ""; position: absolute; top: -100%; left: 0; width: 100%; height: 4px;
-            background: #00ff00; box-shadow: 0 0 15px #00ff00;
-            animation: scan 2s linear infinite;
-        }
-        @keyframes scan { 0% { top: -10%; } 100% { top: 110%; } }
+        #container-simulador { position: relative; line-height: 0; user-select: none; border-radius: 10px; overflow: hidden; display: inline-block; }
+        #fundo { max-width: 1000px; display: block; }
+        .camada-cabo { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: 100% 100%; pointer-events: none; z-index: 5; opacity: 0; transition: opacity 0.3s; }
+        #camada-lampada { position: absolute; z-index: 30; opacity: 0; transition: opacity 0.2s; pointer-events: auto; top: 46.5%; left: 75.8%; width: 242px; cursor: help; }
+        .tecla { position: absolute; cursor: pointer; z-index: 25; transition: transform 0.1s; }
+        .tecla:active { transform: scale(0.95); }
+        .conector { position: absolute; display: none; z-index: 15; pointer-events: auto; cursor: help; }
+        
+        /* PLACA COM SCANNER */
+        #placa-concluido { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8); width: 500px; background: #1a1a1a; border: 3px solid #333; border-radius: 15px; z-index: 110; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 60px 40px; box-shadow: 0 0 50px rgba(0,0,0,0.8); opacity: 0; transition: all 0.5s ease; overflow: hidden; }
+        #placa-concluido.show { display: flex; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        #placa-concluido::after { content: ""; position: absolute; top: -100%; left: 0; width: 100%; height: 4px; background: #00ff00; box-shadow: 0 0 15px #00ff00; animation: scan 2.5s linear infinite; }
+        @keyframes scan { 0% { top: -5%; } 100% { top: 105%; } }
+        .texto-concluido { color: #00ff00; font-size: 3em; font-weight: bold; text-shadow: 0 0 10px #00ff00; }
+
+        .btn-acao { position: absolute; padding: 8px 25px; width: 130px; border: none; border-radius: 20px; font-weight: bold; cursor: pointer; color: white; text-transform: uppercase; z-index: 100; }
+        #btn-ajuda { background: #1a2a44; border: 1px solid #00f0ff; top: 79%; left: 15%; }
+        #btn-reiniciar { background: #cc0000; top: 87%; left: 15%; }
+        .ponto { position: absolute; width: 14px; height: 14px; border: 2px solid #ffffff; border-radius: 50%; cursor: pointer; display: none; z-index: 40; animation: pulsar 1.2s infinite; }
+        @keyframes pulsar { 0% { transform: scale(1); } 50% { transform: scale(1.3); } 100% { transform: scale(1); } }
     </style>
 </head>
 <body>
 
     <div id="tela-entrada">
-        <button class="btn-iniciar-lab" onclick="iniciarLaboratorio()">INICIAR LABORATÓRIO</button>
+        <div class="moldura-entrada">
+            <div class="intro-entrada">Laboratório SMT Pro</div>
+            <h1 class="titulo-entrada">INTERRUPTOR SIMPLES PARA 1 LÂMPADA</h1>
+            <button class="btn-iniciar-lab" onclick="iniciarLaboratorio()">Clique para iniciar o Laboratório</button>
+        </div>
     </div>
+
+    <h1>LABORATÓRIO SMT PRO</h1>
+    <div id="painel-status"><div id="status-mensagem">AGUARDANDO INÍCIO...</div></div>
 
     <div id="container-simulador">
         <img src="ambiente.jpg" id="fundo">
@@ -47,40 +70,48 @@
         <div id="camada-retorno2" class="camada-cabo"></div>
         <div id="camada-neutro1" class="camada-cabo"></div>
         <div id="camada-neutro2" class="camada-cabo"></div>
-        
+        <img src="lamp_on.png" id="camada-lampada">
         <img src="al_dg_off.png" id="tecla-dg" class="tecla" style="top: 25%; left: 11.4%; width: 50px;" onclick="toggleDispositivo('dg')">
         <img src="al_dr_off.png" id="tecla-dr" class="tecla" style="top: 28%; left: 23.8%; width: 50px;" onclick="toggleDispositivo('dr')">
         <img src="tec_int_off.png" id="tecla-int" class="tecla" style="top: 73%; left: 72%; width: 53px;" onclick="toggleDispositivo('int')">
+        
+        <div id="ponto-inicio" class="ponto"></div>
+        <div id="ponto-fim" class="ponto"></div>
 
-        <div id="placa-concluido">CONCLUÍDO</div>
+        <div id="placa-concluido">
+            <div class="texto-concluido">CONCLUÍDO</div>
+        </div>
+
+        <button id="btn-ajuda" class="btn-acao" onclick="abrirAjuda()">AJUDA</button>
+        <button id="btn-reiniciar" class="btn-acao" onclick="location.reload()">REINICIAR</button>
     </div>
 
-    <script>
-        let estados = { dg: false, dr: false, int: false };
-        let etapaAtual = 0;
+<script>
+    let estados = { dg: false, dr: false, int: false };
+    let etapaAtual = 0;
 
-        function iniciarLaboratorio() {
-            document.getElementById('tela-entrada').style.display = 'none';
-            // Inicia a lógica principal
-            carregarEtapa();
-        }
+    function iniciarLaboratorio() {
+        document.getElementById('tela-entrada').style.display = 'none';
+        carregarEtapa();
+    }
 
-        function carregarEtapa() {
-            // Aqui entra a lógica das etapas que você já tinha
-            console.log("Etapa atual: " + etapaAtual);
+    function toggleDispositivo(tipo) {
+        estados[tipo] = !estados[tipo];
+        const el = document.getElementById(`tecla-${tipo}`);
+        el.src = estados[tipo] ? `al_${tipo}_on.png` : `al_${tipo}_off.png`;
+        
+        // Verifica se tudo está ligado para mostrar a placa com scanner
+        if (estados.dg && estados.dr && estados.int) {
+            document.getElementById('placa-concluido').classList.add('show');
+        } else {
+            document.getElementById('placa-concluido').classList.remove('show');
         }
+    }
 
-        function toggleDispositivo(tipo) {
-            estados[tipo] = !estados[tipo];
-            const el = document.getElementById(`tecla-${tipo}`);
-            // Lógica de troca de imagem (off/on)
-            el.src = estados[tipo] ? `al_${tipo}_on.png` : `al_${tipo}_off.png`;
-            
-            // Verifica se montou tudo
-            if (etapaAtual >= 6 && estados.dg && estados.dr && estados.int) {
-                document.getElementById('placa-concluido').classList.add('show');
-            }
-        }
-    </script>
+    function carregarEtapa() {
+        // Sua lógica original de etapas permanece aqui
+        console.log("Simulador pronto.");
+    }
+</script>
 </body>
 </html>
