@@ -418,7 +418,6 @@
         const overlay = document.createElement('div');
         overlay.style.cssText = 'position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:9999; display:flex; align-items:center; justify-content:center; cursor:pointer;';
         
-        // Borda e título agora verdes com leve glow verde para combinar com o tema
         overlay.innerHTML = `<div style="position:absolute; left:${posX}; top:${posY}; transform:translate(-50%, -50%); background:rgba(6, 11, 19, 0.95); border:2px solid #00ff00; padding:40px 30px; border-radius:15px; width:500px; color:#fff; text-align:left; backdrop-filter: blur(8px); box-shadow: 0 0 30px rgba(0, 255, 0, 0.15);">
             <h2 style="color:#00ff00; text-align:center; margin-bottom:30px; text-transform:uppercase; text-shadow: 0 0 10px rgba(0, 255, 0, 0.4);">Checklist Técnico</h2>
             <div id="check-itens" style="font-size:16px; line-height:2.5;">
@@ -442,7 +441,6 @@
         const itens = overlay.querySelectorAll('.c-item');
         const msgFinal = overlay.querySelector('#msg-final');
         
-        // Itens recebem a cor e um brilho leve ao serem checados
         itens.forEach((it, idx) => {
             setTimeout(() => { 
                 it.textContent = it.textContent.replace('☐', '✔'); 
@@ -618,10 +616,10 @@
         if (tudoLigado) {
             lamp.style.opacity = "1"; 
             
-            // Se a placa já foi exibida neste teste, não ativa de novo para não ficar piscando
+            // Se a placa já foi exibida neste teste, não ativa de novo
             if (!placaJaExibida) {
                 primeiroTesteFeito = true;
-                placaJaExibida = true;
+                placaJaExibida = true; // Trava ativada de forma definitiva
                 placa.classList.add('show'); 
                 
                 // Remove a placa após 3 segundos (3000ms)
@@ -632,8 +630,8 @@
         } else {
             lamp.style.opacity = "0";
             placa.classList.remove('show'); 
-            // Se desligar qualquer interruptor/disjuntor, reseta a trava para permitir exibir o scanner no próximo teste completo
-            placaJaExibida = false; 
+            // A linha "placaJaExibida = false;" foi removida daqui, 
+            // assim a placa só aparecerá a PRIMEIRA vez que tudo for ligado.
         }
     }
 </script>
