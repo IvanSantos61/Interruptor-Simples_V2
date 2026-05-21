@@ -260,6 +260,54 @@
         }
         @keyframes pulsar { 0% { transform: translate(-50%, -50%) scale(1); } 70% { transform: translate(-50%, -50%) scale(1.25); } 100% { transform: translate(-50%, -50%) scale(1); } }
         #status-mensagem span.destaque { color: #ff9900; }
+        /* --- COLAR BLOCO CSS AQUI --- */
+        /* --- BALÕES DE INFORMAÇÃO DOS COMPONENTES (TOOLTIPS) --- */
+        .tooltip-u {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+            border-bottom: 1px dotted #ffcc00; /* Destaque sutil abaixo do nome */
+        }
+
+        .tooltip-u .tooltiptext-u {
+            visibility: hidden;
+            width: 260px;
+            background-color: #050a14; /* Fundo escuro combinando com o corpo do app */
+            color: #ffffff;
+            text-align: left;
+            border: 1px solid #00f0ff; /* Borda Neon Cyan idêntica ao seu padrão */
+            border-radius: 8px;
+            padding: 12px;
+            position: absolute;
+            z-index: 500; /* Fica acima dos pontos e cabos */
+            bottom: 130%; /* Abre logo acima do elemento */
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            font-size: 13px;
+            line-height: 1.4;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.3); /* Brilho neon sutil */
+        }
+
+        /* Setinha na base do balão */
+        .tooltip-u .tooltiptext-u::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 6px;
+            border-style: solid;
+            border-color: #00f0ff transparent transparent transparent;
+        }
+
+        /* Ativação suave ao passar o mouse */
+        .tooltip-u:hover .tooltiptext-u {
+            visibility: visible;
+            opacity: 1;
+        }
     </style>
 </head>
 <body onclick="fecharBalao()">
