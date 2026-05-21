@@ -27,7 +27,7 @@
             text-transform: uppercase;
         }
 
-        /* --- TOOLTIP DINÂMICO (ÁREAS DO FUNDO) --- */
+        /* --- TOOLTIP DINÂMICO --- */
         #tooltip-lab {
             position: fixed;
             padding: 8px 12px;
@@ -43,35 +43,15 @@
             display: none;
             white-space: nowrap;
             box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
-            transform: translate(15px, 15px);
         }
 
+        /* --- ÁREAS SENSÍVEIS (HOTSPOTS) --- */
         .hotspot {
             position: absolute;
             z-index: 80;
             cursor: help;
-            border: 1px solid red; /* Para ajuste, depois remova */
+            border: 1px solid red; /* Mantenha para ajuste, remova depois */
         }
-
-        /* --- BALÕES DE AJUDA NBR-5410 --- */
-        .balao-base {
-            position: absolute; 
-            z-index: 400; 
-            background: white; 
-            color: black;
-            padding: 15px; 
-            border-radius: 10px; 
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-            font-weight: bold; 
-            font-size: 14px; 
-            display: none;
-            flex-direction: column; 
-            align-items: center; 
-            text-align: center; 
-            border: 2px solid #333;
-            width: 220px;
-        }
-        .referencia-nbr { color: red; font-size: 11px; margin-top: 5px; display: block; }
 
         /* --- TELA DE ENTRADA --- */
         #tela-entrada {
@@ -90,9 +70,9 @@
             padding: 20px; text-align: center;
         }
 
-        .intro-entrada { color: #008b8b; font-size: 55px; font-weight: 400; text-transform: uppercase; margin: 0 0 10px 0; }
-        .titulo-entrada { color: #00f0ff; font-size: 38px; text-transform: uppercase; margin: 0 0 25px 0; }
-        .subtitulo-entrada { color: #00f0ff; font-size: 24px; letter-spacing: 5px; text-transform: uppercase; margin: 0 0 50px 0; }
+        .intro-entrada { color: #008b8b; font-size: 55px; font-weight: 400; text-transform: uppercase; margin-bottom: 10px; }
+        .titulo-entrada { color: #00f0ff; font-size: 38px; text-transform: uppercase; margin-bottom: 25px; }
+        .subtitulo-entrada { color: #00f0ff; font-size: 24px; letter-spacing: 5px; text-transform: uppercase; margin-bottom: 50px; }
         .creditos-entrada { color: #445566; font-size: 15px; margin-bottom: 50px; }
 
         .btn-iniciar-lab {
@@ -115,28 +95,20 @@
         #container-simulador { position: relative; line-height: 0; user-select: none; border-radius: 10px; overflow: hidden; display: inline-block; }
         #fundo { max-width: 1000px; height: auto; display: block; }
 
-        .camada-cabo { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; opacity: 0; transition: opacity 0.3s; }
+        .camada-cabo { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; opacity: 0; transition: opacity 0.3s; background-size: 100% 100%; }
         #camada-lampada { position: absolute; z-index: 30; opacity: 0; transition: opacity 0.2s; top: 46.5%; left: 75.8%; width: 242px; }
 
         .tecla { position: absolute; cursor: pointer; z-index: 90; }
-        .conector { position: absolute; display: none; z-index: 15; cursor: help; }
+        .conector { position: absolute; display: none; z-index: 15; cursor: help; width: 65px; }
 
-        #painel-equipamentos {
-            position: absolute; top: 22%; left: 66.3%; width: 190px;
-            background: rgba(5, 10, 20, 0.95); border: 2px solid #00f0ff;
-            border-radius: 12px; padding: 15px; z-index: 95; display: none; flex-direction: column; gap: 10px;
+        /* --- BALÕES DE AJUDA --- */
+        .balao-base {
+            position: absolute; z-index: 400; background: white; color: black;
+            padding: 15px; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            font-weight: bold; font-size: 14px; display: none;
+            flex-direction: column; align-items: center; text-align: center; border: 2px solid #333; width: 220px;
         }
-        .item-equip-moldura { background: rgba(0, 255, 255, 0.05); border: 1px solid #00f0ff; border-radius: 5px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; font-size: 14px; font-weight: bold; }
-        .simbolo-ligado { color: #00ff00; }
-        .simbolo-desligado { color: #ff0000; }
-
-        #placa-concluido {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8);
-            width: 500px; background: #1a1a1a; border: 4px solid #333; border-radius: 15px; z-index: 110; 
-            display: none; flex-direction: column; align-items: center; padding: 60px 40px; opacity: 0; transition: all 0.5s ease;
-        }
-        #placa-concluido.show { display: flex; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-        .texto-concluido { color: #00ff00; font-size: 3em; font-weight: bold; }
+        .referencia-nbr { color: red; font-size: 11px; margin-top: 5px; display: block; }
 
         .ponto { position: absolute; width: 14px; height: 14px; border: 2px solid #ffffff; border-radius: 50%; cursor: pointer; display: none; z-index: 40; transform: translate(-50%, -50%); animation: pulsar 1.2s infinite; }
         @keyframes pulsar { 0% { scale: 1; } 50% { scale: 1.3; } 100% { scale: 1; } }
@@ -169,12 +141,12 @@
     <div id="container-simulador">
         <img src="ambiente.jpg" id="fundo">
          
-        <div id="camada-fase1" class="camada-cabo"></div>
-        <div id="camada-fase2" class="camada-cabo"></div>
-        <div id="camada-retorno1" class="camada-cabo"></div>
-        <div id="camada-retorno2" class="camada-cabo"></div>
-        <div id="camada-neutro1" class="camada-cabo"></div>
-        <div id="camada-neutro2" class="camada-cabo"></div>
+        <div id="camada-fase1" class="camada-cabo" style="background-image: url('fase1.png');"></div>
+        <div id="camada-fase2" class="camada-cabo" style="background-image: url('fase2.png');"></div>
+        <div id="camada-retorno1" class="camada-cabo" style="background-image: url('retorno1.png');"></div>
+        <div id="camada-retorno2" class="camada-cabo" style="background-image: url('retorno2.png');"></div>
+        <div id="camada-neutro1" class="camada-cabo" style="background-image: url('neutro1.png');"></div>
+        <div id="camada-neutro2" class="camada-cabo" style="background-image: url('neutro2.png');"></div>
 
         <div class="hotspot" style="top: 10%; left: 5%; width: 50px; height: 180px;" onmousemove="mapaMouse(event, 'BARRA DE ATERRAMENTO')" onmouseout="mapaSair()"></div>
         <div class="hotspot" style="top: 10%; left: 15%; width: 45px; height: 160px;" onmousemove="mapaMouse(event, 'DG (DISJUNTOR GERAL)')" onmouseout="mapaSair()"></div>
@@ -185,53 +157,41 @@
 
         <div id="balao-ajuda" class="balao-base">
             <span id="texto-ajuda"></span>
-            <span class="referencia-nbr">Conforme NBR-5410</span>
+            <span class="referencia-nbr">NBR-5410</span>
         </div>
 
-        <img src="lamp_on.png" id="camada-lampada" onclick="abrirAjuda(event, 'Carga: Lâmpada incandescente ou LED.')">
-        <img src="al_dg_off.png" id="tecla-dg" class="tecla" style="top: 25%; left: 11.4%; width: 50px;" onclick="toggleDispositivo('dg')">
-        <img src="al_dr_off.png" id="tecla-dr" class="tecla" style="top: 28%; left: 23.8%; width: 50px;" onclick="toggleDispositivo('dr')">
-        <img src="tec_int_off.png" id="tecla-int" class="tecla" style="top: 73%; left: 72%; width: 53px;" onclick="toggleDispositivo('int')">
+        <img src="lamp_on.png" id="camada-lampada">
+        <img src="al_dg_off.png" id="tecla-dg" class="tecla" style="top: 25%; left: 11.4%; width: 50px;" onclick="toggle('dg')">
+        <img src="al_dr_off.png" id="tecla-dr" class="tecla" style="top: 28%; left: 23.8%; width: 50px;" onclick="toggle('dr')">
+        <img src="tec_int_off.png" id="tecla-int" class="tecla" style="top: 73%; left: 72%; width: 53px;" onclick="toggle('int')">
 
-        <img src="con_wago.png" id="wago-fase" class="conector" style="width: 65px; top: 26%; left: 57.4%;" onclick="abrirAjuda(event, 'Cabo Fase: Cor Preta ou Marrom.')">
-        <img src="con_wago.png" id="wago-retorno" class="conector" style="width: 65px; top: 17.7%; left: 59.6%;" onclick="abrirAjuda(event, 'Cabo Retorno: Geralmente Branco ou Vermelho.')">
-        <img src="con_wago.png" id="wago-neutro" class="conector" style="width: 65px; top: 14%; left: 57%;" onclick="abrirAjuda(event, 'Cabo Neutro: Cor obrigatória Azul Claro.')">
-
-        <div id="painel-equipamentos">
-            <div class="item-equip-moldura"><span>DG</span><span id="status-dg-painel" class="simbolo-desligado">✘</span></div>
-            <div class="item-equip-moldura"><span>DR</span><span id="status-dr-painel" class="simbolo-desligado">✘</span></div>
-            <div class="item-equip-moldura"><span>INT</span><span id="status-int-painel" class="simbolo-desligado">✘</span></div>
-        </div>
+        <img src="con_wago.png" id="wago-fase" class="conector" style="top: 26%; left: 57.4%;" onclick="abrirAjuda(event, 'Cabo Fase: Cor Preta ou Marrom.')">
+        <img src="con_wago.png" id="wago-retorno" class="conector" style="top: 17.7%; left: 59.6%;" onclick="abrirAjuda(event, 'Cabo Retorno: Geralmente Branco ou Vermelho.')">
+        <img src="con_wago.png" id="wago-neutro" class="conector" style="top: 14%; left: 57%;" onclick="abrirAjuda(event, 'Cabo Neutro: Cor obrigatória Azul Claro.')">
 
         <div id="ponto-inicio" class="ponto"></div>
         <div id="ponto-fim" class="ponto"></div>
 
-        <div id="placa-concluido"><div class="texto-concluido">✓ CONCLUÍDO</div></div>
-
-        <button id="btn-ajuda" class="btn-acao" onclick="event.stopPropagation(); alert('Clique nos conectores ou componentes para ver detalhes técnicos.')">AJUDA</button>
+        <button id="btn-ajuda" class="btn-acao" onclick="event.stopPropagation(); alert('Clique nos conectores para ver detalhes técnicos.')">AJUDA</button>
         <button id="btn-reiniciar" class="btn-acao" onclick="location.reload()">REINICIAR</button>
     </div>
 
 <script>
+    let etapaAtual = 0;
     let estados = { dg: false, dr: false, int: false };
     let instalacaoConcluida = false;
-    let etapaAtual = 0;
-    let primeiroTesteFeito = false;
-    let placaJaExibida = false;
 
     const ttLab = document.getElementById('tooltip-lab');
     const balao = document.getElementById('balao-ajuda');
 
-    // Tooltip Mouse
     function mapaMouse(e, nome) {
         ttLab.innerHTML = nome;
         ttLab.style.display = 'block';
-        ttLab.style.left = e.clientX + 'px';
-        ttLab.style.top = e.clientY + 'px';
+        ttLab.style.left = (e.clientX + 10) + 'px';
+        ttLab.style.top = (e.clientY + 10) + 'px';
     }
     function mapaSair() { ttLab.style.display = 'none'; }
 
-    // Ajuda NBR
     function abrirAjuda(e, texto) {
         e.stopPropagation();
         balao.style.display = 'flex';
@@ -250,76 +210,47 @@
     }
 
     const sequencia = [
-        { id: 'fase1', msg: 'CONECTE O CABO DE FASE (PRETO) NA ENTRADA DO DG', ini: {t: '38%', l: '27%'}, fim: {t: '23%', l: '56.5%'} },
-        { id: 'neutro1', msg: 'CONECTE O NEUTRO (AZUL) NO BARRAMENTO', ini: {t: '35%', l: '44.3%'}, fim: {t: '14%', l: '56%'} }
+        { id: 'fase1', msg: 'Conecte a Fase na entrada do DG', ini: {t:'38%', l:'27%'}, fim: {t:'23%', l:'56.5%'} },
+        { id: 'fase2', msg: 'Conecte a saída do DR ao Interruptor', ini: {t:'28%', l:'28%'}, fim: {t:'70%', l:'70%'} },
+        { id: 'retorno1', msg: 'Conecte o Retorno do Interruptor ao Wago', ini: {t:'73%', l:'75%'}, fim: {t:'18%', l:'60%'} },
+        { id: 'retorno2', msg: 'Leve o Retorno até a Lâmpada', ini: {t:'18%', l:'61%'}, fim: {t:'48%', l:'78%'} },
+        { id: 'neutro1', msg: 'Conecte o Neutro da Rede ao Barramento', ini: {t:'35%', l:'44%'}, fim: {t:'14%', l:'56%'} },
+        { id: 'neutro2', msg: 'Conecte o Neutro à Lâmpada', ini: {t:'14%', l:'58%'}, fim: {t:'48%', l:'82%'} }
     ];
 
     function carregarEtapa() {
         if (etapaAtual >= sequencia.length) {
             instalacaoConcluida = true;
-            document.getElementById('status-mensagem').innerHTML = 'PRONTO PARA TESTE! LIGUE OS DISPOSITIVOS.';
-            document.getElementById('painel-equipamentos').style.display = 'flex';
+            document.getElementById('status-mensagem').innerHTML = "INSTALAÇÃO CONCLUÍDA! LIGUE OS DISPOSITIVOS.";
             return;
         }
-        const dados = sequencia[etapaAtual];
-        document.getElementById('status-mensagem').innerHTML = dados.msg;
+        const d = sequencia[etapaAtual];
+        document.getElementById('status-mensagem').innerHTML = d.msg;
         const p1 = document.getElementById('ponto-inicio');
         const p2 = document.getElementById('ponto-fim');
-        
-        p1.style.top = dados.ini.t; p1.style.left = dados.ini.l; p1.style.display = 'block';
-        p2.style.top = dados.fim.t; p2.style.left = dados.fim.l; p2.style.display = 'block'; p2.style.opacity = '0';
+        p1.style.top=d.ini.t; p1.style.left=d.ini.l; p1.style.display='block';
+        p2.style.top=d.fim.t; p2.style.left=d.fim.l; p2.style.display='block'; p2.style.opacity='0';
 
-        p1.onclick = (e) => { e.stopPropagation(); p2.style.opacity = '1'; };
-        p2.onclick = (e) => { 
-            e.stopPropagation();
-            document.getElementById(`camada-${dados.id}`).style.opacity = '1';
-            // Ativa o conector correspondente se houver
-            let wagoId = `wago-${dados.id.replace('1', '').replace('2', '')}`;
-            if(document.getElementById(wagoId)) document.getElementById(wagoId).style.display = 'block';
-            
-            etapaAtual++; 
-            p1.style.display = 'none'; p2.style.display = 'none';
-            carregarEtapa(); 
+        p1.onclick = () => p2.style.opacity='1';
+        p2.onclick = () => {
+            document.getElementById('camada-'+d.id).style.opacity='1';
+            if(d.id.includes('fase')) document.getElementById('wago-fase').style.display='block';
+            if(d.id.includes('retorno')) document.getElementById('wago-retorno').style.display='block';
+            if(d.id.includes('neutro')) document.getElementById('wago-neutro').style.display='block';
+            etapaAtual++;
+            p1.style.display='none'; p2.style.display='none';
+            carregarEtapa();
         };
     }
 
-    function toggleDispositivo(tipo) {
-        estados[tipo] = !estados[tipo];
-        const el = document.getElementById(`tecla-${tipo}`);
-        if(tipo === 'int') el.src = estados.int ? 'tec_int_on.png' : 'tec_int_off.png';
-        else el.src = estados[tipo] ? `al_${tipo}_on.png` : `al_${tipo}_off.png`;
+    function toggle(t) {
+        estados[t] = !estados[t];
+        const el = document.getElementById('tecla-'+t);
+        if(t === 'int') el.src = estados.int ? 'tec_int_on.png' : 'tec_int_off.png';
+        else el.src = estados[t] ? `al_${t}_on.png` : `al_${t}_off.png`;
         
-        atualizarPainel();
-        verificarCircuito();
-    }
-
-    function atualizarPainel() {
-        if (!instalacaoConcluida) return;
-        ['dg', 'dr', 'int'].forEach(t => {
-            const span = document.getElementById(`status-${t}-painel`);
-            span.innerHTML = estados[t] ? '✔' : '✘';
-            span.className = estados[t] ? 'simbolo-ligado' : 'simbolo-desligado';
-        });
-    }
-
-    function verificarCircuito() {
-        const lamp = document.getElementById('camada-lampada');
-        const tudoLigado = instalacaoConcluida && estados.dg && estados.dr && estados.int;
-
-        if (tudoLigado) {
-            lamp.style.opacity = "1";
-            primeiroTesteFeito = true;
-            document.getElementById('status-mensagem').innerHTML = 'CIRCUITO LIGADO!';
-        } else {
-            lamp.style.opacity = "0";
-            if (instalacaoConcluida) document.getElementById('status-mensagem').innerHTML = 'CIRCUITO DESLIGADO.';
-            
-            if (primeiroTesteFeito && !placaJaExibida && !estados.dg && !estados.dr && !estados.int) {
-                placaJaExibida = true;
-                document.getElementById('placa-concluido').classList.add('show');
-                setTimeout(() => document.getElementById('placa-concluido').classList.remove('show'), 4000);
-            }
-        }
+        const ligada = instalacaoConcluida && estados.dg && estados.dr && estados.int;
+        document.getElementById('camada-lampada').style.opacity = ligada ? "1" : "0";
     }
 </script>
 </body>
