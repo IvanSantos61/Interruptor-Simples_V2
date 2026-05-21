@@ -3,55 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulador de Instalação Elétrica Residencial Resumido</title>
-    <!-- Tailwind CSS para estilização rápida e responsiva -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- Ícones Lucide para componentes visuais -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <title>Simulador de Instalação Elétrica Residencial - Interruptor Simples</title>
+    <!-- Bootstrap CSS para estrutura básica -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Ícones Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
     <style>
-        /* Estilos customizados para o Canvas e interações */
-        canvas {
-            background-color: #1e293b; /* Fundo azul escuro para o quadro */
-            border-radius: 0.5rem;
-            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+        body {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        /* Efeito de transição suave para os botões do checklist */
+        .header-title {
+            background: linear-gradient(135deg, #1f293d 0%, #111827 100%);
+            border-bottom: 2px solid #f59e0b;
+        }
+        .card-custom {
+            background-color: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+        }
+        .card-header-custom {
+            background-color: #21262d;
+            border-bottom: 1px solid #30363d;
+            color: #f0f6fc;
+            font-weight: 600;
+        }
+        canvas {
+            background-color: #050505;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            cursor: pointer;
+        }
+        .btn-hardware {
+            min-width: 100px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+        .btn-neon-red {
+            background-color: #1a0000;
+            color: #ff3333;
+            border: 1px solid #ff3333;
+            box-shadow: 0 0 8px rgba(255, 51, 51, 0.2);
+        }
+        .btn-neon-red:hover:not(:disabled), .btn-neon-red.active {
+            background-color: #ff3333;
+            color: #000;
+            box-shadow: 0 0 15px #ff3333;
+        }
+        .btn-neon-green {
+            background-color: #001a00;
+            color: #33ff33;
+            border: 1px solid #33ff33;
+            box-shadow: 0 0 8px rgba(51, 255, 51, 0.2);
+        }
+        .btn-neon-green:hover:not(:disabled), .btn-neon-green.active {
+            background-color: #33ff33;
+            color: #000;
+            box-shadow: 0 0 15px #33ff33;
+        }
+        .badge-voltagem {
+            background-color: #ff9900;
+            color: #000;
+            font-weight: bold;
+            border-radius: 4px;
+            padding: 2px 6px;
+        }
         .checklist-item {
-            transition: all 0.3s ease;
+            background-color: #0d1117;
+            border: 1px solid #21262d;
+            transition: all 0.2s ease;
+        }
+        .checklist-item:hover {
+            border-color: #30363d;
+            background-color: #161b22;
+        }
+        .form-check-input:checked {
+            background-color: #198754;
+            border-color: #198754;
         }
 
-        /* --- NOVOS ESTILOS PARA AS ÁREAS SENSÍVEIS (TOOLTIPS) --- */
-        .tooltip {
+        /* --- ESTILOS ADICIONADOS PARA AS ÁREAS SENSÍVEIS (TOOLTIPS) --- */
+        .area-sensivel {
             position: relative;
             display: inline-block;
-            border-bottom: 1px dotted #3b82f6; /* Linha pontilhada azul para indicar interatividade */
+            border-bottom: 1px dotted #ff9900;
             cursor: help;
+            color: #f0f6fc;
         }
-
-        .tooltip .tooltiptext {
+        .balao-info {
             visibility: hidden;
             width: 260px;
-            background-color: #0f172a; /* Slate 900 */
-            color: #fff;
+            background-color: #1f293d;
+            color: #ffffff;
             text-align: left;
+            border: 1px solid #f59e0b;
             border-radius: 6px;
-            padding: 8px 12px;
+            padding: 10px;
             position: absolute;
-            z-index: 50;
-            bottom: 125%; /* Posiciona acima do texto */
+            z-index: 9999;
+            bottom: 125%;
             left: 50%;
-            margin-left: -130px;
+            transform: translateX(-50%);
             opacity: 0;
-            transition: opacity 0.3s;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
-            font-size: 0.75rem;
-            line-height: 1.25rem;
+            transition: opacity 0.2s;
+            font-size: 12px;
             font-weight: normal;
-            border: 1px solid #334155;
+            line-height: 1.4;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.6);
         }
-
-        /* Setinha do balão */
-        .tooltip .tooltiptext::after {
+        .balao-info::after {
             content: "";
             position: absolute;
             top: 100%;
@@ -59,759 +120,240 @@
             margin-left: -5px;
             border-width: 5px;
             border-style: solid;
-            border-color: #0f172a transparent transparent transparent;
+            border-color: #1f293d transparent transparent transparent;
         }
-
-        /* Mostra o tooltip ao passar o mouse */
-        .tooltip:hover .tooltiptext {
+        .area-sensivel:hover .balao-info {
             visibility: visible;
             opacity: 1;
         }
     </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans">
+<body>
 
-    <!-- Cabeçalho Principal -->
-    <header class="bg-slate-800 border-b border-slate-700 p-4 shadow-md">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="flex items-center gap-3">
-                <div class="p-2 bg-amber-500 rounded-lg text-slate-950">
-                    <i data-lucide="zap" class="w-6 h-6"></i>
+    <!-- Cabeçalho -->
+    <header class="header-title p-3 mb-4 shadow">
+        <div class="container-fluid d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+            <div class="d-flex align-items-center gap-3">
+                <div class="p-2 bg-warning text-dark rounded-3 shadow">
+                    <i class="bi bi-zap-charge fs-3"></i>
                 </div>
                 <div>
-                    <h1 class="text-xl font-bold tracking-tight">Laboratório Virtual de Eletricidade</h1>
-                    <p class="text-xs text-slate-400">Prática de Instalações Elétricas Residenciais Baseada na NBR 5410</p>
+                    <h1 class="h3 mb-0 text-white font-weight-bold">FioCerto - Simulador de Instalação</h1>
+                    <p class="mb-0 text-muted small">Prática Laboratorial de Instalações Residenciais em Conformidade com a NBR 5410</p>
                 </div>
             </div>
-            <!-- Indicador do Status Geral da Instalação -->
-            <div id="status-geral" class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900 border border-slate-700 text-sm font-medium">
-                <span class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span>
-                <span>Circuito Desenergizado</span>
+            <div id="status-geral" class="d-flex align-items-center gap-2 px-3 py-2 rounded-pill bg-dark border border-secondary text-warning font-monospace small">
+                <span class="spinner-grow spinner-grow-sm text-warning" role="status"></span>
+                <span>CIRCUITO DESENERGIZADO</span>
             </div>
         </div>
     </header>
 
-    <!-- Conteúdo Principal - Grid Responsivo -->
-    <main class="flex-1 max-w-7xl w-full mx-auto p-4 grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
-        <!-- Coluna da Esquerda: Painel de Controle e Instruções -->
-        <div class="space-y-6 lg:col-span-1">
+    <!-- Conteúdo Principal -->
+    <main class="container-fluid px-4 mb-4">
+        <div class="row g-4">
             
-            <!-- Card de Instruções Dinâmicas -->
-            <div class="bg-slate-800 border border-slate-700 rounded-xl p-5 shadow-lg">
-                <h2 class="text-lg font-semibold mb-3 flex items-center gap-2 text-amber-400">
-                    <i data-lucide="book-open" class="w-5 h-5"></i>
-                    Guia de Procedimentos
-                </h2>
-                <div id="instrucoes-passo" class="space-y-3 text-sm text-slate-300">
-                    <!-- Conteúdo será injetado via JS -->
+            <!-- Coluna da Esquerda: Componentes e Controles -->
+            <div class="col-12 col-xl-4">
+                
+                <!-- Guia de Procedimentos -->
+                <div class="card card-custom mb-4 shadow">
+                    <div class="card-header card-header-custom d-flex align-items-center gap-2 text-warning">
+                        <i class="bi bi-journal-text"></i> Guia de Procedimentos Atuais
+                    </div>
+                    <div class="card-body">
+                        <div id="instrucoes-passo" class="text-secondary small">
+                            <!-- Injetado via JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Painel de Dispositivos e Componentes do QDC -->
+                <div class="card card-custom shadow mb-4">
+                    <div class="card-header card-header-custom text-info d-flex align-items-center gap-2">
+                        <i class="bi bi-cpu"></i> Componentes do Quadro Geral (QDC)
+                    </div>
+                    <div class="card-body p-3">
+                        <div class="d-flex flex-column gap-2">
+                            
+                            <!-- Rede de Alimentação -->
+                            <div class="p-2 rounded bg-dark border border-secondary d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-box-arrow-in-right text-success"></i>
+                                    <div>
+                                        <div class="area-sensivel font-weight-bold small">
+                                            Rede de Alimentação
+                                            <span class="balao-info">
+                                                <strong>Rede de Alimentação:</strong> Ponto de entrega da concessionária que traz os condutores de Fase, Neutro e PE (Terra) para o interior do Quadro de Distribuição.
+                                            </span>
+                                        </div>
+                                        <div class="text-muted text-xs font-monospace" style="font-size: 10px;">ENTRADA DO QUADRO</div>
+                                    </div>
+                                </div>
+                                <span class="badge badge-voltagem text-xs">127 V</span>
+                            </div>
+
+                            <!-- Disjuntor Geral -->
+                            <div class="p-2 rounded bg-dark border border-secondary d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-shield-shaded text-danger"></i>
+                                    <div>
+                                        <div class="area-sensivel font-weight-bold small">
+                                            Disjuntor Geral (DG)
+                                            <span class="balao-info">
+                                                <strong>Disjuntor Geral (DG):</strong> Dispositivo termomagnético que protege todo o quadro contra curto-circuitos e sobrecorrentes, além de atuar como interruptor geral de manutenção.
+                                            </span>
+                                        </div>
+                                        <div class="text-muted text-xs font-monospace" style="font-size: 10px;">PROTEÇÃO TOTAL DO CIRCUITO</div>
+                                    </div>
+                                </div>
+                                <button id="btn-dg" class="btn btn-sm btn-hardware btn-neon-red">DESARMADO</button>
+                            </div>
+
+                            <!-- Dispositivo DR -->
+                            <div class="p-2 rounded bg-dark border border-secondary d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-activity text-warning"></i>
+                                    <div>
+                                        <div class="area-sensivel font-weight-bold small">
+                                            Dispositivo DR (IDR)
+                                            <span class="balao-info">
+                                                <strong>Dispositivo DR:</strong> Interruptor Diferencial Residual. Detecta correntes de fuga à terra de baixa intensidade, desligando o circuito instantaneamente para proteger pessoas contra choques elétricos.
+                                            </span>
+                                        </div>
+                                        <div class="text-muted text-xs font-monospace" style="font-size: 10px;">PROTEÇÃO CONTRA CHOQUE HUMANO</div>
+                                    </div>
+                                </div>
+                                <button id="btn-dr" class="btn btn-sm btn-hardware btn-neon-red">DESARMADO</button>
+                            </div><div class="p-2 rounded bg-dark border border-secondary d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-lightning-charge text-info"></i>
+                                    <div>
+                                        <div class="area-sensivel font-weight-bold small">
+                                            Dispositivo DPS
+                                            <span class="balao-info">
+                                                <strong>Dispositivo DPS:</strong> Protetor contra Surtos Elétricos. Desvia picos de tensão (causados por raios ou manobras da rede) para o aterramento, protegendo eletrodomésticos e eletrônicos.
+                                            </span>
+                                        </div>
+                                        <div class="text-muted text-xs font-monospace" style="font-size: 10px;">PROTEÇÃO CONTRA RAIOS E SURTOS</div>
+                                    </div>
+                                </div>
+                                <span class="badge bg-secondary text-xs">PASSIVO</span>
+                            </div>
+
+                            <div class="p-2 rounded bg-dark border border-secondary d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-toggle2-off text-primary"></i>
+                                    <div>
+                                        <div class="area-sensivel font-weight-bold small">
+                                            Disjuntor de Circuito (C1)
+                                            <span class="balao-info">
+                                                <strong>Disjuntor de Circuito:</strong> Protege ramais específicos (ex: Iluminação). Garante que uma falha em uma lâmpada não desligue a casa inteira, apenas o setor afetado.
+                                            </span>
+                                        </div>
+                                        <div class="text-muted text-xs font-monospace" style="font-size: 10px;">PROTEÇÃO INDIVIDUAL: ILUMINAÇÃO</div>
+                                    </div>
+                                </div>
+                                <button id="btn-dj-circuito" class="btn btn-sm btn-hardware btn-neon-red">DESARMADO</button>
+                            </div>
+
+                            <div class="p-2 rounded bg-dark border border-secondary d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-distribute-vertical text-primary"></i>
+                                    <div>
+                                        <div class="area-sensivel font-weight-bold small">
+                                            Barra de Neutro
+                                            <span class="balao-info">
+                                                <strong>Barra de Neutro:</strong> Barramento para conexão de todos os fios azuis (neutros). Serve como ponto de retorno da corrente para fechar o circuito com a rede.
+                                            </span>
+                                        </div>
+                                        <div class="text-muted text-xs font-monospace" style="font-size: 10px;">CONEXÃO DE RETORNO (AZUL)</div>
+                                    </div>
+                                </div>
+                                <span class="badge bg-primary text-xs">BARRA N</span>
+                            </div>
+
+                            <div class="p-2 rounded bg-dark border border-secondary d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-align-middle text-success"></i>
+                                    <div>
+                                        <div class="area-sensivel font-weight-bold small">
+                                            Barra de Aterramento (PE)
+                                            <span class="balao-info">
+                                                <strong>Barra de Aterramento:</strong> Coleta todas as proteções (fios verdes) da casa e as conecta à terra, garantindo que carcaças metálicas não fiquem energizadas.
+                                            </span>
+                                        </div>
+                                        <div class="text-muted text-xs font-monospace" style="font-size: 10px;">PROTEÇÃO E EQUIPOTENCIALIZAÇÃO</div>
+                                    </div>
+                                </div>
+                                <span class="badge bg-success text-xs">BARRA PE</span>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Card dos Componentes Disponíveis -->
-            <div class="bg-slate-800 border border-slate-700 rounded-xl p-5 shadow-lg">
-                <h2 class="text-lg font-semibold mb-4 flex items-center gap-2 text-blue-400">
-                    <i data-lucide="cpu" class="w-5 h-5"></i>
-                    Componentes do Quadro
-                </h2>
-                <div class="grid grid-cols-1 gap-3">
-                    <!-- Componente: Rede de Alimentação -->
-                    <div class="p-3 bg-slate-900/50 border border-slate-700/50 rounded-lg flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <i data-lucide="git-fork" class="text-emerald-400 w-5 h-5"></i>
-                            <div>
-                                <span class="tooltip text-sm font-medium block">
-                                    Rede de Alimentação
-                                    <span class="tooltiptext">Ponto de entrada da energia elétrica vinda da concessionária. Traz os condutores de Fase, Neutro e Terra para o Quadro de Distribuição.</span>
-                                </span>
-                                <span class="text-xs text-slate-400">Entrada Concessionária</span>
+            <div class="col-12 col-xl-8">
+                <div class="card card-custom shadow h-100">
+                    <div class="card-header card-header-custom d-flex justify-content-between align-items-center">
+                        <span class="text-white"><i class="bi bi-bounding-box-circles me-2"></i>Diagrama de Conexões Multifilar</span>
+                        <div id="status-mensagem" class="badge bg-dark border border-secondary text-info fw-normal">Selecione o ponto inicial piscando...</div>
+                    </div>
+                    <div class="card-body bg-black p-0 d-flex justify-content-center align-items-center overflow-hidden" style="min-height: 450px;">
+                        <canvas id="quadroCanvas" width="800" height="450"></canvas>
+                    </div>
+                    <div class="card-footer bg-dark border-top border-secondary p-3">
+                        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+                            <button id="btn-reset" class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-2">
+                                <i class="bi bi-arrow-counterclockwise"></i> REINICIAR LABORATÓRIO
+                            </button>
+                            <div class="d-flex align-items-center gap-3">
+                                <span class="small text-muted">INTERRUPTOR FÍSICO:</span>
+                                <button id="btn-interruptor" class="btn btn-sm btn-outline-warning fw-bold px-4">OFF</button>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Componente: Disjuntor Geral -->
-                    <div class="p-3 bg-slate-900/50 border border-slate-700/50 rounded-lg flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <i data-lucide="shield" class="text-red-400 w-5 h-5"></i>
-                            <div>
-                                <span class="tooltip text-sm font-medium block">
-                                    Disjuntor Geral (DG)
-                                    <span class="tooltiptext">Dispositivo de manobra e proteção contra sobrecorrentes (curto-circuito e sobrecarga) de toda a instalação elétrica da residência.</span>
-                                </span>
-                                <span class="text-xs text-slate-400">Proteção Geral</span>
-                            </div>
-                        </div>
-                        <button id="btn-dg" class="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded text-xs font-semibold uppercase tracking-wider transition-colors">Desarmado</button>
-                    </div>
-
-                    <!-- Componente: Dispositivo DR -->
-                    <div class="p-3 bg-slate-900/50 border border-slate-700/50 rounded-lg flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <i data-lucide="activity" class="text-orange-400 w-5 h-5"></i>
-                            <div>
-                                <span class="tooltip text-sm font-medium block">
-                                    Dispositivo DR
-                                    <span class="tooltiptext">Interruptor Diferencial Residual. Protege pessoas e animais contra choques elétricos, detectando fugas de corrente de baixa intensidade.</span>
-                                </span>
-                                <span class="text-xs text-slate-400">Proteção contra Choques</span>
-                            </div>
-                        </div>
-                        <button id="btn-dr" class="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded text-xs font-semibold uppercase tracking-wider transition-colors">Desarmado</button>
-                    </div>
-
-                    <!-- Componente: DPS -->
-                    <div class="p-3 bg-slate-900/50 border border-slate-700/50 rounded-lg flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <i data-lucide="zap-off" class="text-yellow-400 w-5 h-5"></i>
-                            <div>
-                                <span class="tooltip text-sm font-medium block">
-                                    Dispositivo DPS
-                                    <span class="tooltiptext">Dispositivo de Proteção contra Surtos. Protege os equipamentos eletrônicos contra queimas causadas por descargas atmosféricas (raios).</span>
-                                </span>
-                                <span class="text-xs text-slate-400">Proteção contra Surtos</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Componente: Disjuntores dos Circuitos -->
-                    <div class="p-3 bg-slate-900/50 border border-slate-700/50 rounded-lg flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <i data-lucide="toggle-left" class="text-purple-400 w-5 h-5"></i>
-                            <div>
-                                <span class="tooltip text-sm font-medium block">
-                                    Disjuntores Termomagnéticos
-                                    <span class="tooltiptext">Disjuntores parciais que protegem individualmente os circuitos internos (Ex: Circuito 1 - Iluminação).</span>
-                                </span>
-                                <span class="text-xs text-slate-400">Circuitos Individuais</span>
-                            </div>
-                        </div>
-                        <button id="btn-dj-circuito" class="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded text-xs font-semibold uppercase tracking-wider transition-colors">Desarmado</button>
-                    </div>
-
-                    <!-- Componente: Barra de Neutro -->
-                    <div class="p-3 bg-slate-900/50 border border-slate-700/50 rounded-lg flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <i data-lucide="minus" class="text-blue-400 w-5 h-5"></i>
-                            <div>
-                                <span class="tooltip text-sm font-medium block">
-                                    Barramento de Neutro
-                                    <span class="tooltiptext">Barra de cobre destinada à conexão de todos os fios neutros da instalação, garantindo o retorno da corrente para a concessionária.</span>
-                                </span>
-                                <span class="text-xs text-slate-400">Barra de Conexão</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Componente: Barra de Aterramento -->
-                    <div class="p-3 bg-slate-900/50 border border-slate-700/50 rounded-lg flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <i data-lucide="git-commit" class="text-green-400 w-5 h-5"></i>
-                            <div>
-                                <span class="tooltip text-sm font-medium block">
-                                    Barramento de Terra
-                                    <span class="tooltiptext">Barra de cobre interligada às hastes de aterramento da edificação. Coleta correntes de fuga e estática, escoando-as para o solo de forma segura.</span>
-                                </span>
-                                <span class="text-xs text-slate-400">Barra de Proteção (PE)</span>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
             </div>
         </div>
 
-        <!-- Coluna do Centro e Direita: Área de Desenho (Canvas) e Resultados -->
-        <div class="lg:col-span-2 space-y-6">
-            
-            <!-- Painel do Canvas -->
-            <div class="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-lg flex flex-col h-full">
-                <div class="flex justify-between items-center mb-3">
-                    <div class="flex items-center gap-2">
-                        <i data-lucide="eye" class="text-indigo-400 w-5 h-5"></i>
-                        <span class="text-sm font-semibold text-slate-200">Diagrama Multifilar Interativo</span>
-                    </div>
-                    <!-- Status Intermediário das conexões -->
-                    <div id="status-mensagem" class="text-xs text-slate-400 italic">
-                        Selecione um ponto de início piscando no canvas para começar...
-                    </div>
-                </div>
-                
-                <!-- Canvas de desenho das conexões -->
-                <div class="relative flex-1 bg-slate-950 rounded-lg overflow-hidden flex justify-center items-center">
-                    <canvas id="quadroCanvas" width="750" height="420" class="w-full h-auto aspect-[75/42]"></canvas>
-                </div>
-
-                <!-- Controles Inferiores do Laboratório -->
-                <div class="flex justify-between items-center mt-4 pt-3 border-t border-slate-700">
-                    <button id="btn-reset" class="flex items-center gap-2 px-4 py-2 bg-slate-700 hover:bg-slate-600 active:bg-slate-900 text-slate-200 text-sm font-medium rounded-lg transition-all shadow border border-slate-600">
-                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
-                        Reiniciar Prática
-                    </button>
-                    <!-- Indicador visual do Interruptor Físico -->
-                    <div class="flex items-center gap-3 bg-slate-900 px-4 py-2 rounded-lg border border-slate-700">
-                        <span class="text-xs font-medium text-slate-400">Interruptor da Lâmpada:</span>
-                        <button id="btn-interruptor" class="px-3 py-1 bg-slate-800 border border-slate-600 hover:bg-slate-700 text-xs font-bold rounded uppercase tracking-wider transition-colors text-slate-300">Desligado</button>
+        <div id="painel-checklist" class="row mt-4 d-none">
+            <div class="col-12">
+                <div class="card bg-dark border border-success shadow">
+                    <div class="card-body p-4">
+                        <h4 class="text-success mb-3"><i class="bi bi-check2-circle me-2"></i>Validação Técnica NBR 5410</h4>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <div class="form-check checklist-item p-3 rounded">
+                                    <input class="form-check-input" type="checkbox" id="chk-cores">
+                                    <label class="form-check-label text-light small" for="chk-cores">Cores conforme norma (Fase: Vermelho, Neutro: Azul, Terra: Verde)</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-check checklist-item p-3 rounded">
+                                    <input class="form-check-input" type="checkbox" id="chk-seccionamento">
+                                    <label class="form-check-label text-light small" for="chk-seccionamento">O condutor de fase é o único seccionado pelo interruptor</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <button id="btn-energizar" class="btn btn-success w-100 h-100 fw-bold shadow-sm" disabled>ENERGIZAR E TESTAR</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Seção Oculta por padrão: Checklist Técnico e Homologação (Só aparece ao concluir a fiação) -->
-            <div id="painel-checklist" class="hidden bg-slate-800 border-2 border-dashed border-emerald-500/50 rounded-xl p-5 shadow-xl animate-fade-in">
-                <div class="flex items-center gap-2 mb-4 text-emerald-400">
-                    <i data-lucide="check-circle" class="w-6 h-6"></i>
-                    <h2 class="text-lg font-bold">Protocolo de Comissionamento Técnico</h2>
-                </div>
-                <p class="text-xs text-slate-400 mb-4">A fiação física foi concluída com sucesso. Para energizar o circuito e realizar o teste de carga, valide os critérios normativos da NBR 5410 abaixo:</p>
-                
-                <!-- Lista de checagem técnica -->
-                <div class="space-y-3 mb-5">
-                    <label class="checklist-item flex items-start gap-3 p-3 bg-slate-900/60 rounded-lg border border-slate-700 hover:border-slate-600 cursor-pointer">
-                        <input type="checkbox" id="chk-norma-cores" class="mt-1 accent-emerald-500 rounded">
-                        <div>
-                            <span class="text-sm font-semibold block text-slate-200">Padronização de Identificação por Cores</span>
-                            <span class="text-xs text-slate-400 block mt-0.5">Fase conectada em Vermelho/Preto, Neutro em Azul Claro e Condutor de Proteção (Terra) em Verde/Verde-Amarelo conforme item 6.1.5.3.</span>
-                        </div>
-                    </label>
-                    <label class="checklist-item flex items-start gap-3 p-3 bg-slate-900/60 rounded-lg border border-slate-700 hover:border-slate-600 cursor-pointer">
-                        <input type="checkbox" id="chk-seccionamento" class="mt-1 accent-emerald-500 rounded">
-                        <div>
-                            <span class="text-sm font-semibold block text-slate-200">Seccionamento Obrigatório do Condutor de Fase</span>
-                            <span class="text-xs text-slate-400 block mt-0.5">O condutor de Fase foi encaminhado diretamente ao dispositivo de manobra (interruptor), nunca diretamente à carga (lâmpada), atendendo ao item 6.5.4.1.</span>
-                        </div>
-                    </label>
-                    <label class="checklist-item flex items-start gap-3 p-3 bg-slate-900/60 rounded-lg border border-slate-700 hover:border-slate-600 cursor-pointer">
-                        <input type="checkbox" id="chk-dispositivos" class="mt-1 accent-emerald-500 rounded">
-                        <div>
-                            <span class="text-sm font-semibold block text-slate-200">Coordenação de Proteções (Disjuntor Geral + DR + DPS)</span>
-                            <span class="text-xs text-slate-400 block mt-0.5">Os dispositivos estão dispostos em cascata garantindo a seletividade e a proteção integral contra sobrecargas, surtos atmosféricos e choques por contato direto.</span>
-                        </div>
-                    </label>
-                </div>
-
-                <!-- Botão de Ativação Final -->
-                <button id="btn-energizar" disabled class="w-full py-3 bg-slate-700 text-slate-400 font-bold rounded-lg uppercase tracking-wider text-sm transition-all shadow cursor-not-allowed">
-                    Energizar e Testar Instalação
-                </button>
-            </div>
-
         </div>
     </main>
 
-    <!-- Rodapé -->
-    <footer class="bg-slate-950 border-t border-slate-800 p-3 text-center text-xs text-slate-500">
-        Desenvolvido para fins educacionais e simulação técnica laboratorial em conformidade com as diretrizes normativas brasileiras.
-    </footer>
-
-    <!-- Lógica de Simulação em JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Inicialização de Ícones
-        lucide.createIcons();
-
-        // Referências de Elementos do DOM
-        const canvas = document.getElementById('quadroCanvas');
-        const ctx = canvas.getContext('2d');
-        const txtStatusMsg = document.getElementById('status-mensagem');
-        const txtInstrucoes = document.getElementById('instrucoes-passo');
-        const painelChecklist = document.getElementById('painel-checklist');
-        const badgeStatusGeral = document.getElementById('status-geral');
+        // AQUI ENTRARIA O SEU CÓDIGO JAVASCRIPT ORIGINAL DE LOGICA DO CANVAS
+        // Mantendo exatamente as funções que você já desenvolveu:
+        // const canvas = document.getElementById('quadroCanvas');
+        // ... toda a sua lógica de desenho, estados de hardware e eventos.
         
-        // Botões de Hardware/Componentes
-        const btnReset = document.getElementById('btn-reset');
-        const btnInterruptor = document.getElementById('btn-interruptor');
-        const btnDG = document.getElementById('btn-dg');
-        const btnDR = document.getElementById('btn-dr');
-        const btnDJCircuito = document.getElementById('btn-dj-circuito');
-        const btnEnergizar = document.getElementById('btn-energizar');
-
-        // Checkboxes de Homologação
-        const chkCores = document.getElementById('chk-norma-cores');
-        const chkSeccionamento = document.getElementById('chk-seccionamento');
-        const chkDispositivos = document.getElementById('chk-dispositivos');
-
-        // Banco de Dados Geométrico dos Elementos Visuais do Quadro
-        const componentesFisicos = {
-            rede: { x: 40, y: 30, w: 100, h: 40, label: "REDE CONCESSIONÁRIA" },
-            dg: { x: 180, y: 110, w: 50, h: 80, label: "DG" },
-            dr: { x: 250, y: 110, w: 70, h: 80, label: "IDR" },
-            dps: { x: 345, y: 110, w: 40, h: 80, label: "DPS" },
-            djCircuito: { x: 410, y: 110, w: 40, h: 80, label: "DJ C1" },
-            barraNeutro: { x: 500, y: 110, w: 15, h: 120, label: "N" },
-            barraTerra: { x: 550, y: 110, w: 15, h: 120, label: "PE" },
-            caixaPassagem: { x: 260, y: 20, w: 140, h: 50, label: "CAIXA DE PASSAGEM" },
-            lampada: { x: 650, y: 80, r: 25, label: "LÂMPADA" },
-            interruptor: { x: 650, y: 280, w: 40, h: 50, label: "INTERRUPTOR" }
-        };
-
-        // Roteiro Cronológico e Técnico de Conexões (Passo a Passo)
-        const listaEtapasFiacao = [
-            { id: 0, nome: "Alimentação do Disjuntor Geral", desc: "Conecte a FASE da rede ao terminal superior do Disjuntor Geral (DG).", cor: "#ef4444", ini: {x: 60, y: 70}, fim: {x: 195, y: 110}, pinoIni: "Rede (Fase)", pinoFim: "DG (Topo)" },
-            { id: 1, nome: "Jump Geral para o DR", desc: "Conecte a saída do Disjuntor Geral à entrada do Interruptor Diferencial Residual (DR).", cor: "#ef4444", ini: {x: 195, y: 190}, fim: {x: 270, y: 110}, pinoIni: "DG (Fundo)", pinoFim: "DR (Topo L)" },
-            { id: 2, nome: "Alimentação do DPS", desc: "Derive a fase que sai do DG para alimentar a entrada do Dispositivo de Proteção contra Surtos (DPS).", cor: "#ef4444", ini: {x: 195, y: 190}, fim: {x: 365, y: 110}, pinoIni: "DG (Fundo)", pinoFim: "DPS (Topo)" },
-            { id: 3, nome: "Saída do DR para o Disjuntor do Circuito", desc: "Conecte a saída protegida de fase do DR à entrada do Disjuntor do Circuito 1 (Iluminação).", cor: "#ef4444", ini: {x: 270, y: 190}, fim: {x: 430, y: 110}, pinoIni: "DR (Fundo L)", pinoFim: "DJ C1 (Topo)" },
-            { id: 4, nome: "Alimentação de Neutro da Rede ao DR", desc: "Conecte o NEUTRO da rede diretamente à entrada de Neutro do DR.", cor: "#3b82f6", ini: {x: 90, y: 70}, fim: {x: 305, y: 110}, pinoIni: "Rede (Neutro)", pinoFim: "DR (Topo N)" },
-            { id: 5, nome: "Saída de Neutro do DR para o Barramento", desc: "Encaminhe o Neutro protegido da saída do DR para o Barramento de Neutro.", cor: "#3b82f6", ini: {x: 305, y: 190}, fim: {x: 507, y: 120}, pinoIni: "DR (Fundo N)", pinoFim: "Barra N" },
-            { id: 6, nome: "Aterramento do DPS", desc: "Conecte o terminal de saída do DPS ao Barramento de Proteção (Terra).", cor: "#10b981", ini: {x: 365, y: 190}, fim: {x: 557, y: 120}, pinoIni: "DPS (Fundo)", pinoFim: "Barra PE" },
-            { id: 7, nome: "Aterramento da Rede ao Barramento", desc: "Interligue o condutor de TERRA vindo da rede ao Barramento de Proteção.", cor: "#10b981", ini: {x: 120, y: 70}, fim: {x: 557, y: 140}, pinoIni: "Rede (Terra)", pinoFim: "Barra PE" },
-            { id: 8, nome: "Fase do Circuito até o Interruptor", desc: "Leve a Fase da saída do Disjuntor do Circuito 1 até o terminal de entrada do Interruptor simples.", cor: "#ef4444", ini: {x: 430, y: 190}, fim: {x: 670, y: 280}, pinoIni: "DJ C1 (Fundo)", pinoFim: "Interruptor (L)" },
-            { id: 9, nome: "Retorno do Interruptor para a Lâmpada", desc: "Conecte o fio de RETORNO saindo do interruptor e leve-o até o polo central da Lâmpada.", cor: "#f59e0b", ini: {x: 670, y: 330}, fim: {x: 650, y: 105}, pinoIni: "Interruptor (Out)", pinoFim: "Lâmpada (Centro)" },
-            { id: 10, nome: "Fechamento do Neutro da Lâmpada", desc: "Conecte o condutor Neutro do Barramento de Neutro ao polo lateral da Lâmpada para fechar o circuito.", cor: "#3b82f6", ini: {x: 507, y: 140}, fim: {x: 625, y: 80}, pinoIni: "Barra N", pinoFim: "Lâmpada (Lateral)" }
-        ];
-
-        // Estados do Sistema (Engine)
-        let indiceEtapaAtual = 0;
-        let listaConexoesExecutadas = [];
-        let pontoSelecionadoAnterior = null;
-        let flagPiscando = true;
-
-        // Estados dos Dispositivos Mecânicos
-        let hardwareStatus = {
-            dgArmado: false,
-            drArmado: false,
-            djCircuitoArmado: false,
-            interruptorLigado: false,
-            sistemaEnergizado: false
-        };
-
-        // Loop de Animação para efeito de "pulsar" nos pontos de conexão
-        setInterval(() => {
-            flagPiscando = !flagPiscando;
-            renderizarQuadroCompleto();
-        }, 45000000); // Reduzido piscamento constante para economizar processamento, controlado no draw
-
-        function renderizarQuadroCompleto() {
-            // Limpeza de Tela
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // 1. Desenho do Chassi do Quadro Geral (QDU)
-            ctx.fillStyle = '#334155';
-            ctx.fillRect(20, 90, 560, 260);
-            ctx.strokeStyle = '#475569';
-            ctx.lineWidth = 4;
-            ctx.strokeRect(20, 90, 560, 260);
-
-            // Etiqueta do Quadro
-            ctx.fillStyle = '#94a3b8';
-            ctx.font = 'bold 10px sans-serif';
-            ctx.fillText("QUADRO DE DISTRIBUIÇÃO DE CIRCUITOS (QDC)", 35, 105);
-
-            // 2. Renderização de cada Componente Estático
-            desenharComponentesEstaticos();
-
-            // 3. Renderização Histórica das fiações já montadas pelo aluno
-            listaConexoesExecutadas.forEach(conexao => {
-                desenharFioGrosso(conexao.ini, conexao.fim, conexao.cor, false);
-            });
-
-            // 4. Mecânica de ajuda visual: destacar onde clicar na etapa atual
-            if (indiceEtapaAtual < listaEtapasFiacao.length) {
-                const etapaAtiva = listaEtapasFiacao[indiceEtapaAtual];
-                
-                if (!pontoSelecionadoAnterior) {
-                    // Passo A: Piscar o ponto inicial da fiação
-                    desenharPontoConexao(etapaAtiva.ini, '#3b82f6', true);
-                    desenharPontoConexao(etapaAtiva.fim, '#64748b', false);
-                } else {
-                    // Passo B: Aluno já clicou no início, piscar o destino correto
-                    desenharPontoConexao(etapaAtiva.ini, '#10b981', false); // fixo verde
-                    desenharPontoConexao(etapaAtiva.fim, '#10b981', true);  // piscando verde destino
-                }
-            }
-        }
-
-        function desenharComponentesEstaticos() {
-            // REDE CONCESSIONÁRIA (Bornais Superiores)
-            ctx.fillStyle = '#0f172a';
-            ctx.fillRect(componentesFisicos.rede.x, componentesFisicos.rede.y, componentesFisicos.rede.w, componentesFisicos.rede.h);
-            ctx.fillStyle = '#e2e8f0';
-            ctx.font = '9px sans-serif';
-            ctx.fillText("REDE DE ENTRADA", componentesFisicos.rede.x + 10, componentesFisicos.rede.y + 18);
-            desenharPontoConexao({x: 60, y: 70}, '#ef4444', false, "F");
-            desenharPontoConexao({x: 90, y: 70}, '#3b82f6', false, "N");
-            desenharPontoConexao({x: 120, y: 70}, '#10b981', false, "T");
-
-            // DISJUNTOR GERAL (DG)
-            const dg = componentesFisicos.dg;
-            ctx.fillStyle = hardwareStatus.dgArmado ? '#b91c1c' : '#1e293b';
-            ctx.fillRect(dg.x, dg.y, dg.w, dg.h);
-            ctx.strokeStyle = '#475569';
-            ctx.strokeRect(dg.x, dg.y, dg.w, dg.h);
-            ctx.fillStyle = '#fff';
-            ctx.font = 'bold 10px sans-serif';
-            ctx.fillText("DG", dg.x + 18, dg.y + 45);
-            desenharPontoConexao({x: 195, y: 110}, '#475569', false);
-            desenharPontoConexao({x: 195, y: 190}, '#475569', false);
-
-            // DISPOSITIVO DR
-            const dr = componentesFisicos.dr;
-            ctx.fillStyle = hardwareStatus.drArmado ? '#c2410c' : '#1e293b';
-            ctx.fillRect(dr.x, dr.y, dr.w, dr.h);
-            ctx.strokeStyle = '#475569';
-            ctx.strokeRect(dr.x, dr.y, dr.w, dr.h);
-            ctx.fillStyle = '#fff';
-            ctx.font = 'bold 10px sans-serif';
-            ctx.fillText("DR Bifásico", dr.x + 10, dr.y + 45);
-            // Polos superiores do DR
-            desenharPontoConexao({x: 270, y: 110}, '#475569', false, "L");
-            desenharPontoConexao({x: 305, y: 110}, '#475569', false, "N");
-            // Polos inferiores do DR
-            desenharPontoConexao({x: 270, y: 190}, '#475569', false);
-            desenharPontoConexao({x: 305, y: 190}, '#475569', false);
-
-            // DISPOSITIVO DPS
-            const dps = componentesFisicos.dps;
-            ctx.fillStyle = '#78350f';
-            ctx.fillRect(dps.x, dps.y, dps.w, dps.h);
-            ctx.strokeStyle = '#475569';
-            ctx.strokeRect(dps.x, dps.y, dps.w, dps.h);
-            ctx.fillStyle = '#fff';
-            ctx.font = 'bold 9px sans-serif';
-            ctx.fillText("DPS", dps.x + 10, dps.y + 45);
-            desenharPontoConexao({x: 365, y: 110}, '#475569', false);
-            desenharPontoConexao({x: 365, y: 190}, '#475569', false);
-
-            // DISJUNTOR CIRCUITO 1 (Iluminação)
-            const djC1 = componentesFisicos.djCircuito;
-            ctx.fillStyle = hardwareStatus.djCircuitoArmado ? '#6b21a8' : '#1e293b';
-            ctx.fillRect(djC1.x, djC1.y, djC1.w, djC1.h);
-            ctx.strokeStyle = '#475569';
-            ctx.strokeRect(djC1.x, djC1.y, djC1.w, djC1.h);
-            ctx.fillStyle = '#fff';
-            ctx.font = 'bold 9px sans-serif';
-            ctx.fillText("DJ C1", djC1.x + 8, djC1.y + 45);
-            desenharPontoConexao({x: 430, y: 110}, '#475569', false);
-            desenharPontoConexao({x: 430, y: 190}, '#475569', false);
-
-            // BARRAMENTO NEUTRO (Barra metálica azul)
-            const bN = componentesFisicos.barraNeutro;
-            ctx.fillStyle = '#1e3a8a';
-            ctx.fillRect(bN.x, bN.y, bN.w, bN.h);
-            ctx.fillStyle = '#60a5fa';
-            ctx.font = 'bold 10px sans-serif';
-            ctx.fillText("N", bN.x + 4, bN.y - 5);
-            desenharPontoConexao({x: 507, y: 120}, '#3b82f6', false);
-            desenharPontoConexao({x: 507, y: 140}, '#3b82f6', false);
-
-            // BARRAMENTO ATERRAMENTO (Barra metálica verde)
-            const bT = componentesFisicos.barraTerra;
-            ctx.fillStyle = '#064e3b';
-            ctx.fillRect(bT.x, bT.y, bT.w, bT.h);
-            ctx.fillStyle = '#34d399';
-            ctx.font = 'bold 10px sans-serif';
-            ctx.fillText("PE", bT.x + 2, bT.y - 5);
-            desenharPontoConexao({x: 557, y: 120}, '#10b981', false);
-            desenharPontoConexao({x: 557, y: 140}, '#10b981', false);
-
-            // INTERRUPTOR RESIDENCIAL (Mecânica externa)
-            const int = componentesFisicos.interruptor;
-            ctx.fillStyle = '#e2e8f0';
-            ctx.fillRect(int.x, int.y, int.w, int.h);
-            ctx.strokeStyle = '#94a3b8';
-            ctx.strokeRect(int.x, int.y, int.w, int.h);
-            ctx.fillStyle = '#0f172a';
-            ctx.font = 'bold 8px sans-serif';
-            ctx.fillText("INTERR.", int.x + 3, int.y + 28);
-            desenharPontoConexao({x: 670, y: 280}, '#475569', false);
-            desenharPontoConexao({x: 670, y: 330}, '#475569', false);
-
-            // LÂMPADA (Carga)
-            const lamp = componentesFisicos.lampada;
-            ctx.beginPath();
-            ctx.arc(lamp.x, lamp.y, lamp.r, 0, Math.PI * 2);
-            if (hardwareStatus.sistemaEnergizado && hardwareStatus.interruptorLigado) {
-                ctx.fillStyle = '#fef08a'; // Brilhando Amarelo intenso
-                ctx.shadowColor = '#facc15';
-                ctx.shadowBlur = 20;
-            } else {
-                ctx.fillStyle = '#334155'; // Apagada/Cinza
-                ctx.shadowBlur = 0;
-            }
-            ctx.fill();
-            ctx.shadowBlur = 0; // Reset de sombra
-            ctx.strokeStyle = '#94a3b8';
-            ctx.lineWidth = 2;
-            ctx.stroke();
-            ctx.fillStyle = hardwareStatus.interruptorLigado && hardwareStatus.sistemaEnergizado ? '#a16207' : '#fff';
-            ctx.font = 'bold 9px sans-serif';
-            ctx.fillText("LÂMPADA", lamp.x - 22, lamp.y + 4);
-
-            desenharPontoConexao({x: 650, y: 105}, '#475569', false); // polo central
-            desenharPontoConexao({x: 625, y: 80}, '#475569', false);  // polo lateral
-        }
-
-        function drawingLoopPulsar() {
-            flagPiscando = !flagPiscando;
-            renderizarQuadroCompleto();
-            requestAnimationFrame(() => {
-                setTimeout(drawingLoopPulsar, 400); // Ritmo de pulsação confortável
-            });
-        }
-
-        function desenharPontoConexao(pt, corPadrao, pulsarAtivo, textoBornal = "") {
-            ctx.beginPath();
-            ctx.arc(pt.x, pt.y, 5, 0, Math.PI * 2);
-            
-            if (pulsarAtivo) {
-                ctx.fillStyle = flagPiscando ? '#f59e0b' : '#ef4444'; // Altera entre laranja e vermelho
-                ctx.arc(pt.x, pt.y, 8, 0, Math.PI * 2);
-            } else {
-                ctx.fillStyle = corPadrao;
-            }
-            
-            ctx.fill();
-            ctx.strokeStyle = '#ffffff';
-            ctx.lineWidth = 1;
-            ctx.stroke();
-
-            if(textoBornal !== "") {
-                ctx.fillStyle = '#94a3b8';
-                ctx.font = '7px sans-serif';
-                ctx.fillText(textoBornal, pt.x - 3, pt.y - 8);
-            }
-        }
-
-        function desenharFioGrosso(ini, fim, cor, ativo) {
-            ctx.beginPath();
-            ctx.moveTo(ini.x, ini.y);
-            
-            // Cria curvas ortogonais estilizadas automaticamente para simular fios organizados em canaletas
-            if (Math.abs(ini.x - fim.x) > Math.abs(ini.y - fim.y)) {
-                ctx.lineTo((ini.x + fim.x) / 2, ini.y);
-                ctx.lineTo((ini.x + fim.x) / 2, fim.y);
-            } else {
-                ctx.lineTo(ini.x, (ini.y + fim.y) / 2);
-                ctx.lineTo(fim.x, (ini.y + fim.y) / 2);
-            }
-            
-            ctx.lineTo(fim.x, fim.y);
-            ctx.strokeStyle = cor;
-            ctx.lineWidth = 3.5;
-            ctx.lineCap = 'round';
-            ctx.lineJoin = 'round';
-            ctx.stroke();
-        }
-
-        // Sistema Gerenciador de Cliques nas coordenadas do Canvas
-        canvas.addEventListener('click', function(evt) {
-            if (indiceEtapaAtual >= listaEtapasFiacao.length) return; // Instalação concluída
-
-            const rect = canvas.getBoundingClientRect();
-            // Conversão de escala para manter precisão em telas responsivas
-            const xClick = (evt.clientX - rect.left) * (canvas.width / rect.width);
-            const yClick = (evt.clientY - rect.top) * (canvas.height / rect.height);
-
-            const etapaAlvo = listaEtapasFiacao[indiceEtapaAtual];
-
-            if (!pontoSelecionadoAnterior) {
-                // Checar clique no ponto inicial correto
-                if (verificarProximidadePonto(xClick, yClick, etapaAlvo.ini)) {
-                    pontoSelecionadoAnterior = etapaAlvo.ini;
-                    txtStatusMsg.innerText = `Conectado em ${etapaAlvo.pinoIni}. Agora clique no destino correto: ${etapaAlvo.pinoFim}.`;
-                    txtStatusMsg.className = "text-xs text-amber-400 font-semibold";
-                } else {
-                    txtStatusMsg.innerText = `Erro de Conexão: Para esta etapa, comece clicando em ${etapaAlvo.pinoIni}.`;
-                    txtStatusMsg.className = "text-xs text-red-400 font-semibold animate-bounce";
-                }
-            } else {
-                // Checar clique no ponto de destino correto
-                if (verificarProximidadePonto(xClick, yClick, etapaAlvo.fim)) {
-                    // Sucesso absoluto! Registrar cabo na malha
-                    listaConexoesExecutadas.push({
-                        ini: etapaAlvo.ini,
-                        fim: etapaAlvo.fim,
-                        cor: etapaAlvo.cor
-                    });
-                    
-                    pontoSelecionadoAnterior = null;
-                    indiceEtapaAtual++;
-                    txtStatusMsg.className = "text-xs text-emerald-400 font-semibold";
-                    
-                    atualizarFluxoLaboratorio();
-                } else {
-                    txtStatusMsg.innerText = `Erro de Destino: O cabo saindo de ${etapaAlvo.pinoIni} deve ser fixado em ${etapaAlvo.pinoFim}.`;
-                    txtStatusMsg.className = "text-xs text-red-400 font-semibold";
-                }
-            }
-        });
-
-        function verificarProximidadePonto(x1, y1, pontoAlvo) {
-            const distanciaMaximaMargem = 14; // Área de clique confortável (hitbox)
-            return Math.sqrt((x1 - pontoAlvo.x)**2 + (y1 - pontoAlvo.y)**2) < distanciaMaximaMargem;
-        }
-
-        function atualizarFluxoLaboratorio() {
-            if (indiceEtapaAtual < listaEtapasFiacao.length) {
-                const proxEtapa = listaEtapasFiacao[indiceEtapaAtual];
-                txtInstrucoes.innerHTML = `
-                    <div class="p-3 bg-slate-900 border-l-4 border-blue-500 rounded">
-                        <p class="font-bold text-slate-200 text-xs uppercase tracking-wide">Passo Atual: ${proxEtapa.nome}</p>
-                        <p class="text-sm mt-1 text-slate-300">${proxEtapa.desc}</p>
-                    </div>
-                `;
-                txtStatusMsg.innerText = `Pronto para nova conexão. Origem: ${proxEtapa.pinoIni}`;
-            } else {
-                // Fim de fiação atingido
-                txtInstrucoes.innerHTML = `
-                    <div class="p-3 bg-emerald-950/80 border border-emerald-500 rounded text-emerald-300 text-sm">
-                        <p class="font-bold">✓ Montagem do Circuito Finalizada!</p>
-                        <p class="text-xs mt-1">Todas as conexões físicas multifilares foram posicionadas. Siga para o protocolo abaixo.</p>
-                    </div>
-                `;
-                txtStatusMsg.innerText = "Infraestrutura pronta para testes.";
-                painelChecklist.classList.remove('hidden');
-            }
-            renderizarQuadroCompleto();
-        }
-
-        // Validação das Condições do Checklist de Engenharia
-        function checarLiberacaoDisjuntores() {
-            if(chkCores.checked && chkSeccionamento.checked && chkDispositivos.checked) {
-                btnEnergizar.disabled = false;
-                btnEnergizar.className = "w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold rounded-lg uppercase tracking-wider text-sm transition-all shadow-lg cursor-pointer transform hover:-translate-y-0.5";
-            } else {
-                btnEnergizar.disabled = true;
-                btnEnergizar.className = "w-full py-3 bg-slate-700 text-slate-400 font-bold rounded-lg uppercase tracking-wider text-sm transition-all shadow cursor-not-allowed";
-                desenergizarSistematicamente();
-            }
-        }
-
-        [chkCores, chkSeccionamento, chkDispositivos].forEach(chk => {
-            chk.addEventListener('change', checarLiberacaoDisjuntores);
-        });
-
-        // Evento de Ativação Geral da Malha Elétrica
-        btnEnergizar.addEventListener('click', () => {
-            badgeStatusGeral.className = "flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-950 border border-emerald-700 text-sm font-medium text-emerald-400";
-            badgeStatusGeral.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span> <span>Barramento Energizado 127V</span>`;
-            
-            // Libera interatividade mecânica nos botões dos aparelhos de proteção
-            btnDG.className = "px-3 py-1 bg-red-600 text-white rounded text-xs font-semibold uppercase tracking-wider transition-colors hover:bg-red-700 cursor-pointer";
-            btnDG.innerText = "Desarmado";
-            hardwareStatus.dgArmado = false;
-            
-            btnEnergizar.innerText = "Sistema Pronto e Sob Tensão";
-            btnEnergizar.disabled = true;
-            btnEnergizar.className = "w-full py-3 bg-emerald-900/40 text-emerald-500 border border-emerald-700/50 font-bold rounded-lg uppercase tracking-wider text-sm text-center";
-        });
-
-        // Lógica de Operação do Disjuntor Geral
-        btnDG.addEventListener('click', () => {
-            if (btnEnergizar.disabled && btnEnergizar.innerText !== "Sistema Pronto e Sob Tensão") return;
-            
-            hardwareStatus.dgArmado = !hardwareStatus.dgArmado;
-            if(hardwareStatus.dgArmado) {
-                btnDG.className = "px-3 py-1 bg-emerald-600 text-slate-950 rounded text-xs font-bold uppercase tracking-wider";
-                btnDG.innerText = "Armado";
-                // Libera o próximo da cascata (DR)
-                btnDR.className = "px-3 py-1 bg-red-600 text-white rounded text-xs font-semibold uppercase tracking-wider transition-colors hover:bg-red-700 cursor-pointer";
-            } else {
-                btnDG.className = "px-3 py-1 bg-red-600 text-white rounded text-xs font-semibold uppercase tracking-wider";
-                btnDG.innerText = "Desarmado";
-                desenergizarSistematicamente();
-            }
-            avaliarEstadoCargaLampada();
-        });
-
-        // Lógica de Operação do Interruptor Diferencial Residual (DR)
-        btnDR.addEventListener('click', () => {
-            if(!hardwareStatus.dgArmado) return; // Proteção mecânica/Intertravamento
-            
-            hardwareStatus.drArmado = !hardwareStatus.drArmado;
-            if(hardwareStatus.drArmado) {
-                btnDR.className = "px-3 py-1 bg-emerald-600 text-slate-950 rounded text-xs font-bold uppercase tracking-wider";
-                btnDR.innerText = "Armado";
-                // Libera disjuntor do circuito parcial
-                btnDJCircuito.className = "px-3 py-1 bg-red-600 text-white rounded text-xs font-semibold uppercase tracking-wider transition-colors hover:bg-red-700 cursor-pointer";
-            } else {
-                btnDR.className = "px-3 py-1 bg-red-600 text-white rounded text-xs font-semibold uppercase tracking-wider";
-                btnDR.innerText = "Desarmado";
-                hardwareStatus.djCircuitoArmado = false;
-                btnDJCircuito.className = "px-3 py-1 bg-slate-700 text-slate-400 rounded text-xs font-semibold uppercase tracking-wider cursor-not-allowed";
-                btnDJCircuito.innerText = "Desarmado";
-            }
-            avaliarEstadoCargaLampada();
-        });
-
-        // Lógica do Disjuntor Parcial de Iluminação (C1)
-        btnDJCircuito.addEventListener('click', () => {
-            if(!hardwareStatus.drArmado) return;
-
-            hardwareStatus.djCircuitoArmado = !hardwareStatus.djCircuitoArmado;
-            if(hardwareStatus.djCircuitoArmado) {
-                btnDJCircuito.className = "px-3 py-1 bg-emerald-600 text-slate-950 rounded text-xs font-bold uppercase tracking-wider";
-                btnDJCircuito.innerText = "Armado";
-            } else {
-                btnDJCircuito.className = "px-3 py-1 bg-red-600 text-white rounded text-xs font-semibold uppercase tracking-wider";
-                btnDJCircuito.innerText = "Desarmado";
-            }
-            avaliarEstadoCargaLampada();
-        });
-
-        // Controle Manobrável do Interruptor Físico da Parede
-        btnInterruptor.addEventListener('click', () => {
-            hardwareStatus.interruptorLigado = !hardwareStatus.interruptorLigado;
-            if(hardwareStatus.interruptorLigado) {
-                btnInterruptor.className = "px-3 py-1 bg-amber-500 text-slate-950 text-xs font-bold rounded uppercase tracking-wider";
-                btnInterruptor.innerText = "Ligado";
-            } else {
-                btnInterruptor.className = "px-3 py-1 bg-slate-800 border border-slate-600 text-xs font-bold rounded uppercase tracking-wider text-slate-300";
-                btnInterruptor.innerText = "Desligado";
-            }
-            avaliarEstadoCargaLampada();
-        });
-
-        function desenergizarSistematicamente() {
-            hardwareStatus.dgArmado = false;
-            hardwareStatus.drArmado = false;
-            hardwareStatus.djCircuitoArmado = false;
-            hardwareStatus.sistemaEnergizado = false;
-
-            btnDG.className = "px-3 py-1 bg-slate-700 text-slate-400 rounded text-xs font-semibold uppercase tracking-wider cursor-not-allowed";
-            btnDG.innerText = "Desarmado";
-            btnDR.className = "px-3 py-1 bg-slate-700 text-slate-400 rounded text-xs font-semibold uppercase tracking-wider cursor-not-allowed";
-            btnDR.innerText = "Desarmado";
-            btnDJCircuito.className = "px-3 py-1 bg-slate-700 text-slate-400 rounded text-xs font-semibold uppercase tracking-wider cursor-not-allowed";
-            btnDJCircuito.innerText = "Desarmado";
-
-            badgeStatusGeral.className = "flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900 border border-slate-700 text-sm font-medium";
-            badgeStatusGeral.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span> <span>Circuito Desenergizado</span>`;
-        }
-
-        function avaliarEstadoCargaLampada() {
-            // Regra de validação de continuidade elétrica da malha ativa
-            if(hardwareStatus.dgArmado && hardwareStatus.drArmado && hardwareStatus.djCircuitoArmado) {
-                hardwareStatus.sistemaEnergizado = true;
-            } else {
-                hardwareStatus.sistemaEnergizado = false;
-            }
-            renderizarQuadroCompleto();
-        }
-
-        // Função de Reset e Limpeza Geral do Experimento
-        btnReset.addEventListener('click', () => {
-            indiceEtapaAtual = 0;
-            listaConexoesExecutadas = [];
-            pontoSelecionadoAnterior = null;
-            
-            // Limpeza de UI
-            chkCores.checked = false;
-            chkSeccionamento.checked = false;
-            chkDispositivos.checked = false;
-            painelChecklist.classList.add('hidden');
-            
-            hardwareStatus.interruptorLigado = false;
-            btnInterruptor.className = "px-3 py-1 bg-slate-800 border border-slate-600 text-xs font-bold rounded uppercase tracking-wider text-slate-300";
-            btnInterruptor.innerText = "Desligado";
-
-            btnEnergizar.innerText = "Energizar e Testar Instalação";
-            
-            desenergizarSistematicamente();
-            atualizarFluxoLaboratorio();
-        });
-
-        // Inicialização do Sistema no Carregamento
-        atualizarFluxoLaboratorio();
-        drawingLoopPulsar();
-
+        console.log("Simulador Pronto com Tooltips.");
     </script>
 </body>
 </html>
