@@ -202,7 +202,6 @@
             left: 15%; 
         }
 
-        /* --- PLACA CONCLUÍDO COM SCANNER --- */
         #placa-concluido {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8);
             width: 500px; background: linear-gradient(145deg, #2c2c2c, #1a1a1a);
@@ -210,19 +209,11 @@
             flex-direction: column; align-items: center; justify-content: center; padding: 60px 40px;
             box-shadow: 0 0 50px rgba(0,0,0,0.8), inset 0 0 15px rgba(255,255,255,0.1);
             opacity: 0; transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            overflow: hidden; 
         }
         #placa-concluido.show { display: flex; opacity: 1; transform: translate(-50%, -50%) scale(1); }
         
-        #placa-concluido::before {
-            content: ""; position: absolute; top: -100%; left: 0; width: 100%; height: 4px;
-            background: #00ff00; box-shadow: 0 0 15px #00ff00;
-            animation: scan 2s linear infinite; z-index: 1;
-        }
-        @keyframes scan { 0% { top: -10%; } 100% { top: 110%; } }
-        
         .texto-concluido { 
-            color: #00ff00; font-size: 3em; font-weight: bold; text-shadow: 0 0 20px rgba(0, 255, 0, 0.6); display: flex; align-items: center; gap: 20px; letter-spacing: 2px; z-index: 2;
+            color: #00ff00; font-size: 3em; font-weight: bold; text-shadow: 0 0 20px rgba(0, 255, 0, 0.6); display: flex; align-items: center; gap: 20px; letter-spacing: 2px; 
         }
 
         .parafuso { 
@@ -260,6 +251,25 @@
         }
         @keyframes pulsar { 0% { transform: translate(-50%, -50%) scale(1); } 70% { transform: translate(-50%, -50%) scale(1.25); } 100% { transform: translate(-50%, -50%) scale(1); } }
         #status-mensagem span.destaque { color: #ff9900; }
+
+        /* --- EFEITO SCANNER NA PLACA CONCLUIDO --- */
+        .scanner-line {
+            position: absolute;
+            width: 100%;
+            height: 6px;
+            background: rgba(0, 240, 255, 0.7);
+            box-shadow: 0 0 20px 8px rgba(0, 240, 255, 0.5);
+            top: 0;
+            animation: scanMove 2.5s ease-in-out infinite;
+            z-index: 115;
+            pointer-events: none;
+        }
+        @keyframes scanMove {
+            0% { top: 0%; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
     </style>
 </head>
 <body onclick="fecharBalao()">
@@ -326,13 +336,14 @@
             <div class="item-equip-moldura">
                 <span class="nome-equip">INT</span>
                 <span id="status-int-painel" class="status-equip-simbolo simbolo-desligado">✘</span>
-            </div>  
+            </div>
         </div>
 
         <div id="ponto-inicio" class="ponto"></div>
         <div id="ponto-fim" class="ponto"></div>
 
         <div id="placa-concluido">
+            <div class="scanner-line"></div>
             <div class="parafuso p-tl"></div><div class="parafuso p-tr"></div>
             <div class="parafuso p-bl"></div><div class="parafuso p-br"></div>
             <div class="texto-concluido"><span>✓</span> CONCLUÍDO</div>
@@ -576,10 +587,7 @@
             if (tipo === 'dg') el.src = estados.dg ? 'al_dg_on.png' : 'al_dg_off.png';
             if (tipo === 'dr') el.src = estados.dr ? 'al_dr_on.png' : 'al_dr_off.png';
         }
-        if (tipo === 'int') { 
-            somInterruptor.currentTime = 0; somInterruptor.play(); 
-            el.src = estados.int ? 'tec_int_on.png' : 'tec_int_off.png'; 
-        }
+        if (tipo === 'int') { somInterruptor.currentTime = 0; somInterruptor.play(); el.src = estados.int ? 'tec_int_on.png' : 'tec_int_off.png'; }
         
         if (instalacaoConcluida) {
             atualizarSimbolosPainel();
@@ -606,16 +614,46 @@
 
     function atualicarCircuito() {
         const lamp = document.getElementById('camada-lampada');
-        const placa = document.getElementById('placa-concluido'); 
+        const placa = document.getElementById('placa-concluido');
         const tudoLigado = instalacaoConcluida && estados.dg && estados.dr && estados.int;
         
         if (tudoLigado) {
             lamp.style.opacity = "1"; 
             primeiroTesteFeito = true;
-            placa.classList.add('show'); 
+            statusTxt.innerHTML = '<div class="status-final acesa">LÂMPADA ACESA</div>';
+            
+            if(placa) {
+                placa.classList.remove('show'); 
+                setTimeout(() => { placa.style.display = 'none'; }, 500); 
+            }
+            placaAtiva = false;
         } else {
-            lamp.style.opacity = "0";
-            placa.classList.remove('show'); 
+            if(lamp) lamp.style.opacity = "0";
+            if (instalacaoConcluida && primeiroTesteFeito) {
+                statusTxt.innerHTML = '<div class="status-final apagada">LÂMPADA APAGADA</div>';
+                
+                if (!placaAtiva && !placaJaExibida && placa) {
+                    placaAtiva = true;
+                    placaJaExibida = true;
+                    
+                    setTimeout(() => {
+                        if (!estados.dg || !estados.dr || !estados.int) {
+                            placa.style.display = 'flex'; 
+                            setTimeout(() => placa.classList.add('show'), 50);
+                            
+                            setTimeout(() => { 
+                                placa.classList.remove('show'); 
+                                setTimeout(() => { 
+                                    placa.style.display = 'none'; 
+                                    placaAtiva = false; 
+                                }, 500); 
+                            }, 2000);
+                        } else { 
+                            placaAtiva = false; 
+                        }
+                    }, 500);
+                }
+            }
         }
     }
 </script>
