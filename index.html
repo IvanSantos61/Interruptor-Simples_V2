@@ -1,359 +1,646 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulador de Instalação Elétrica Residencial - Interruptor Simples</title>
-    <!-- Bootstrap CSS para estrutura básica -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Ícones Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <title>Laboratório SMT Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            background-color: #0d1117;
-            color: #c9d1d9;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .header-title {
-            background: linear-gradient(135deg, #1f293d 0%, #111827 100%);
-            border-bottom: 2px solid #f59e0b;
-        }
-        .card-custom {
-            background-color: #161b22;
-            border: 1px solid #30363d;
-            border-radius: 8px;
-        }
-        .card-header-custom {
-            background-color: #21262d;
-            border-bottom: 1px solid #30363d;
-            color: #f0f6fc;
-            font-weight: 600;
-        }
-        canvas {
-            background-color: #050505;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-            cursor: pointer;
-        }
-        .btn-hardware {
-            min-width: 100px;
-            font-weight: bold;
-            letter-spacing: 0.5px;
-        }
-        .btn-neon-red {
-            background-color: #1a0000;
-            color: #ff3333;
-            border: 1px solid #ff3333;
-            box-shadow: 0 0 8px rgba(255, 51, 51, 0.2);
-        }
-        .btn-neon-red:hover:not(:disabled), .btn-neon-red.active {
-            background-color: #ff3333;
-            color: #000;
-            box-shadow: 0 0 15px #ff3333;
-        }
-        .btn-neon-green {
-            background-color: #001a00;
-            color: #33ff33;
-            border: 1px solid #33ff33;
-            box-shadow: 0 0 8px rgba(51, 255, 51, 0.2);
-        }
-        .btn-neon-green:hover:not(:disabled), .btn-neon-green.active {
-            background-color: #33ff33;
-            color: #000;
-            box-shadow: 0 0 15px #33ff33;
-        }
-        .badge-voltagem {
-            background-color: #ff9900;
-            color: #000;
-            font-weight: bold;
-            border-radius: 4px;
-            padding: 2px 6px;
-        }
-        .checklist-item {
-            background-color: #0d1117;
-            border: 1px solid #21262d;
-            transition: all 0.2s ease;
-        }
-        .checklist-item:hover {
-            border-color: #30363d;
-            background-color: #161b22;
-        }
-        .form-check-input:checked {
-            background-color: #198754;
-            border-color: #198754;
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: #060b13; 
+            color: white; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            padding: 20px;
+            margin: 0;
+            overflow-x: hidden;
         }
 
-        /* --- ESTILOS ADICIONADOS PARA AS ÁREAS SENSÍVEIS (TOOLTIPS) --- */
-        .area-sensivel {
-            position: relative;
-            display: inline-block;
-            border-bottom: 1px dotted #ff9900;
-            cursor: help;
-            color: #f0f6fc;
+        h1 {
+            color: #00f0ff;
+            text-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
-        .balao-info {
-            visibility: hidden;
-            width: 260px;
-            background-color: #1f293d;
-            color: #ffffff;
-            text-align: left;
-            border: 1px solid #f59e0b;
-            border-radius: 6px;
-            padding: 10px;
+
+        /* --- TELA DE ENTRADA --- */
+        #tela-entrada {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: #060b13; z-index: 1000;
+            display: flex; align-items: center; justify-content: center;
+            transition: opacity 0.5s ease, visibility 0.5s;
+        }
+
+        .moldura-entrada {
+            width: 80%; max-width: 900px; height: 70%; max-height: 450px;
+            border: 3px solid #00f0ff; border-radius: 25px;
+            box-shadow: 0 0 50px rgba(0, 240, 255, 0.4), inset 0 0 20px rgba(0, 240, 255, 0.1);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 20px; text-align: center;
+        }
+
+        .intro-entrada {
+            color: #008b8b; font-size: 55px; font-weight: 400; line-height: 1.1;
+            letter-spacing: 1px; text-transform: uppercase;
+            text-shadow: 0 0 15px rgba(0, 139, 139, 0.5); margin: 0 0 10px 0;
+        }
+
+        .titulo-entrada {
+            color: #00f0ff; font-size: 38px; font-weight: 400; line-height: 1.2;
+            letter-spacing: 1px; text-transform: uppercase;
+            text-shadow: 0 0 25px rgba(0, 240, 255, 0.6); margin: 0 0 25px 0;
+        }
+
+        .subtitulo-entrada {
+            color: #00f0ff; font-size: 24px; font-weight: 450; letter-spacing: 5px;
+            text-transform: uppercase; margin: 0 0 50px 0;
+        }
+
+        .creditos-entrada { color: #445566; font-size: 15px; font-weight: 500; margin-bottom: 50px; }
+
+        .btn-iniciar-lab {
+            background: transparent; border: 2px solid #00f0ff; border-radius: 50px;
+            color: #00f0ff; font-size: 16px; font-weight: bold; text-transform: uppercase;
+            padding: 12px 35px; cursor: pointer; letter-spacing: 1px;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2); transition: all 0.3s ease;
+            animation: pulsarBotao 1.5s infinite;
+        }
+        @keyframes pulsarBotao { 0% { opacity: 0.5; box-shadow: 0 0 10px rgba(0,240,255,0.2); } 50% { opacity: 1; box-shadow: 0 0 25px rgba(0,240,255,0.6); } 100% { opacity: 0.5; box-shadow: 0 0 10px rgba(0,240,255,0.2); } }
+        .btn-iniciar-lab:hover { background: #00f0ff; color: #060b13; }
+
+        /* --- INTERFACE DO SIMULADOR --- */
+        #painel-status {
+            width: 90%; max-width: 950px;
+            background: rgba(0, 0, 0, 0.4); border: 1px solid #1a2a44;
+            border-radius: 15px; padding: 25px; margin-bottom: 30px;
+            text-align: center; min-height: 80px; display: flex;
+            justify-content: center; align-items: center;
+        }
+
+        #status-mensagem { 
+            font-family: 'Arial Narrow', Arial, sans-serif; 
+            font-size: 1.3em; 
+            font-weight: bold; 
+            color: #ffffff; 
+            letter-spacing: 1px;
+            text-transform: uppercase; 
+            transition: all 0.3s ease; 
+        }
+        .cor-alerta { color: #ff0000 !important; text-shadow: 0 0 5px rgba(255, 0, 0, 0.3); }
+        .cor-instrucao { color: #ffcc00; text-shadow: 0 0 5px rgba(255, 204, 0, 0.4); }
+        .status-final { padding: 12px 40px; border-radius: 50px; display: inline-block; box-shadow: 0 0 15px rgba(0,0,0,0.5); letter-spacing: 1px; }
+        .acesa { background: #008000; box-shadow: 0 0 20px #00ff00; border: 1px solid #00ff00; }
+        .apagada { background: #cc0000; box-shadow: 0 0 20px #ff0000; border: 1px solid #ff4444; }
+
+        #container-simulador { position: relative; line-height: 0; user-select: none; border-radius: 10px; overflow: hidden; display: inline-block; }
+        #fundo { max-width: 1000px; height: auto; display: block; }
+
+        .camada-cabo { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: 100% 100%; pointer-events: none; z-index: 5; opacity: 0; transition: opacity 0.3s; }
+        #camada-lampada { position: absolute; z-index: 30; opacity: 0; transition: opacity 0.2s; pointer-events: auto; top: 46.5%; left: 75.8%; width: 242px; cursor: help; }
+
+        .tecla { position: absolute; cursor: pointer; z-index: 25; transition: transform 0.1s; }
+        .tecla:active { transform: scale(0.95); }
+        
+        .conector { position: absolute; display: none; z-index: 15; pointer-events: auto; transform-origin: center; cursor: help; }
+
+        /* --- PAINEL DE MONITORAMENTO --- */
+        #painel-equipamentos {
             position: absolute;
-            z-index: 9999;
-            bottom: 125%;
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0;
-            transition: opacity 0.2s;
-            font-size: 12px;
-            font-weight: normal;
-            line-height: 1.4;
-            box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+            top: 22%;
+            left: 66.3%;
+            width: 190px;
+            background: rgba(5, 10, 20, 0.95);
+            border: 2px solid #00f0ff;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.3);
+            font-family: 'Orbitron', sans-serif;
+            z-index: 90;
+            display: none; 
+            flex-direction: column;
+            gap: 10px;
         }
-        .balao-info::after {
-            content: "";
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            margin-left: -5px;
-            border-width: 5px;
-            border-style: solid;
-            border-color: #1f293d transparent transparent transparent;
+        .titulo-painel-equip {
+            font-size: 11px;
+            color: #00f0ff;
+            text-align: center;
+            font-weight: bold;
+            border-bottom: 1px solid rgba(0, 240, 255, 0.3);
+            padding-bottom: 6px;
+            margin-bottom: 4px;
+            letter-spacing: 1px;
         }
-        .area-sensivel:hover .balao-info {
-            visibility: visible;
-            opacity: 1;
+        .item-equip-moldura {
+            background: rgba(0, 255, 255, 0.05); 
+            border: 1px solid #00f0ff; 
+            border-radius: 5px;
+            padding: 8px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            font-weight: bold;
         }
+        .nome-equip { color: #ffffff; letter-spacing: 1px; }
+        .status-equip-simbolo { font-size: 16px; font-weight: bold; }
+        .simbolo-ligado { color: #00ff00; text-shadow: 0 0 8px #00ff00; }
+        .simbolo-desligado { color: #ff0000; text-shadow: 0 0 8px #ff0000; }
+
+        /* --- BALÕES INFORMATIVOS --- */
+        .balao-base {
+            position: absolute; z-index: 400; background: white; color: black;
+            padding: 15px; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            font-weight: bold; font-size: 15px; line-height: 1.3; display: none;
+            flex-direction: column; align-items: center; text-align: center; border: 2px solid #333;
+        }
+
+        #balao-informativo { top: 59.5%; left: 30.5%; width: 190px; }
+        #balao-informativo::after { content: ""; position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); border-width: 12px 12px 0; border-style: solid; border-color: white transparent transparent; }
+        #balao-cor-fase { top: 52%; left: 4%; width: 185px; }
+        #balao-cor-fase::after { content: ""; position: absolute; right: -12px; top: 50%; transform: translateY(-50%); border-width: 12px 0 12px 12px; border-style: solid; border-color: transparent transparent transparent white; }
+        #balao-cor-neutro { top: 15%; left: 31%; width: 185px; }
+        #balao-cor-neutro::after { content: ""; position: absolute; right: -12px; top: 50%; transform: translateY(-50%); border-width: 12px 0 12px 12px; border-style: solid; border-color: transparent transparent transparent white; }
+        #balao-seccionar-fase { top: 40%; left: 33%; width: 210px; }
+        #balao-seccionar-fase::after { content: ""; position: absolute; right: -12px; top: 50%; transform: translateY(-50%); border-width: 12px 0 12px 12px; border-style: solid; border-color: transparent transparent transparent white; }
+        #balao-cor-retorno { top: 32%; left: 40%; width: 210px; }
+        #balao-cor-retorno::after { content: ""; position: absolute; right: -12px; top: 50%; transform: translateY(-50%); border-width: 12px 0 12px 12px; border-style: solid; border-color: transparent transparent transparent white; }
+
+        .referencia-nbr { color: red; font-size: 13px; margin-top: 5px; display: block; }
+
+        .btn-acao { 
+            position: absolute; 
+            padding: 8px 25px; 
+            width: 130px; 
+            border: none; 
+            border-radius: 20px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5); 
+            font-size: 14px; 
+            color: white; 
+            text-transform: uppercase;
+            text-align: center;
+            z-index: 100;
+        }
+
+        #btn-ajuda { 
+            background: #1a2a44; 
+            border: 1px solid #00f0ff; 
+            box-shadow: 0 0 10px rgba(0,255,255,0.3); 
+            top: 79%;   
+            left: 15%; 
+        }
+
+        #btn-reiniciar { 
+            background: #cc0000; 
+            top: 87%;   
+            left: 15%; 
+        }
+
+        /* --- PLACA CONCLUÍDO COM SCANNER --- */
+        #placa-concluido {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8);
+            width: 500px; background: linear-gradient(145deg, #2c2c2c, #1a1a1a);
+            border: 4px solid #333; border-radius: 15px; z-index: 110; display: none;
+            flex-direction: column; align-items: center; justify-content: center; padding: 60px 40px;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8), inset 0 0 15px rgba(255,255,255,0.1);
+            opacity: 0; transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden; 
+        }
+        #placa-concluido.show { display: flex; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        
+        #placa-concluido::before {
+            content: ""; position: absolute; top: -100%; left: 0; width: 100%; height: 4px;
+            background: #00ff00; box-shadow: 0 0 15px #00ff00;
+            animation: scan 2s linear infinite; z-index: 1;
+        }
+        @keyframes scan { 0% { top: -10%; } 100% { top: 110%; } }
+        
+        .texto-concluido { 
+            color: #00ff00; font-size: 3em; font-weight: bold; text-shadow: 0 0 20px rgba(0, 255, 0, 0.6); display: flex; align-items: center; gap: 20px; letter-spacing: 2px; z-index: 2;
+        }
+
+        .parafuso { 
+            position: absolute; 
+            width: 18px; 
+            height: 18px; 
+            border-radius: 50%; 
+            background: linear-gradient(to bottom, #111 2px, transparent 2px, transparent calc(100% - 2px), #111 calc(100% - 2px)), linear-gradient(to right, #444 48%, #111 48%, #111 52%, #444 52%); 
+            box-shadow: inset 1px 1px 3px rgba(0,0,0,0.6), 0 0 4px rgba(0,0,0,0.8); 
+            border: 1px solid #222; 
+        }
+        .p-tl { top: 8px; left: 8px; } .p-tr { top: 8px; right: 8px; }
+        .p-bl { bottom: 8px; left: 8px; } .p-br { bottom: 8px; right: 8px; }
+
+        #modal-ajuda { 
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 380px; background: rgba(5, 10, 20, 0.98); border: 2px solid #00f0ff; border-radius: 15px; z-index: 150; display: none; flex-direction: column; padding: 25px; box-shadow: 0 0 30px rgba(0, 255, 255, 0.4); 
+        }
+        .ajuda-titulo { color: #00f0ff; text-align: center; margin-bottom: 20px; font-weight: bold; font-size: 18px; letter-spacing: 1px; }
+        
+        .ajuda-item { background: rgba(0, 255, 255, 0.05); border: 1px solid #00f0ff; color: white; padding: 10px; margin-bottom: 10px; border-radius: 5px; cursor: pointer; font-size: 16px; }
+        
+        .btn-fechar { background: #222; color: #aaa; border: 1px solid #444; padding: 8px; margin-top: 5px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+
+        #visualizador-ajuda { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 200; display: none; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; }
+        #img-ajuda-grande { max-width: 70%; max-height: 70%; border: 2px solid #00f0ff; border-radius: 8px; }
+        .legenda-voltar { color: #00f0ff; font-weight: bold; margin-top: 15px; font-size: 16px; letter-spacing: 1px; text-transform: uppercase; }
+
+        .ponto { 
+            position: absolute; width: 14px; height: 14px; 
+            border: 2px solid #ffffff; border-radius: 50%; 
+            cursor: pointer; display: none; z-index: 40; 
+            transform: translate(-50%, -50%); animation: pulsar 1.2s infinite; 
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
+            transition: opacity 0.2s ease;
+        }
+        @keyframes pulsar { 0% { transform: translate(-50%, -50%) scale(1); } 70% { transform: translate(-50%, -50%) scale(1.25); } 100% { transform: translate(-50%, -50%) scale(1); } }
+        #status-mensagem span.destaque { color: #ff9900; }
     </style>
 </head>
-<body>
+<body onclick="fecharBalao()">
 
-    <!-- Cabeçalho -->
-    <header class="header-title p-3 mb-4 shadow">
-        <div class="container-fluid d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
-            <div class="d-flex align-items-center gap-3">
-                <div class="p-2 bg-warning text-dark rounded-3 shadow">
-                    <i class="bi bi-zap-charge fs-3"></i>
-                </div>
-                <div>
-                    <h1 class="h3 mb-0 text-white font-weight-bold">FioCerto - Simulador de Instalação</h1>
-                    <p class="mb-0 text-muted small">Prática Laboratorial de Instalações Residenciais em Conformidade com a NBR 5410</p>
-                </div>
-            </div>
-            <div id="status-geral" class="d-flex align-items-center gap-2 px-3 py-2 rounded-pill bg-dark border border-secondary text-warning font-monospace small">
-                <span class="spinner-grow spinner-grow-sm text-warning" role="status"></span>
-                <span>CIRCUITO DESENERGIZADO</span>
-            </div>
+    <div id="tela-entrada">
+        <div class="moldura-entrada">
+            <div class="intro-entrada">Laboratório SMT Pro</div>
+            <h1 class="titulo-entrada">INTERRUPTOR SIMPLES PARA 1<br>LÂMPADA</h1>
+            <h2 class="subtitulo-entrada">CIRCUITO MONOFÁSICO - 127V</h2>
+            <div class="creditos-entrada">© Desenvolvido por Ivan Santos - ConectaeadPLUS - 2026</div>
+            <button class="btn-iniciar-lab" onclick="iniciarLaboratorio()">Clique para iniciar o Laboratório</button>
         </div>
-    </header>
+    </div>
 
-    <!-- Conteúdo Principal -->
-    <main class="container-fluid px-4 mb-4">
-        <div class="row g-4">
+    <h1>LABORATÓRIO SMT PRO</h1>
+
+    <audio id="som-disjuntor" src="disj.mp3"></audio>
+    <audio id="som-interruptor" src="int.mp3"></audio>
+    <audio id="som-conexao" src="conexao.mp3"></audio>
+
+    <div id="painel-status">
+        <div id="status-mensagem">AGUARDANDO INÍCIO...</div>
+    </div>
+
+    <div id="container-simulador" onclick="fecharBalao()">
+        <img src="ambiente.jpg" id="fundo">
+         
+        <div id="camada-fase1" class="camada-cabo"></div>
+        <div id="camada-fase2" class="camada-cabo"></div>
+        <div id="camada-retorno1" class="camada-cabo"></div>
+        <div id="camada-retorno2" class="camada-cabo"></div>
+        <div id="camada-neutro1" class="camada-cabo"></div>
+        <div id="camada-neutro2" class="camada-cabo"></div>
+
+        <div id="balao-informativo" class="balao-base">A seção mínima dos fios de iluminação é 1,5mm²<span class="referencia-nbr">(Item 6.2.6.1.1 da NBR-5410)</span></div>
+        <div id="balao-cor-fase" class="balao-base">A fase poderá ser de qualquer cor<span class="referencia-nbr">(Item 6.1.5.3.4 da NBR-5410)</span></div>
+        <div id="balao-cor-neutro" class="balao-base">O neutro deve ser de cor Azul Claro<span class="referencia-nbr">(Item 6.1.5.3.1 da NBR-5410)</span></div>
+        <div id="balao-seccionar-fase" class="balao-base">O interruptor deve seccionar o condutor vivo (fase)<span class="referencia-nbr">(Item 6.3.7.2.1 da NBR-5410)</span></div>
+        <div id="balao-cor-retorno" class="balao-base">O retorno também pode ser de qualquer cor.<span class="referencia-nbr">(continuidade da fase NBR-5410)</span></div>
+
+        <img src="lamp_on.png" id="camada-lampada" title="Para interligações consulte em 'AJUDA'">
+
+        <img src="al_dg_off.png" id="tecla-dg" class="tecla" style="top: 25%; left: 11.4%; width: 50px;" onclick="toggleDispositivo('dg')">
+        <img src="al_dr_off.png" id="tecla-dr" class="tecla" style="top: 28%; left: 23.8%; width: 50px;" onclick="toggleDispositivo('dr')">
+        <img src="tec_int_off.png" id="tecla-int" class="tecla" style="top: 73%; left: 72%; width: 53px; z-index: 100; pointer-events: auto; cursor: help;" onclick="toggleDispositivo('int')" title="Para interligações consulte em 'AJUDA'">
+
+        <img src="con_wago.png" id="wago-fase" class="conector" style="width: 65px; top: 26%; left: 57.4%;">
+        <img src="con_wago.png" id="wago-retorno" class="conector" style="width: 65px; top: 17.7%; left: 59.6%;">
+        <img src="con_wago.png" id="wago-neutro" class="conector" style="width: 65px; top: 14%; left: 57%;">
+
+        <div id="painel-equipamentos">
+            <div class="titulo-painel-equip">STATUS DO CIRCUITO</div>
             
-            <!-- Coluna da Esquerda: Componentes e Controles -->
-            <div class="col-12 col-xl-4">
-                
-                <!-- Guia de Procedimentos -->
-                <div class="card card-custom mb-4 shadow">
-                    <div class="card-header card-header-custom d-flex align-items-center gap-2 text-warning">
-                        <i class="bi bi-journal-text"></i> Guia de Procedimentos Atuais
-                    </div>
-                    <div class="card-body">
-                        <div id="instrucoes-passo" class="text-secondary small">
-                            <!-- Injetado via JS -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Painel de Dispositivos e Componentes do QDC -->
-                <div class="card card-custom shadow mb-4">
-                    <div class="card-header card-header-custom text-info d-flex align-items-center gap-2">
-                        <i class="bi bi-cpu"></i> Componentes do Quadro Geral (QDC)
-                    </div>
-                    <div class="card-body p-3">
-                        <div class="d-flex flex-column gap-2">
-                            
-                            <!-- Rede de Alimentação -->
-                            <div class="p-2 rounded bg-dark border border-secondary d-flex justify-content-between align-items-center">
-                                <div class="d-flex align-items-center gap-2">
-                                    <i class="bi bi-box-arrow-in-right text-success"></i>
-                                    <div>
-                                        <div class="area-sensivel font-weight-bold small">
-                                            Rede de Alimentação
-                                            <span class="balao-info">
-                                                <strong>Rede de Alimentação:</strong> Ponto de entrega da concessionária que traz os condutores de Fase, Neutro e PE (Terra) para o interior do Quadro de Distribuição.
-                                            </span>
-                                        </div>
-                                        <div class="text-muted text-xs font-monospace" style="font-size: 10px;">ENTRADA DO QUADRO</div>
-                                    </div>
-                                </div>
-                                <span class="badge badge-voltagem text-xs">127 V</span>
-                            </div>
-
-                            <!-- Disjuntor Geral -->
-                            <div class="p-2 rounded bg-dark border border-secondary d-flex justify-content-between align-items-center">
-                                <div class="d-flex align-items-center gap-2">
-                                    <i class="bi bi-shield-shaded text-danger"></i>
-                                    <div>
-                                        <div class="area-sensivel font-weight-bold small">
-                                            Disjuntor Geral (DG)
-                                            <span class="balao-info">
-                                                <strong>Disjuntor Geral (DG):</strong> Dispositivo termomagnético que protege todo o quadro contra curto-circuitos e sobrecorrentes, além de atuar como interruptor geral de manutenção.
-                                            </span>
-                                        </div>
-                                        <div class="text-muted text-xs font-monospace" style="font-size: 10px;">PROTEÇÃO TOTAL DO CIRCUITO</div>
-                                    </div>
-                                </div>
-                                <button id="btn-dg" class="btn btn-sm btn-hardware btn-neon-red">DESARMADO</button>
-                            </div>
-
-                            <!-- Dispositivo DR -->
-                            <div class="p-2 rounded bg-dark border border-secondary d-flex justify-content-between align-items-center">
-                                <div class="d-flex align-items-center gap-2">
-                                    <i class="bi bi-activity text-warning"></i>
-                                    <div>
-                                        <div class="area-sensivel font-weight-bold small">
-                                            Dispositivo DR (IDR)
-                                            <span class="balao-info">
-                                                <strong>Dispositivo DR:</strong> Interruptor Diferencial Residual. Detecta correntes de fuga à terra de baixa intensidade, desligando o circuito instantaneamente para proteger pessoas contra choques elétricos.
-                                            </span>
-                                        </div>
-                                        <div class="text-muted text-xs font-monospace" style="font-size: 10px;">PROTEÇÃO CONTRA CHOQUE HUMANO</div>
-                                    </div>
-                                </div>
-                                <button id="btn-dr" class="btn btn-sm btn-hardware btn-neon-red">DESARMADO</button>
-                            </div><div class="p-2 rounded bg-dark border border-secondary d-flex justify-content-between align-items-center">
-                                <div class="d-flex align-items-center gap-2">
-                                    <i class="bi bi-lightning-charge text-info"></i>
-                                    <div>
-                                        <div class="area-sensivel font-weight-bold small">
-                                            Dispositivo DPS
-                                            <span class="balao-info">
-                                                <strong>Dispositivo DPS:</strong> Protetor contra Surtos Elétricos. Desvia picos de tensão (causados por raios ou manobras da rede) para o aterramento, protegendo eletrodomésticos e eletrônicos.
-                                            </span>
-                                        </div>
-                                        <div class="text-muted text-xs font-monospace" style="font-size: 10px;">PROTEÇÃO CONTRA RAIOS E SURTOS</div>
-                                    </div>
-                                </div>
-                                <span class="badge bg-secondary text-xs">PASSIVO</span>
-                            </div>
-
-                            <div class="p-2 rounded bg-dark border border-secondary d-flex justify-content-between align-items-center">
-                                <div class="d-flex align-items-center gap-2">
-                                    <i class="bi bi-toggle2-off text-primary"></i>
-                                    <div>
-                                        <div class="area-sensivel font-weight-bold small">
-                                            Disjuntor de Circuito (C1)
-                                            <span class="balao-info">
-                                                <strong>Disjuntor de Circuito:</strong> Protege ramais específicos (ex: Iluminação). Garante que uma falha em uma lâmpada não desligue a casa inteira, apenas o setor afetado.
-                                            </span>
-                                        </div>
-                                        <div class="text-muted text-xs font-monospace" style="font-size: 10px;">PROTEÇÃO INDIVIDUAL: ILUMINAÇÃO</div>
-                                    </div>
-                                </div>
-                                <button id="btn-dj-circuito" class="btn btn-sm btn-hardware btn-neon-red">DESARMADO</button>
-                            </div>
-
-                            <div class="p-2 rounded bg-dark border border-secondary d-flex justify-content-between align-items-center">
-                                <div class="d-flex align-items-center gap-2">
-                                    <i class="bi bi-distribute-vertical text-primary"></i>
-                                    <div>
-                                        <div class="area-sensivel font-weight-bold small">
-                                            Barra de Neutro
-                                            <span class="balao-info">
-                                                <strong>Barra de Neutro:</strong> Barramento para conexão de todos os fios azuis (neutros). Serve como ponto de retorno da corrente para fechar o circuito com a rede.
-                                            </span>
-                                        </div>
-                                        <div class="text-muted text-xs font-monospace" style="font-size: 10px;">CONEXÃO DE RETORNO (AZUL)</div>
-                                    </div>
-                                </div>
-                                <span class="badge bg-primary text-xs">BARRA N</span>
-                            </div>
-
-                            <div class="p-2 rounded bg-dark border border-secondary d-flex justify-content-between align-items-center">
-                                <div class="d-flex align-items-center gap-2">
-                                    <i class="bi bi-align-middle text-success"></i>
-                                    <div>
-                                        <div class="area-sensivel font-weight-bold small">
-                                            Barra de Aterramento (PE)
-                                            <span class="balao-info">
-                                                <strong>Barra de Aterramento:</strong> Coleta todas as proteções (fios verdes) da casa e as conecta à terra, garantindo que carcaças metálicas não fiquem energizadas.
-                                            </span>
-                                        </div>
-                                        <div class="text-muted text-xs font-monospace" style="font-size: 10px;">PROTEÇÃO E EQUIPOTENCIALIZAÇÃO</div>
-                                    </div>
-                                </div>
-                                <span class="badge bg-success text-xs">BARRA PE</span>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
+            <div class="item-equip-moldura">
+                <span class="nome-equip">DG</span>
+                <span id="status-dg-painel" class="status-equip-simbolo simbolo-desligado">✘</span>
             </div>
-
-            <div class="col-12 col-xl-8">
-                <div class="card card-custom shadow h-100">
-                    <div class="card-header card-header-custom d-flex justify-content-between align-items-center">
-                        <span class="text-white"><i class="bi bi-bounding-box-circles me-2"></i>Diagrama de Conexões Multifilar</span>
-                        <div id="status-mensagem" class="badge bg-dark border border-secondary text-info fw-normal">Selecione o ponto inicial piscando...</div>
-                    </div>
-                    <div class="card-body bg-black p-0 d-flex justify-content-center align-items-center overflow-hidden" style="min-height: 450px;">
-                        <canvas id="quadroCanvas" width="800" height="450"></canvas>
-                    </div>
-                    <div class="card-footer bg-dark border-top border-secondary p-3">
-                        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
-                            <button id="btn-reset" class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-2">
-                                <i class="bi bi-arrow-counterclockwise"></i> REINICIAR LABORATÓRIO
-                            </button>
-                            <div class="d-flex align-items-center gap-3">
-                                <span class="small text-muted">INTERRUPTOR FÍSICO:</span>
-                                <button id="btn-interruptor" class="btn btn-sm btn-outline-warning fw-bold px-4">OFF</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            
+            <div class="item-equip-moldura">
+                <span class="nome-equip">DR</span>
+                <span id="status-dr-painel" class="status-equip-simbolo simbolo-desligado">✘</span>
             </div>
+            
+            <div class="item-equip-moldura">
+                <span class="nome-equip">INT</span>
+                <span id="status-int-painel" class="status-equip-simbolo simbolo-desligado">✘</span>
+            </div>  
         </div>
 
-        <div id="painel-checklist" class="row mt-4 d-none">
-            <div class="col-12">
-                <div class="card bg-dark border border-success shadow">
-                    <div class="card-body p-4">
-                        <h4 class="text-success mb-3"><i class="bi bi-check2-circle me-2"></i>Validação Técnica NBR 5410</h4>
-                        <div class="row g-3">
-                            <div class="col-md-4">
-                                <div class="form-check checklist-item p-3 rounded">
-                                    <input class="form-check-input" type="checkbox" id="chk-cores">
-                                    <label class="form-check-label text-light small" for="chk-cores">Cores conforme norma (Fase: Vermelho, Neutro: Azul, Terra: Verde)</label>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-check checklist-item p-3 rounded">
-                                    <input class="form-check-input" type="checkbox" id="chk-seccionamento">
-                                    <label class="form-check-label text-light small" for="chk-seccionamento">O condutor de fase é o único seccionado pelo interruptor</label>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <button id="btn-energizar" class="btn btn-success w-100 h-100 fw-bold shadow-sm" disabled>ENERGIZAR E TESTAR</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
+        <div id="ponto-inicio" class="ponto"></div>
+        <div id="ponto-fim" class="ponto"></div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // AQUI ENTRARIA O SEU CÓDIGO JAVASCRIPT ORIGINAL DE LOGICA DO CANVAS
-        // Mantendo exatamente as funções que você já desenvolveu:
-        // const canvas = document.getElementById('quadroCanvas');
-        // ... toda a sua lógica de desenho, estados de hardware e eventos.
+        <div id="placa-concluido">
+            <div class="parafuso p-tl"></div><div class="parafuso p-tr"></div>
+            <div class="parafuso p-bl"></div><div class="parafuso p-br"></div>
+            <div class="texto-concluido"><span>✓</span> CONCLUÍDO</div>
+        </div>
+
+        <div id="modal-ajuda">
+            <div class="ajuda-titulo">AJUDA TÉCNICA</div>
+            <div class="ajuda-item" onclick="mostrarEsquema('ligaint.png')">1. Ligação do Interruptor</div>
+            <div class="ajuda-item" onclick="mostrarEsquema('ligabocal.png')">2. Ligação da Lâmpada</div>
+            <div class="ajuda-item" onclick="mostrarEsquema('emendas2.png')">3. Emendas e conexões</div>
+            <div class="ajuda-item" onclick="mostrarEsquema('listamat.png')">4. Lista de material</div>
+            <button class="btn-fechar" onclick="fecharAjuda()">FECHAR</button>
+        </div>
+
+        <button id="btn-ajuda" class="btn-acao" onclick="abrirAjuda()">AJUDA</button>
+        <button id="btn-reiniciar" class="btn-acao" onclick="location.reload()">REINICIAR</button>
+
+        <div id="visualizador-ajuda" onclick="voltarParaMenu()">
+            <img id="img-ajuda-grande" src=""><div class="legenda-voltar">CLIQUE PARA VOLTAR</div>
+        </div>
+    </div>
+
+<script>
+    let estados = { dg: false, dr: false, int: false };
+    let instalacaoConcluida = false;
+    let primeiroTesteFeito = false; 
+    let placaJaExibida = false; 
+    let placaAtiva = false;
+    let etapaAtual = 0;
+    let aguardandoDestino = false;
+
+    const somDisjuntor = document.getElementById('som-disjuntor');
+    const somInterruptor = document.getElementById('som-interruptor');
+    const somConexao = document.getElementById('som-conexao');
+     
+    const balao = document.getElementById('balao-informativo');
+    const balaoCor = document.getElementById('balao-cor-fase');
+    const balaoNeutro = document.getElementById('balao-cor-neutro');
+    const balaoSeccionar = document.getElementById('balao-seccionar-fase');
+    const balaoRetorno = document.getElementById('balao-cor-retorno');
+
+    const telaEntrada = document.getElementById('tela-entrada');
+
+    function iniciarLaboratorio() { 
+        telaEntrada.style.opacity = '0'; 
+        setTimeout(() => { 
+            telaEntrada.style.visibility = 'hidden'; 
+            carregarEtapa(); 
+        }, 500); 
+    }
+
+    function fecharBalao() {
+        balao.style.display = 'none';
+        balaoCor.style.display = 'none';
+        balaoNeutro.style.display = 'none';
+        balaoSeccionar.style.display = 'none';
+        balaoRetorno.style.display = 'none';
+    }
+
+    function abrirAjuda() { document.getElementById('modal-ajuda').style.display = 'flex'; }
+    function fecharAjuda() { document.getElementById('modal-ajuda').style.display = 'none'; }
+    function mostrarEsquema(src) { document.getElementById('img-ajuda-grande').src = src; document.getElementById('visualizador-ajuda').style.display = 'flex'; fecharAjuda(); }
+    function voltarParaMenu() { document.getElementById('visualizador-ajuda').style.display = 'none'; abrirAjuda(); }
+
+    const sequencia = [
+        { id: 'FASE1', cor: '#ff0000', max: 54, pasta: 'FASE1', ini: {t: '38%', l: '27%'}, fim: {t: '23%', l: '56.5%'}, wagoRot: '90deg', msg: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NA REFERENCIA INDICADA NO DR, PARA INICIAR A PASSAGEM DA FASE</span>', msgDestino: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NO PONTO INDICADO NA CAIXA DE PASSAGEM, PARA LEVAR A FASE</span>' },
+        { id: 'NEUTRO1', cor: '#00bfff', max: 70, pasta: 'NEUTRO1', ini: {t: '35%', l: '44.3%'}, fim: {t: '14%', l: '56%'}, wagoRot: '270deg', msg: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NA REFERÊNCIA INDICADA NO BARRAMENTO PARA INICIAR A PASSAGEM DO NEUTRO</span>', msgDestino: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NO PONTO INDICADO NA CAIXA DE PASSAGEM, PARA LEVAR O NEUTRO</span>' },
+        { id: 'FASE2', cor: '#ff0000', max: 23, pasta: 'FASE2', ini: {t: '32%', l: '58.5%'}, fim: {t: '81%', l: '68%'}, msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA MOSTRADA NO CONECTOR DE EMENDA', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA MOSTRADA NO INTERRUPTOR' },
+        { id: 'RETORNO1', cor: '#ffff00', max: 20, pasta: 'RETORNO1', ini: {t: '19.3%', l: '63%'}, fim: {t: '75%', l: '68%'}, wagoRot: '0deg', msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA INDICADA NA CAIXA', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA DO INTERRUPTOR' },
+        { id: 'RETORNO2', cor: '#ffff00', max: 24, pasta: 'RETORNO2', ini: {t: '16.3%', l: '63%'}, fim: {t: '55%', l: '89%'}, wagoRot: '0deg', msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> LEVE O RETORNO À LÂMPADA.</span> CLIQUE NA REFERÊNCIA INDICADA NO CONECTOR', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO</span>: CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA MOSTRADA NA LÂMPADA' },
+        { id: 'NEUTRO2', cor: '#00bfff', max: 29, pasta: 'NEUTRO2', ini: {t: '8%', l: '58%'}, fim: {t: '55%', l: '91.3%'}, msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA INDICADA NO CONECTOR DE EMENDA', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO</span>: CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA MOSTRADA NA LÂMPADA.' }
+    ];
+
+    const elInicio = document.getElementById('ponto-inicio');
+    const elFim = document.getElementById('ponto-fim');
+    const statusTxt = document.getElementById('status-mensagem');
+    const painelEquip = document.getElementById('painel-equipamentos');
+
+    function exibirChecklistFinal() {
+        const posX = '34%'; 
+        const posY = '57%'; 
+
+        const overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:9999; display:flex; align-items:center; justify-content:center; cursor:pointer;';
         
-        console.log("Simulador Pronto com Tooltips.");
-    </script>
+        overlay.innerHTML = `<div style="position:absolute; left:${posX}; top:${posY}; transform:translate(-50%, -50%); background:rgba(6, 11, 19, 0.95); border:2px solid #00ff00; padding:40px 30px; border-radius:15px; width:500px; color:#fff; text-align:left; backdrop-filter: blur(8px); box-shadow: 0 0 30px rgba(0, 255, 0, 0.15);">
+            <h2 style="color:#00ff00; text-align:center; margin-bottom:30px; text-transform:uppercase; text-shadow: 0 0 10px rgba(0, 255, 0, 0.4);">Checklist Técnico</h2>
+            <div id="check-itens" style="font-size:16px; line-height:2.5;">
+                <div class="c-item">☐ Fase chegando ao interruptor</div>
+                <div class="c-item">☐ Neutro indo diretamente para as lâmpadas</div>
+                <div class="c-item">☐ Emendas com conectores adequados</div>
+                <div class="c-item">☐ Instalação do disjuntor de proteção</div>
+                <div class="c-item">☐ Instalação do dispositivo DR</div>
+                <div class="c-item">☐ Bitola dos fios adequada</div>
+                <div class="c-item">☐ Condutores identificados por cores</div>
+                <div class="c-item">☐ Bornes de dispositivos de proteção apertados</div>
+                <div class="c-item">☐ Verificação de curto-circuito</div>
+                <div class="c-item">☐ Lâmpadas não apresentam cintilação (pisca)</div>
+            </div>
+            <div id="msg-final" style="display:none; margin-top:35px; color:#00ff00; font-weight:bold; font-size:18px; border:2px solid #00ff00; padding:15px; text-align:center; border-radius:8px; box-shadow: inset 0 0 10px rgba(0, 255, 0, 0.2);">
+                INSTALAÇÃO CONCLUÍDA.<br>CLIQUE PARA TESTAR
+            </div>
+        </div>`;
+        
+        document.body.appendChild(overlay);
+        const itens = overlay.querySelectorAll('.c-item');
+        const msgFinal = overlay.querySelector('#msg-final');
+        
+        itens.forEach((it, idx) => {
+            setTimeout(() => { 
+                it.textContent = it.textContent.replace('☐', '✔'); 
+                it.style.color = '#00ff00'; 
+                it.style.fontWeight = 'bold';
+                it.style.textShadow = '0 0 5px rgba(0, 255, 0, 0.4)';
+            }, (idx + 1) * 600);
+        });
+        setTimeout(() => { msgFinal.style.display = "block"; }, (itens.length + 1) * 600);
+        overlay.onclick = () => { overlay.remove(); };
+    }
+
+    function carregarEtapa() {
+        if (etapaAtual >= sequencia.length) {
+            instalacaoConcluida = true;
+            statusTxt.innerHTML = '<span class="cor-alerta">FIAÇÃO CONCLUÍDA!</span> <span class="cor-instrucao">LIGUE O DG, O DR E O INTERRUPTOR PARA TESTAR.</span>';
+            elInicio.style.display = 'none'; 
+            elFim.style.display = 'none';
+            
+            painelEquip.style.display = 'flex';
+            atualizarSimbolosPainel();
+            
+            exibirChecklistFinal();
+            return;
+        }
+        const dados = sequencia[etapaAtual];
+        statusTxt.innerHTML = dados.msg;
+        
+        elInicio.style.top = dados.ini.t; 
+        elInicio.style.left = dados.ini.l; 
+        elInicio.style.background = dados.cor; 
+        elInicio.style.borderColor = "#ffffff";
+        elInicio.style.display = 'block'; 
+        elInicio.style.opacity = '1';
+        elInicio.style.pointerEvents = 'auto';
+
+        elFim.style.top = dados.fim.t; 
+        elFim.style.left = dados.fim.l; 
+        elFim.style.background = dados.cor; 
+        elFim.style.borderColor = "#ffffff";
+        elFim.style.display = 'block'; 
+        elFim.style.opacity = '0';
+        elFim.style.pointerEvents = 'none';
+        
+        aguardandoDestino = false;
+
+        elInicio.onclick = null;
+        elFim.onclick = null;
+
+        elInicio.onclick = (e) => { 
+            e.stopPropagation(); 
+            fecharBalao(); 
+            elInicio.style.background = "#00ff00"; 
+            
+            elFim.style.opacity = '1';
+            elFim.style.pointerEvents = 'auto';
+            
+            aguardandoDestino = true; 
+            if(sequencia[etapaAtual].msgDestino) statusTxt.innerHTML = sequencia[etapaAtual].msgDestino; 
+        };
+
+        elFim.onclick = (e) => { 
+            e.stopPropagation(); 
+            if (aguardandoDestino) {
+                elFim.style.background = "#00ff00"; 
+                elFim.style.pointerEvents = 'none';
+                elInicio.onclick = null;
+                elFim.onclick = null;
+                animarCabo(sequencia[etapaAtual]);
+            }
+        };
+    }
+
+    function animarCabo(cabo) {
+        fecharBalao(); 
+        let frame = 0;
+        const camada = document.getElementById(`camada-${cabo.id.toLowerCase()}`);
+        
+        camada.style.transition = "none";
+        camada.style.opacity = "1";
+
+        const loop = setInterval(() => {
+            if (frame > cabo.max) {
+                clearInterval(loop);
+                return;
+            }
+
+            const frameString = frame.toString().padStart(4, '0');
+            const imgUrl = `${cabo.pasta}/quadro${frameString}.png`;
+            
+            const imgPreload = new Image();
+            imgPreload.src = imgUrl;
+            imgPreload.onload = () => {
+                camada.style.backgroundImage = `url('${imgUrl}')`;
+            };
+
+            if (frame === cabo.max) {
+                clearInterval(loop);
+
+                somConexao.currentTime = 0; 
+                somConexao.play();
+
+                if (cabo.id === 'FASE1') { balao.style.display = 'flex'; balaoCor.style.display = 'flex'; }
+                if (cabo.id === 'NEUTRO1') { balaoNeutro.style.display = 'flex'; }
+                if (cabo.id === 'FASE2') { balaoSeccionar.style.display = 'flex'; }
+                if (cabo.id === 'RETORNO1') { balaoRetorno.style.display = 'flex'; }
+
+                let idWago;
+                if (cabo.id === 'FASE1') idWago = 'wago-fase';
+                else if (cabo.id === 'NEUTRO1') idWago = 'wago-neutro';
+                else if (cabo.id === 'RETORNO1') idWago = 'wago-retorno'; 
+                else if (cabo.id === 'RETORNO2') idWago = 'wago-retorno';
+
+                if (idWago) {
+                    setTimeout(() => {
+                        const wago = document.getElementById(idWago);
+                        wago.style.transform = `translate(-50%, -50%) rotate(${cabo.wagoRot})`; 
+                        wago.style.display = 'block';
+                        wago.title = "Para interligações consulte em 'AJUDA'";
+                    }, 1500);
+                }
+
+                etapaAtual++; 
+                setTimeout(carregarEtapa, 600);
+                return;
+            }
+            
+            frame += 1;
+        }, 25);
+    }
+
+    function toggleDispositivo(tipo) {
+        estados[tipo] = !estados[tipo];
+        const el = document.getElementById(`tecla-${tipo}`);
+        if (tipo === 'dg' || tipo === 'dr') {
+            somDisjuntor.currentTime = 0; somDisjuntor.play();
+            if (tipo === 'dg') el.src = estados.dg ? 'al_dg_on.png' : 'al_dg_off.png';
+            if (tipo === 'dr') el.src = estados.dr ? 'al_dr_on.png' : 'al_dr_off.png';
+        }
+        if (tipo === 'int') { 
+            somInterruptor.currentTime = 0; somInterruptor.play(); 
+            el.src = estados.int ? 'tec_int_on.png' : 'tec_int_off.png'; 
+        }
+        
+        if (instalacaoConcluida) {
+            atualizarSimbolosPainel();
+        }
+        atualicarCircuito();
+    }
+
+    function atualizarSimbolosPainel() {
+        const elDg = document.getElementById('status-dg-painel');
+        const elDr = document.getElementById('status-dr-painel');
+        const elInt = document.getElementById('status-int-painel');
+
+        if(!elDg || !elDr || !elInt) return;
+
+        if(estados.dg) { elDg.innerHTML = "✔"; elDg.className = "status-equip-simbolo simbolo-ligado"; }
+        else { elDg.innerHTML = "✘"; elDg.className = "status-equip-simbolo simbolo-desligado"; }
+
+        if(estados.dr) { elDr.innerHTML = "✔"; elDr.className = "status-equip-simbolo simbolo-ligado"; }
+        else { elDr.innerHTML = "✘"; elDr.className = "status-equip-simbolo simbolo-desligado"; }
+
+        if(estados.int) { elInt.innerHTML = "✔"; elInt.className = "status-equip-simbolo simbolo-ligado"; }
+        else { elInt.innerHTML = "✘"; elInt.className = "status-equip-simbolo simbolo-desligado"; }
+    }
+
+    function atualicarCircuito() {
+        const lamp = document.getElementById('camada-lampada');
+        const placa = document.getElementById('placa-concluido'); 
+        const tudoLigado = instalacaoConcluida && estados.dg && estados.dr && estados.int;
+        
+        if (tudoLigado) {
+            lamp.style.opacity = "1"; 
+            
+            // Marca que o teste de ligar foi bem sucedido
+            primeiroTesteFeito = true; 
+            
+            // Garante que a placa não vai aparecer enquanto a lâmpada estiver acesa
+            placa.classList.remove('show');
+            
+        } else {
+            lamp.style.opacity = "0";
+            
+            // Se o circuito já foi testado com sucesso (ligado uma vez)
+            // E a placa ainda não foi exibida
+            if (primeiroTesteFeito && !placaJaExibida) {
+                placaJaExibida = true; // Trava ativada de forma definitiva
+                placa.classList.add('show'); 
+                
+                // Remove a placa após 3 segundos (3000ms)
+                setTimeout(() => {
+                    placa.classList.remove('show');
+                }, 3000);
+            } else {
+                // Em qualquer outro momento de clique, mantém a placa escondida
+                placa.classList.remove('show');
+            }
+        }
+    }
+</script>
 </body>
 </html>
