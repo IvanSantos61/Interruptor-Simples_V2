@@ -209,7 +209,7 @@
             flex-direction: column; align-items: center; justify-content: center; padding: 60px 40px;
             box-shadow: 0 0 50px rgba(0,0,0,0.8), inset 0 0 15px rgba(255,255,255,0.1);
             opacity: 0; transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            overflow: hidden; /* Para conter o scanner */
+            overflow: hidden;
         }
         #placa-concluido.show { display: flex; opacity: 1; transform: translate(-50%, -50%) scale(1); }
         
@@ -219,26 +219,16 @@
         }
 
         /* --- EFEITO SCANNER --- */
-        .scanner-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            overflow: hidden;
-            border-radius: 15px;
-            z-index: 115;
-        }
-
         .scanner-line {
             position: absolute;
             width: 100%;
-            height: 5px;
-            background: rgba(0, 240, 255, 0.6);
-            box-shadow: 0 0 20px 5px rgba(0, 240, 255, 0.4);
-            top: -10px;
+            height: 6px;
+            background: rgba(0, 240, 255, 0.7);
+            box-shadow: 0 0 20px 8px rgba(0, 240, 255, 0.5);
+            top: 0;
             animation: scanMove 2.5s ease-in-out infinite;
+            z-index: 115;
+            pointer-events: none;
         }
 
         @keyframes scanMove {
@@ -246,17 +236,6 @@
             10% { opacity: 1; }
             90% { opacity: 1; }
             100% { top: 100%; opacity: 0; }
-        }
-
-        .scan-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to bottom, transparent 50%, rgba(0, 240, 255, 0.05) 50%);
-            background-size: 100% 4px;
-            opacity: 0.3;
         }
 
         .parafuso { 
@@ -362,10 +341,7 @@
         <div id="ponto-fim" class="ponto"></div>
 
         <div id="placa-concluido">
-            <div class="scanner-container">
-                <div class="scanner-line"></div>
-                <div class="scan-overlay"></div>
-            </div>
+            <div class="scanner-line"></div>
             <div class="parafuso p-tl"></div><div class="parafuso p-tr"></div>
             <div class="parafuso p-bl"></div><div class="parafuso p-br"></div>
             <div class="texto-concluido"><span>✓</span> CONCLUÍDO</div>
@@ -408,10 +384,6 @@
     const balaoRetorno = document.getElementById('balao-cor-retorno');
 
     const telaEntrada = document.getElementById('tela-entrada');
-    const statusTxt = document.getElementById('status-mensagem');
-    const painelEquip = document.getElementById('painel-equipamentos');
-    const elInicio = document.getElementById('ponto-inicio');
-    const elFim = document.getElementById('ponto-fim');
 
     function iniciarLaboratorio() { 
         telaEntrada.style.opacity = '0'; 
@@ -443,12 +415,56 @@
         { id: 'NEUTRO2', cor: '#00bfff', max: 29, pasta: 'NEUTRO2', ini: {t: '8%', l: '58%'}, fim: {t: '55%', l: '91.3%'}, msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA INDICADA NO CONECTOR DE EMENDA', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO</span>: CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA MOSTRADA NA LÂMPADA.' }
     ];
 
+    const elInicio = document.getElementById('ponto-inicio');
+    const elFim = document.getElementById('ponto-fim');
+    const statusTxt = document.getElementById('status-mensagem');
+    const painelEquip = document.getElementById('painel-equipamentos');
+
+    function exibirChecklistFinal() {
+        const posX = '34%'; 
+        const posY = '57%'; 
+
+        const overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:9999; display:flex; align-items:center; justify-content:center; cursor:pointer;';
+        overlay.innerHTML = `<div style="position:absolute; left:${posX}; top:${posY}; transform:translate(-50%, -50%); background:rgba(6, 11, 19, 0.95); border:2px solid #ffd700; padding:40px 30px; border-radius:15px; width:500px; color:#fff; text-align:left; backdrop-filter: blur(8px); box-shadow: 0 0 30px rgba(0,0,0,0.5);">
+            <h2 style="color:#ffd700; text-align:center; margin-bottom:30px; text-transform:uppercase;">Checklist Técnico</h2>
+            <div id="check-itens" style="font-size:16px; line-height:2.5;">
+                <div class="c-item">☐ Fase chegando ao interruptor</div>
+                <div class="c-item">☐ Neutro indo diretamente para as lâmpadas</div>
+                <div class="c-item">☐ Emendas com conectores adequados</div>
+                <div class="c-item">☐ Instalação do disjuntor de proteção</div>
+                <div class="c-item">☐ Instalação do dispositivo DR</div>
+                <div class="c-item">☐ Bitola dos fios adequada</div>
+                <div class="c-item">☐ Condutores identificados por cores</div>
+                <div class="c-item">☐ Bornes de dispositivos de proteção apertados</div>
+                <div class="c-item">☐ Verificação de curto-circuito</div>
+                <div class="c-item">☐ Lâmpadas não apresentam cintilação (pisca)</div>
+            </div>
+            <div id="msg-final" style="display:none; margin-top:35px; color:#00ff00; font-weight:bold; font-size:18px; border:2px solid #00ff00; padding:15px; text-align:center; border-radius:8px;">
+                INSTALAÇÃO CONCLUÍDA.<br>CLIQUE PARA TESTAR
+            </div>
+        </div>`;
+        document.body.appendChild(overlay);
+        const itens = overlay.querySelectorAll('.c-item');
+        const msgFinal = overlay.querySelector('#msg-final');
+        itens.forEach((it, idx) => {
+            setTimeout(() => { 
+                it.textContent = it.textContent.replace('☐', '✔'); 
+                it.style.color = '#00ff00'; 
+                it.style.fontWeight = 'bold';
+            }, (idx + 1) * 600);
+        });
+        setTimeout(() => { msgFinal.style.display = "block"; }, (itens.length + 1) * 600);
+        overlay.onclick = () => { overlay.remove(); };
+    }
+
     function carregarEtapa() {
         if (etapaAtual >= sequencia.length) {
             instalacaoConcluida = true;
             statusTxt.innerHTML = '<span class="cor-alerta">FIAÇÃO CONCLUÍDA!</span> <span class="cor-instrucao">LIGUE O DG, O DR E O INTERRUPTOR PARA TESTAR.</span>';
             elInicio.style.display = 'none'; 
             elFim.style.display = 'none';
+            
             painelEquip.style.display = 'flex';
             exibirChecklistFinal();
             return;
@@ -474,44 +490,6 @@
             };
         };
         statusTxt.innerHTML = cabo.msg;
-    }
-
-    function exibirChecklistFinal() {
-        const posX = '34%'; 
-        const posY = '57%'; 
-
-        const overlay = document.createElement('div');
-        overlay.style.cssText = 'position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:9999; display:flex; align-items:center; justify-content:center; cursor:pointer;';
-        overlay.innerHTML = `<div style="position:absolute; left:${posX}; top:${posY}; transform:translate(-50%, -50%); background:rgba(6, 11, 19, 0.95); border:2px solid #ffd700; padding:40px 30px; border-radius:15px; width:500px; color:#fff; text-align:left; backdrop-filter: blur(8px); box-shadow: 0 0 30px rgba(0,0,0,0.5);">
-            <h2 style="color:#ffd700; text-align:center; margin-bottom:30px; text-transform:uppercase;">Checklist Técnico</h2>
-            <div id="check-itens" style="font-size:16px; line-height:2.5;">
-                <div class="c-item">☐ Fase chegando ao interruptor</div>
-                <div class="c-item">☐ Neutro indo diretamente para as lâmpadas</div>
-                <div class="c-item">☐ Emendas com conectores adequados</div>
-                <div class="c-item">☐ Instalação do disjuntor de proteção</div>
-                <div class="c-item">☐ Instalação do dispositivo DR</div>
-                <div class="c-item">☐ Bitola dos fios adequada</div>
-                <div class="c-item">☐ Condutores identificados por cores</div>
-                <div class="c-item">☐ Bornes de dispositivos de proteção apertados</div>
-                <div class="c-item">☐ Verificação de curto-circuito</div>
-                <div class="c-item">☐ Lâmpadas não apresentam cintilação (pisca)</div>
-            </div>
-            <div id="msg-final" style="display:none; margin-top:35px; color:#00ff00; font-weight:bold; font-size:18px; border:2px solid #00ff00; padding:15px; text-align:center; border-radius:8px;">
-                SISTEMA VERIFICADO.<br>CLIQUE PARA TESTAR
-            </div>
-        </div>`;
-        document.body.appendChild(overlay);
-        const itens = overlay.querySelectorAll('.c-item');
-        const msgFinal = overlay.querySelector('#msg-final');
-        itens.forEach((it, idx) => {
-            setTimeout(() => { 
-                it.textContent = it.textContent.replace('☐', '✔'); 
-                it.style.color = '#00ff00'; 
-                it.style.fontWeight = 'bold';
-            }, (idx + 1) * 400);
-        });
-        setTimeout(() => { msgFinal.style.display = "block"; }, (itens.length + 1) * 400);
-        overlay.onclick = () => { overlay.remove(); };
     }
 
     function animarCabo(cabo) {
@@ -629,30 +607,18 @@
                     placaAtiva = true;
                     placaJaExibida = true;
                     
-                    const textoConcluido = placa.querySelector('.texto-concluido');
-                    textoConcluido.innerHTML = '<span>⌛</span> CHECANDO...';
-                    textoConcluido.style.color = '#00f0ff';
-                    textoConcluido.style.textShadow = '0 0 20px rgba(0, 240, 255, 0.6)';
-
                     setTimeout(() => {
                         if (!estados.dg || !estados.dr || !estados.int) {
                             placa.style.display = 'flex'; 
                             setTimeout(() => placa.classList.add('show'), 50);
                             
-                            // Mudar para CONCLUIDO após 2 segundos de "scanner"
-                            setTimeout(() => {
-                                textoConcluido.innerHTML = '<span>✓</span> CONCLUÍDO';
-                                textoConcluido.style.color = '#00ff00';
-                                textoConcluido.style.textShadow = '0 0 20px rgba(0, 255, 0, 0.6)';
-                            }, 2000);
-
                             setTimeout(() => { 
                                 placa.classList.remove('show'); 
                                 setTimeout(() => { 
                                     placa.style.display = 'none'; 
                                     placaAtiva = false; 
                                 }, 500); 
-                            }, 4500);
+                            }, 2000);
                         } else { 
                             placaAtiva = false; 
                         }
