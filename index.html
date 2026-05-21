@@ -51,7 +51,8 @@
             position: absolute;
             z-index: 80;
             cursor: help;
-            border: 1px solid red; /* Mantenha para ajuste, depois remova */
+            /* APAGUE A LINHA ABAIXO PARA TORNAR INVISÍVEL APÓS OS AJUSTES */
+            border: 1px solid red; 
         }
 
         /* --- TELA DE ENTRADA --- */
@@ -71,72 +72,113 @@
             padding: 20px; text-align: center;
         }
 
-        .intro-entrada { color: #008b8b; font-size: 55px; font-weight: 400; text-transform: uppercase; margin-bottom: 10px; }
-        .titulo-entrada { color: #00f0ff; font-size: 38px; text-transform: uppercase; margin-bottom: 25px; }
-        .subtitulo-entrada { color: #00f0ff; font-size: 24px; letter-spacing: 5px; text-transform: uppercase; margin-bottom: 50px; }
-        .creditos-entrada { color: #445566; font-size: 15px; margin-bottom: 50px; }
+        .intro-entrada {
+            color: #008b8b; font-size: 55px; font-weight: 400; line-height: 1.1;
+            letter-spacing: 1px; text-transform: uppercase;
+            text-shadow: 0 0 15px rgba(0, 139, 139, 0.5); margin: 0 0 10px 0;
+        }
+
+        .titulo-entrada {
+            color: #00f0ff; font-size: 38px; font-weight: 400; line-height: 1.2;
+            letter-spacing: 1px; text-transform: uppercase;
+            text-shadow: 0 0 25px rgba(0, 240, 255, 0.6); margin: 0 0 25px 0;
+        }
+
+        .subtitulo-entrada {
+            color: #00f0ff; font-size: 24px; font-weight: 450; letter-spacing: 5px;
+            text-transform: uppercase; margin: 0 0 50px 0;
+        }
+
+        .creditos-entrada { color: #445566; font-size: 15px; font-weight: 500; margin-bottom: 50px; }
 
         .btn-iniciar-lab {
             background: transparent; border: 2px solid #00f0ff; border-radius: 50px;
             color: #00f0ff; font-size: 16px; font-weight: bold; text-transform: uppercase;
-            padding: 12px 35px; cursor: pointer; animation: pulsarBotao 1.5s infinite;
+            padding: 12px 35px; cursor: pointer; letter-spacing: 1px;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2); transition: all 0.3s ease;
+            animation: pulsarBotao 1.5s infinite;
         }
-        @keyframes pulsarBotao { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+        @keyframes pulsarBotao { 0% { opacity: 0.5; box-shadow: 0 0 10px rgba(0,240,255,0.2); } 50% { opacity: 1; box-shadow: 0 0 25px rgba(0,240,255,0.6); } 100% { opacity: 0.5; box-shadow: 0 0 10px rgba(0,240,255,0.2); } }
+        .btn-iniciar-lab:hover { background: #00f0ff; color: #060b13; }
 
-        /* --- INTERFACE --- */
+        /* --- INTERFACE DO SIMULADOR --- */
         #painel-status {
             width: 90%; max-width: 950px;
             background: rgba(0, 0, 0, 0.4); border: 1px solid #1a2a44;
             border-radius: 15px; padding: 25px; margin-bottom: 30px;
-            text-align: center; min-height: 80px; display: flex; justify-content: center; align-items: center;
+            text-align: center; min-height: 80px; display: flex;
+            justify-content: center; align-items: center;
         }
 
-        #status-mensagem { font-family: 'Arial Narrow', Arial, sans-serif; font-size: 1.3em; font-weight: bold; color: #ffffff; text-transform: uppercase; }
+        #status-mensagem { 
+            font-family: 'Arial Narrow', Arial, sans-serif; 
+            font-size: 1.3em; 
+            font-weight: bold; 
+            color: #ffffff; 
+            letter-spacing: 1px;
+            text-transform: uppercase; 
+            transition: all 0.3s ease; 
+        }
+        .cor-alerta { color: #ff0000 !important; text-shadow: 0 0 5px rgba(255, 0, 0, 0.3); }
+        .cor-instrucao { color: #ffcc00; text-shadow: 0 0 5px rgba(255, 204, 0, 0.4); }
 
         #container-simulador { position: relative; line-height: 0; user-select: none; border-radius: 10px; overflow: hidden; display: inline-block; }
         #fundo { max-width: 1000px; height: auto; display: block; }
 
-        .camada-cabo { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; opacity: 0; transition: opacity 0.3s; }
-        #camada-lampada { position: absolute; z-index: 30; opacity: 0; transition: opacity 0.2s; top: 46.5%; left: 75.8%; width: 242px; }
+        .camada-cabo { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: 100% 100%; pointer-events: none; z-index: 5; opacity: 0; transition: opacity 0.3s; }
+        #camada-lampada { position: absolute; z-index: 30; opacity: 0; transition: opacity 0.2s; pointer-events: auto; top: 46.5%; left: 75.8%; width: 242px; cursor: help; }
 
-        .tecla { position: absolute; cursor: pointer; z-index: 90; }
-        .conector { position: absolute; display: none; z-index: 15; cursor: help; }
+        .tecla { position: absolute; cursor: pointer; z-index: 90; transition: transform 0.1s; }
+        .tecla:active { transform: scale(0.95); }
+        
+        .conector { position: absolute; display: none; z-index: 15; pointer-events: auto; transform-origin: center; cursor: help; }
 
-        /* --- BALÕES DE AJUDA --- */
-        .balao-base {
-            position: absolute; z-index: 400; background: white; color: black;
-            padding: 15px; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.5);
-            font-weight: bold; font-size: 14px; display: none;
-            flex-direction: column; align-items: center; text-align: center; border: 2px solid #333;
-        }
-        .referencia-nbr { color: red; font-size: 11px; margin-top: 5px; display: block; }
-
-        /* --- PAINEL MONITORAMENTO --- */
+        /* --- PAINEL DE MONITORAMENTO --- */
         #painel-equipamentos {
             position: absolute; top: 22%; left: 66.3%; width: 190px;
             background: rgba(5, 10, 20, 0.95); border: 2px solid #00f0ff;
-            border-radius: 12px; padding: 15px; z-index: 95; display: none; flex-direction: column; gap: 10px;
+            border-radius: 12px; padding: 15px; box-shadow: 0 0 25px rgba(0, 240, 255, 0.3);
+            font-family: 'Orbitron', sans-serif; z-index: 95; display: none; flex-direction: column; gap: 10px;
         }
-        .titulo-painel-equip { font-size: 11px; color: #00f0ff; text-align: center; font-weight: bold; border-bottom: 1px solid rgba(0, 240, 255, 0.3); padding-bottom: 6px; }
+        .titulo-painel-equip { font-size: 11px; color: #00f0ff; text-align: center; font-weight: bold; border-bottom: 1px solid rgba(0, 240, 255, 0.3); padding-bottom: 6px; margin-bottom: 4px; letter-spacing: 1px; }
         .item-equip-moldura { background: rgba(0, 255, 255, 0.05); border: 1px solid #00f0ff; border-radius: 5px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; font-size: 14px; font-weight: bold; }
-        .simbolo-ligado { color: #00ff00; }
-        .simbolo-desligado { color: #ff0000; }
+        .simbolo-ligado { color: #00ff00; text-shadow: 0 0 8px #00ff00; }
+        .simbolo-desligado { color: #ff0000; text-shadow: 0 0 8px #ff0000; }
+
+        /* --- BALÕES INFORMATIVOS --- */
+        .balao-base {
+            position: absolute; z-index: 400; background: white; color: black;
+            padding: 15px; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            font-weight: bold; font-size: 15px; line-height: 1.3; display: none;
+            flex-direction: column; align-items: center; text-align: center; border: 2px solid #333;
+        }
+        #balao-informativo { top: 59.5%; left: 30.5%; width: 190px; }
+        #balao-cor-fase { top: 52%; left: 4%; width: 185px; }
+        #balao-cor-neutro { top: 15%; left: 31%; width: 185px; }
+        #balao-seccionar-fase { top: 40%; left: 33%; width: 210px; }
+        #balao-cor-retorno { top: 32%; left: 40%; width: 210px; }
+        .referencia-nbr { color: red; font-size: 13px; margin-top: 5px; display: block; }
+
+        .btn-acao { position: absolute; padding: 8px 25px; width: 130px; border: none; border-radius: 20px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5); font-size: 14px; color: white; text-transform: uppercase; z-index: 100; }
+        #btn-ajuda { background: #1a2a44; border: 1px solid #00f0ff; top: 79%; left: 15%; }
+        #btn-reiniciar { background: #cc0000; top: 87%; left: 15%; }
 
         /* --- PLACA CONCLUÍDO --- */
         #placa-concluido {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8);
-            width: 500px; background: #1a1a1a; border: 4px solid #333; border-radius: 15px; z-index: 110; 
-            display: none; flex-direction: column; align-items: center; padding: 60px 40px; opacity: 0; transition: all 0.5s ease;
+            width: 500px; background: linear-gradient(145deg, #2c2c2c, #1a1a1a);
+            border: 4px solid #333; border-radius: 15px; z-index: 110; display: none;
+            flex-direction: column; align-items: center; justify-content: center; padding: 60px 40px;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8); opacity: 0; transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); overflow: hidden; 
         }
         #placa-concluido.show { display: flex; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-        .texto-concluido { color: #00ff00; font-size: 3em; font-weight: bold; }
+        #placa-concluido::before { content: ""; position: absolute; top: -100%; left: 0; width: 100%; height: 4px; background: #00ff00; box-shadow: 0 0 15px #00ff00; animation: scan 2s linear infinite; z-index: 1; }
+        @keyframes scan { 0% { top: -10%; } 100% { top: 110%; } }
+        .texto-concluido { color: #00ff00; font-size: 3em; font-weight: bold; text-shadow: 0 0 20px rgba(0, 255, 0, 0.6); z-index: 2; letter-spacing: 2px; }
 
         .ponto { position: absolute; width: 14px; height: 14px; border: 2px solid #ffffff; border-radius: 50%; cursor: pointer; display: none; z-index: 40; transform: translate(-50%, -50%); animation: pulsar 1.2s infinite; }
-        @keyframes pulsar { 0% { scale: 1; } 50% { scale: 1.3; } 100% { scale: 1; } }
-        
-        .btn-acao { position: absolute; padding: 8px 25px; width: 130px; border: none; border-radius: 20px; font-weight: bold; cursor: pointer; color: white; z-index: 100; }
-        #btn-ajuda { background: #1a2a44; border: 1px solid #00f0ff; top: 79%; left: 15%; }
-        #btn-reiniciar { background: #cc0000; top: 87%; left: 15%; }
+        @keyframes pulsar { 0% { transform: translate(-50%, -50%) scale(1); } 70% { transform: translate(-50%, -50%) scale(1.25); } 100% { transform: translate(-50%, -50%) scale(1); } }
+        #status-mensagem span.destaque { color: #ff9900; }
     </style>
 </head>
 <body onclick="fecharBalao()">
@@ -169,26 +211,21 @@
         <div id="camada-neutro1" class="camada-cabo"></div>
         <div id="camada-neutro2" class="camada-cabo"></div>
 
-        <div class="hotspot" style="top: 9.5%; left: 5.5%; width: 40px; height: 200px;" onmousemove="mapaMouse(event, 'BARRA DE ATERRAMENTO (PE)')" onmouseout="mapaSair()"></div>
-        <div class="hotspot" style="top: 9.58%; left: 42%; width: 40px; height: 200px;" onmousemove="mapaMouse(event, 'BARRA DE NEUTRO')" onmouseout="mapaSair()"></div>
-        <div class="hotspot" style="top: 12%; left: 11.5%; width: 40px; height: 156px;" onmousemove="mapaMouse(event, 'DISJUNTOR GERAL (DG)')" onmouseout="mapaSair()"></div>
-        <div class="hotspot" style="top: 12%; left: 16%; width: 35px; height: 156px;" onmousemove="mapaMouse(event, 'DISPOSITIVO DPS')" onmouseout="mapaSair()"></div>
-        <div class="hotspot" style="top: 12%; left: 19.8%; width: 85px; height: 163px;" onmousemove="mapaMouse(event, 'DISPOSITIVO DR')" onmouseout="mapaSair()"></div>
-        <div class="hotspot" style="top: 12%; left: 28%; width: 118px; height: 163px;" onmousemove="mapaMouse(event, 'DISJUNTORES DE CIRCUITO')" onmouseout="mapaSair()"></div>
-
-        <div id="balao-ajuda" class="balao-base">
-            <span id="texto-ajuda"></span>
-            <span class="referencia-nbr">Conforme NBR-5410</span>
-        </div>
+        <div class="hotspot" style="top: 8%; left: 5%; width: 200px; height: 40px;" onmousemove="mapaMouse(event, 'BARRA DE ATERRAMENTO (PE)')" onmouseout="mapaSair()"></div>
+        <div class="hotspot" style="top: 8%; left: 35%; width: 200px; height: 40px;" onmousemove="mapaMouse(event, 'BARRA DE NEUTRO')" onmouseout="mapaSair()"></div>
+        <div class="hotspot" style="top: 24%; left: 11%; width: 55px; height: 110px;" onmousemove="mapaMouse(event, 'DISJUNTOR GERAL (DG)')" onmouseout="mapaSair()"></div>
+        <div class="hotspot" style="top: 24%; left: 17%; width: 55px; height: 110px;" onmousemove="mapaMouse(event, 'DISPOSITIVO DPS')" onmouseout="mapaSair()"></div>
+        <div class="hotspot" style="top: 24%; left: 23%; width: 85px; height: 110px;" onmousemove="mapaMouse(event, 'DISPOSITIVO DR')" onmouseout="mapaSair()"></div>
+        <div class="hotspot" style="top: 24%; left: 33%; width: 130px; height: 110px;" onmousemove="mapaMouse(event, 'DISJUNTORES DE CIRCUITO')" onmouseout="mapaSair()"></div>
 
         <img src="lamp_on.png" id="camada-lampada">
         <img src="al_dg_off.png" id="tecla-dg" class="tecla" style="top: 25%; left: 11.4%; width: 50px;" onclick="toggleDispositivo('dg')">
         <img src="al_dr_off.png" id="tecla-dr" class="tecla" style="top: 28%; left: 23.8%; width: 50px;" onclick="toggleDispositivo('dr')">
         <img src="tec_int_off.png" id="tecla-int" class="tecla" style="top: 73%; left: 72%; width: 53px;" onclick="toggleDispositivo('int')">
 
-        <img src="con_wago.png" id="wago-fase" class="conector" style="width: 65px; top: 26%; left: 57.4%;" onclick="abrirAjuda(event, 'Cabo Fase: Cor Preta ou Marrom.')">
-        <img src="con_wago.png" id="wago-retorno" class="conector" style="width: 65px; top: 17.7%; left: 59.6%;" onclick="abrirAjuda(event, 'Cabo Retorno: Geralmente Branco ou Vermelho.')">
-        <img src="con_wago.png" id="wago-neutro" class="conector" style="width: 65px; top: 14%; left: 57%;" onclick="abrirAjuda(event, 'Cabo Neutro: Cor obrigatória Azul Claro.')">
+        <img src="con_wago.png" id="wago-fase" class="conector" style="width: 65px; top: 26%; left: 57.4%;">
+        <img src="con_wago.png" id="wago-retorno" class="conector" style="width: 65px; top: 17.7%; left: 59.6%;">
+        <img src="con_wago.png" id="wago-neutro" class="conector" style="width: 65px; top: 14%; left: 57%;">
 
         <div id="painel-equipamentos">
             <div class="titulo-painel-equip">STATUS DO CIRCUITO</div>
@@ -200,40 +237,35 @@
         <div id="ponto-inicio" class="ponto"></div>
         <div id="ponto-fim" class="ponto"></div>
 
-        <div id="placa-concluido"><div class="texto-concluido">✓ CONCLUÍDO</div></div>
+        <div id="placa-concluido">
+            <div class="texto-concluido">✓ CONCLUÍDO</div>
+        </div>
 
-        <button id="btn-ajuda" class="btn-acao" onclick="event.stopPropagation(); alert('Clique nos conectores ou componentes para ver as normas NBR-5410.')">AJUDA</button>
+        <button id="btn-ajuda" class="btn-acao" onclick="alert('Consulte os esquemas técnicos no menu de ajuda.')">AJUDA</button>
         <button id="btn-reiniciar" class="btn-acao" onclick="location.reload()">REINICIAR</button>
     </div>
+
+    <audio id="som-disjuntor" src="disj.mp3"></audio>
+    <audio id="som-interruptor" src="int.mp3"></audio>
+    <audio id="som-conexao" src="conexao.mp3"></audio>
 
 <script>
     let estados = { dg: false, dr: false, int: false };
     let instalacaoConcluida = false;
+    let primeiroTesteFeito = false; 
+    let placaJaExibida = false; 
     let etapaAtual = 0;
-    let primeiroTesteFeito = false;
-    let placaJaExibida = false;
 
     const ttLab = document.getElementById('tooltip-lab');
-    const balao = document.getElementById('balao-ajuda');
 
-    // Tooltip do Mouse
     function mapaMouse(e, nome) {
         ttLab.innerHTML = nome;
         ttLab.style.display = 'block';
         ttLab.style.left = e.clientX + 'px';
         ttLab.style.top = e.clientY + 'px';
     }
-    function mapaSair() { ttLab.style.display = 'none'; }
 
-    // Balões de Ajuda NBR
-    function abrirAjuda(e, texto) {
-        e.stopPropagation();
-        balao.style.display = 'flex';
-        balao.style.left = (e.pageX - 100) + 'px';
-        balao.style.top = (e.pageY - 120) + 'px';
-        document.getElementById('texto-ajuda').innerText = texto;
-    }
-    function fecharBalao() { balao.style.display = 'none'; }
+    function mapaSair() { ttLab.style.display = 'none'; }
 
     function iniciarLaboratorio() { 
         document.getElementById('tela-entrada').style.opacity = '0'; 
@@ -243,15 +275,17 @@
         }, 500); 
     }
 
+    // --- LÓGICA DE INSTALAÇÃO (RESUMIDA PARA O TESTE) ---
     const sequencia = [
-        { id: 'fase1', msg: 'CONECTE O CABO DE FASE (PRETO) NA ENTRADA DO DISJUNTOR GERAL (DG)', ini: {t: '38%', l: '27%'}, fim: {t: '23%', l: '56.5%'} },
-        { id: 'neutro1', msg: 'AGORA CONECTE O CABO NEUTRO (AZUL) NO BARRAMENTO DE NEUTRO', ini: {t: '35%', l: '44.3%'}, fim: {t: '14%', l: '56%'} }
+        { id: 'FASE1', pasta: 'FASE1', max: 54, ini: {t: '38%', l: '27%'}, fim: {t: '23%', l: '56.5%'}, msg: 'CONECTE A FASE DA REDE NO DR' },
+        { id: 'NEUTRO1', pasta: 'NEUTRO1', max: 70, ini: {t: '35%', l: '44.3%'}, fim: {t: '14%', l: '56%'}, msg: 'CONECTE O NEUTRO DA REDE' }
+        // Adicione as outras etapas aqui conforme seu código original
     ];
 
     function carregarEtapa() {
         if (etapaAtual >= sequencia.length) {
             instalacaoConcluida = true;
-            document.getElementById('status-mensagem').innerHTML = 'CIRCUITO PRONTO PARA TESTE! LIGUE OS DISPOSITIVOS.';
+            document.getElementById('status-mensagem').innerHTML = 'CIRCUITO PRONTO PARA TESTE!';
             document.getElementById('painel-equipamentos').style.display = 'flex';
             return;
         }
@@ -263,12 +297,8 @@
         p1.style.top = dados.ini.t; p1.style.left = dados.ini.l; p1.style.display = 'block';
         p2.style.top = dados.fim.t; p2.style.left = dados.fim.l; p2.style.display = 'block'; p2.style.opacity = '0';
 
-        p1.onclick = (e) => { e.stopPropagation(); p2.style.opacity = '1'; };
-        p2.onclick = (e) => { 
-            e.stopPropagation();
-            document.getElementById(`camada-${dados.id}`).style.opacity = '1';
-            if (document.getElementById(`wago-${dados.id.replace('1','')}`)) 
-                document.getElementById(`wago-${dados.id.replace('1','')}`).style.display = 'block';
+        p1.onclick = () => { p2.style.opacity = '1'; };
+        p2.onclick = () => { 
             etapaAtual++; 
             p1.style.display = 'none'; p2.style.display = 'none';
             carregarEtapa(); 
@@ -278,7 +308,8 @@
     function toggleDispositivo(tipo) {
         estados[tipo] = !estados[tipo];
         const el = document.getElementById(`tecla-${tipo}`);
-        el.src = estados[tipo] ? `al_${tipo}_on.png` : `al_${tipo}_off.png`;
+        if (tipo === 'dg') el.src = estados.dg ? 'al_dg_on.png' : 'al_dg_off.png';
+        if (tipo === 'dr') el.src = estados.dr ? 'al_dr_on.png' : 'al_dr_off.png';
         if (tipo === 'int') el.src = estados.int ? 'tec_int_on.png' : 'tec_int_off.png';
         
         atualizarPainel();
@@ -302,15 +333,12 @@
         if (tudoLigado) {
             lamp.style.opacity = "1";
             primeiroTesteFeito = true;
-            document.getElementById('status-mensagem').innerHTML = 'CIRCUITO EM FUNCIONAMENTO!';
         } else {
             lamp.style.opacity = "0";
-            if (instalacaoConcluida) document.getElementById('status-mensagem').innerHTML = 'CIRCUITO DESLIGADO.';
-            
-            if (primeiroTesteFeito && !placaJaExibida && !estados.dg && !estados.dr && !estados.int) {
+            if (primeiroTesteFeito && !placaJaExibida) {
                 placaJaExibida = true;
                 placa.classList.add('show');
-                setTimeout(() => placa.classList.remove('show'), 4000);
+                setTimeout(() => placa.classList.remove('show'), 3000);
             }
         }
     }
