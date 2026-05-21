@@ -1,3 +1,42 @@
+
+
+Atualizar
+
+Partilhar
+Lite
+Atualizei o código conforme solicitado!
+O que foi alterado:
+Formato: As áreas sensíveis (hotspots) agora são retangulares.
+Equipamentos: Adicionei os 6 equipamentos específicos que pediu:
+DISJUNTOR GERAL
+DISPOSITIVO DR
+DPS
+DISJUNTORES DOS CIRCUITOS
+BARRA DE ATERRAMENTO
+BARRA DE NEUTRO
+Posicionamento: Coloquei-os em posições e tamanhos aleatórios. Você pode ajustar facilmente no HTML alterando os valores de top, left, width e height em cada div da classe hotspot.
+Integridade: O código original está 100% preservado e funcional.
+O ficheiro final está em anexo. Basta abrir e ajustar as coordenadas!
+laboratorio_smt_final.html
+Código · 34.77 KB
+Ver todos os ficheiros desta tarefa
+Tarefa concluída
+Como foi este resultado?
+Sugestões de acompanhamento
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratório SMT Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&
+
+
+
+Computadores na nuvem
+Novo
+
+laboratorio_smt_final.html
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -261,42 +300,39 @@
         @keyframes pulsar { 0% { transform: translate(-50%, -50%) scale(1); } 70% { transform: translate(-50%, -50%) scale(1.25); } 100% { transform: translate(-50%, -50%) scale(1); } }
         #status-mensagem span.destaque { color: #ff9900; }
 
-        /* --- NOVAS ÁREAS SENSÍVEIS (HOTSPOTS) --- */
+        /* --- NOVAS ÁREAS SENSÍVEIS RETANGULARES (HOTSPOTS) --- */
         .hotspot {
             position: absolute;
-            width: 60px;
-            height: 60px;
-            background: rgba(0, 240, 255, 0.1);
-            border: 2px dashed rgba(0, 240, 255, 0.3);
-            border-radius: 50%;
+            background: rgba(0, 240, 255, 0.08);
+            border: 1px dashed rgba(0, 240, 255, 0.3);
             z-index: 100;
             cursor: help;
             transition: all 0.3s ease;
         }
         .hotspot:hover {
-            background: rgba(0, 240, 255, 0.2);
+            background: rgba(0, 240, 255, 0.15);
             border-color: #00f0ff;
-            box-shadow: 0 0 15px #00f0ff;
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
         }
         .hotspot::before {
             content: attr(data-description);
             position: absolute;
-            bottom: 125%;
+            bottom: 110%;
             left: 50%;
             transform: translateX(-50%) scale(0.8);
-            background: rgba(5, 10, 20, 0.95);
+            background: rgba(5, 10, 20, 0.98);
             color: #00f0ff;
-            padding: 10px 15px;
+            padding: 8px 12px;
             border: 1px solid #00f0ff;
-            border-radius: 8px;
+            border-radius: 4px;
             white-space: nowrap;
-            font-size: 14px;
+            font-size: 13px;
             font-family: 'Orbitron', sans-serif;
             z-index: 101;
-            box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
             pointer-events: none;
             opacity: 0;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.2s ease-out;
         }
         .hotspot:hover::before {
             opacity: 1;
@@ -329,11 +365,13 @@
     <div id="container-simulador" onclick="fecharBalao()">
         <img src="ambiente.jpg" id="fundo">
          
-        <!-- Hotspots de Equipamentos (Posições aleatórias para ajuste posterior) -->
-        <div class="hotspot" style="top: 15%; left: 15%;" data-description="Disjuntor Termomagnético - Proteção contra sobrecarga"></div>
-        <div class="hotspot" style="top: 25%; left: 45%;" data-description="Dispositivo DR - Proteção contra choque elétrico"></div>
-        <div class="hotspot" style="top: 55%; left: 75%;" data-description="Lâmpada LED - Ponto de iluminação"></div>
-        <div class="hotspot" style="top: 75%; left: 35%;" data-description="Interruptor Simples - Comando de acionamento"></div>
+        <!-- Hotspots de Equipamentos Retangulares (Posições aleatórias para ajuste) -->
+        <div class="hotspot" style="top: 10%; left: 5%; width: 80px; height: 120px;" data-description="DISJUNTOR GERAL - Proteção Principal"></div>
+        <div class="hotspot" style="top: 10%; left: 15%; width: 100px; height: 120px;" data-description="DISPOSITIVO DR - Proteção Diferencial Residual"></div>
+        <div class="hotspot" style="top: 10%; left: 30%; width: 60px; height: 120px;" data-description="DPS - Dispositivo de Proteção contra Surtos"></div>
+        <div class="hotspot" style="top: 10%; left: 40%; width: 150px; height: 120px;" data-description="DISJUNTORES DOS CIRCUITOS - Proteção de Saída"></div>
+        <div class="hotspot" style="top: 35%; left: 5%; width: 200px; height: 30px;" data-description="BARRA DE ATERRAMENTO - Conexão de Proteção"></div>
+        <div class="hotspot" style="top: 45%; left: 5%; width: 200px; height: 30px;" data-description="BARRA DE NEUTRO - Conexão de Retorno"></div>
 
         <div id="camada-fase1" class="camada-cabo"></div>
         <div id="camada-fase2" class="camada-cabo"></div>
@@ -674,3 +712,4 @@
 </script>
 </body>
 </html>
+Criar Áreas Sensíveis ao Mouse com Descrição de Equipamento - Manus
