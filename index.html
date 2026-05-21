@@ -272,38 +272,24 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: bold;
-            color: rgba(0, 240, 255, 0.6);
+            color: rgba(0, 240, 255, 0.5);
             text-align: center;
             padding: 5px;
-            background: rgba(0, 240, 255, 0.05);
+            background: rgba(0, 240, 255, 0.03);
+            pointer-events: auto;
         }
 
         .area-sensivel:hover {
-            border-color: rgba(0, 240, 255, 0.8);
-            background: rgba(0, 240, 255, 0.15);
-            color: rgba(0, 240, 255, 1);
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+            border-color: rgba(0, 240, 255, 0.7);
+            background: rgba(0, 240, 255, 0.1);
+            color: rgba(0, 240, 255, 0.9);
+            box-shadow: 0 0 12px rgba(0, 240, 255, 0.3);
         }
 
         .area-sensivel:active {
             transform: scale(0.98);
-        }
-
-        .tooltip-area {
-            position: absolute;
-            background: rgba(0, 240, 255, 0.9);
-            color: #060b13;
-            padding: 8px 12px;
-            border-radius: 5px;
-            font-size: 13px;
-            font-weight: bold;
-            white-space: nowrap;
-            pointer-events: none;
-            z-index: 500;
-            display: none;
-            box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
         }
     </style>
 </head>
@@ -356,29 +342,12 @@
         <img src="con_wago.png" id="wago-neutro" class="conector" style="width: 65px; top: 14%; left: 57%;">
 
         <!-- ÁREAS SENSÍVEIS AO MOUSE - COMPONENTES ELÉTRICOS -->
-        <div class="area-sensivel" id="area-barra-aterramento" style="top: 62%; left: 15%; width: 120px; height: 40px;">
-            BARRA DE ATERRAMENTO
-        </div>
-
-        <div class="area-sensivel" id="area-dg" style="top: 35%; left: 8%; width: 100px; height: 35px;">
-            DG
-        </div>
-
-        <div class="area-sensivel" id="area-dps" style="top: 45%; left: 22%; width: 100px; height: 35px;">
-            DPS
-        </div>
-
-        <div class="area-sensivel" id="area-dr" style="top: 55%; left: 35%; width: 100px; height: 35px;">
-            DR
-        </div>
-
-        <div class="area-sensivel" id="area-disjuntores" style="top: 28%; left: 48%; width: 120px; height: 40px;">
-            DISJUNTORES
-        </div>
-
-        <div class="area-sensivel" id="area-barra-neutro" style="top: 72%; left: 58%; width: 120px; height: 40px;">
-            BARRA DE NEUTRO
-        </div>
+        <div class="area-sensivel" id="area-barra-aterramento" style="top: 62%; left: 15%; width: 120px; height: 40px;">BARRA ATERR.</div>
+        <div class="area-sensivel" id="area-dg" style="top: 35%; left: 8%; width: 100px; height: 35px;">DG</div>
+        <div class="area-sensivel" id="area-dps" style="top: 45%; left: 22%; width: 100px; height: 35px;">DPS</div>
+        <div class="area-sensivel" id="area-dr" style="top: 55%; left: 35%; width: 100px; height: 35px;">DR</div>
+        <div class="area-sensivel" id="area-disjuntores" style="top: 28%; left: 48%; width: 120px; height: 40px;">DISJUNTORES</div>
+        <div class="area-sensivel" id="area-barra-neutro" style="top: 72%; left: 58%; width: 120px; height: 40px;">BARRA NEUTRO</div>
 
         <div id="painel-equipamentos">
             <div class="titulo-painel-equip">STATUS DO CIRCUITO</div>
@@ -446,77 +415,20 @@
 
     const telaEntrada = document.getElementById('tela-entrada');
 
-    // CONFIGURAÇÃO DAS ÁREAS SENSÍVEIS
+    // CONFIGURAÇÃO DAS ÁREAS SENSÍVEIS - Propriedades ajustáveis
     const areasConfig = {
-        'area-barra-aterramento': {
-            nome: 'BARRA DE ATERRAMENTO',
-            top: 62,
-            left: 15,
-            width: 120,
-            height: 40
-        },
-        'area-dg': {
-            nome: 'DG',
-            top: 35,
-            left: 8,
-            width: 100,
-            height: 35
-        },
-        'area-dps': {
-            nome: 'DPS',
-            top: 45,
-            left: 22,
-            width: 100,
-            height: 35
-        },
-        'area-dr': {
-            nome: 'DR',
-            top: 55,
-            left: 35,
-            width: 100,
-            height: 35
-        },
-        'area-disjuntores': {
-            nome: 'DISJUNTORES',
-            top: 28,
-            left: 48,
-            width: 120,
-            height: 40
-        },
-        'area-barra-neutro': {
-            nome: 'BARRA DE NEUTRO',
-            top: 72,
-            left: 58,
-            width: 120,
-            height: 40
-        }
+        'area-barra-aterramento': { top: 62, left: 15, width: 120, height: 40 },
+        'area-dg': { top: 35, left: 8, width: 100, height: 35 },
+        'area-dps': { top: 45, left: 22, width: 100, height: 35 },
+        'area-dr': { top: 55, left: 35, width: 100, height: 35 },
+        'area-disjuntores': { top: 28, left: 48, width: 120, height: 40 },
+        'area-barra-neutro': { top: 72, left: 58, width: 120, height: 40 }
     };
-
-    // Inicializar eventos das áreas sensíveis
-    function inicializarAreasSensiveis() {
-        Object.keys(areasConfig).forEach(areaId => {
-            const elemento = document.getElementById(areaId);
-            if (elemento) {
-                elemento.addEventListener('mouseenter', (e) => {
-                    const config = areasConfig[areaId];
-                    console.log(`Área sensível detectada: ${config.nome}`);
-                });
-
-                elemento.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const config = areasConfig[areaId];
-                    console.log(`Clique na área: ${config.nome}`);
-                    alert(`Você clicou em: ${config.nome}\n\nPosição: top ${config.top}%, left ${config.left}%\nTamanho: ${config.width}px x ${config.height}px`);
-                });
-            }
-        });
-    }
 
     function iniciarLaboratorio() { 
         telaEntrada.style.opacity = '0'; 
         setTimeout(() => { 
             telaEntrada.style.visibility = 'hidden'; 
-            inicializarAreasSensiveis();
             carregarEtapa(); 
         }, 500); 
     }
@@ -535,38 +447,85 @@
     function voltarParaMenu() { document.getElementById('visualizador-ajuda').style.display = 'none'; abrirAjuda(); }
 
     const sequencia = [
-        { id: 'FASE1', pasta: 'animacoes/fase1', max: 39, wagoRot: '0deg', msgDestino: 'Clique no final do fio para completar a conexão da FASE' },
-        { id: 'NEUTRO1', pasta: 'animacoes/neutro1', max: 39, wagoRot: '0deg', msgDestino: 'Clique no final do fio para completar a conexão do NEUTRO' },
-        { id: 'FASE2', pasta: 'animacoes/fase2', max: 39, wagoRot: '0deg', msgDestino: 'Clique no final do fio para completar a conexão da FASE (retorno)' },
-        { id: 'RETORNO1', pasta: 'animacoes/retorno1', max: 39, wagoRot: '0deg', msgDestino: 'Clique no final do fio para completar a conexão do RETORNO' }
+        { id: 'FASE1', cor: '#ff0000', max: 54, pasta: 'FASE1', ini: {t: '38%', l: '27%'}, fim: {t: '23%', l: '56.5%'}, wagoRot: '90deg', msg: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NA REFERENCIA INDICADA NO DR, PARA INICIAR A PASSAGEM DA FASE</span>', msgDestino: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NO PONTO INDICADO NA CAIXA DE PASSAGEM, PARA LEVAR A FASE</span>' },
+        { id: 'NEUTRO1', cor: '#00bfff', max: 70, pasta: 'NEUTRO1', ini: {t: '35%', l: '44.3%'}, fim: {t: '14%', l: '56%'}, wagoRot: '270deg', msg: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NA REFERÊNCIA INDICADA NO BARRAMENTO PARA INICIAR A PASSAGEM DO NEUTRO</span>', msgDestino: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NO PONTO INDICADO NA CAIXA DE PASSAGEM, PARA LEVAR O NEUTRO</span>' },
+        { id: 'FASE2', cor: '#ff0000', max: 23, pasta: 'FASE2', ini: {t: '32%', l: '58.5%'}, fim: {t: '81%', l: '68%'}, msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA MOSTRADA NO CONECTOR DE EMENDA', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA MOSTRADA NO INTERRUPTOR' },
+        { id: 'RETORNO1', cor: '#ffff00', max: 20, pasta: 'RETORNO1', ini: {t: '19.3%', l: '63%'}, fim: {t: '75%', l: '68%'}, wagoRot: '0deg', msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA INDICADA NA CAIXA', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA DO INTERRUPTOR' },
+        { id: 'RETORNO2', cor: '#ffff00', max: 24, pasta: 'RETORNO2', ini: {t: '16.3%', l: '63%'}, fim: {t: '55%', l: '89%'}, wagoRot: '0deg', msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> LEVE O RETORNO À LÂMPADA.</span> CLIQUE NA REFERÊNCIA INDICADA NO CONECTOR', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO</span>: CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA MOSTRADA NA LÂMPADA' },
+        { id: 'NEUTRO2', cor: '#00bfff', max: 29, pasta: 'NEUTRO2', ini: {t: '8%', l: '58%'}, fim: {t: '55%', l: '91.3%'}, msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA INDICADA NO CONECTOR DE EMENDA', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO</span>: CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA MOSTRADA NA LÂMPADA.' }
     ];
+
+    const elInicio = document.getElementById('ponto-inicio');
+    const elFim = document.getElementById('ponto-fim');
+    const statusTxt = document.getElementById('status-mensagem');
+    const painelEquip = document.getElementById('painel-equipamentos');
+
+    function exibirChecklistFinal() {
+        const posX = '34%'; 
+        const posY = '57%'; 
+
+        const overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:9999; display:flex; align-items:center; justify-content:center; cursor:pointer;';
+        
+        overlay.innerHTML = `<div style="position:absolute; left:${posX}; top:${posY}; transform:translate(-50%, -50%); background:rgba(6, 11, 19, 0.95); border:2px solid #00ff00; padding:40px 30px; border-radius:15px; width:500px; color:#fff; text-align:left; backdrop-filter: blur(8px); box-shadow: 0 0 30px rgba(0, 255, 0, 0.15);">
+            <h2 style="color:#00ff00; text-align:center; margin-bottom:30px; text-transform:uppercase; text-shadow: 0 0 10px rgba(0, 255, 0, 0.4);">Checklist Técnico</h2>
+            <div id="check-itens" style="font-size:16px; line-height:2.5;">
+                <div class="c-item">☐ Fase chegando ao interruptor</div>
+                <div class="c-item">☐ Neutro indo diretamente para as lâmpadas</div>
+                <div class="c-item">☐ Emendas com conectores adequados</div>
+                <div class="c-item">☐ Instalação do disjuntor de proteção</div>
+                <div class="c-item">☐ Instalação do dispositivo DR</div>
+                <div class="c-item">☐ Bitola dos fios adequada</div>
+                <div class="c-item">☐ Condutores identificados por cores</div>
+                <div class="c-item">☐ Bornes de dispositivos de proteção apertados</div>
+                <div class="c-item">☐ Verificação de curto-circuito</div>
+                <div class="c-item">☐ Lâmpadas não apresentam cintilação (pisca)</div>
+            </div>
+            <div id="msg-final" style="display:none; margin-top:35px; color:#00ff00; font-weight:bold; font-size:18px; border:2px solid #00ff00; padding:15px; text-align:center; border-radius:8px; box-shadow: inset 0 0 10px rgba(0, 255, 0, 0.2);">
+                INSTALAÇÃO CONCLUÍDA.<br>CLIQUE PARA TESTAR
+            </div>
+        </div>`;
+        
+        document.body.appendChild(overlay);
+        const itens = overlay.querySelectorAll('.c-item');
+        const msgFinal = overlay.querySelector('#msg-final');
+        
+        itens.forEach((it, idx) => {
+            setTimeout(() => { 
+                it.textContent = it.textContent.replace('☐', '✔'); 
+                it.style.color = '#00ff00'; 
+                it.style.fontWeight = 'bold';
+                it.style.textShadow = '0 0 5px rgba(0, 255, 0, 0.4)';
+            }, (idx + 1) * 600);
+        });
+
+        setTimeout(() => { msgFinal.style.display = 'block'; }, 7000);
+        overlay.onclick = () => { overlay.remove(); };
+    }
 
     function carregarEtapa() {
         if (etapaAtual >= sequencia.length) {
             instalacaoConcluida = true;
-            document.getElementById('painel-equipamentos').style.display = 'flex';
-            document.getElementById('status-mensagem').innerHTML = 'INSTALAÇÃO CONCLUÍDA! Agora teste o circuito.';
+            painelEquip.style.display = 'flex';
+            statusTxt.innerHTML = '<span class="status-final acesa">INSTALAÇÃO CONCLUÍDA! AGORA TESTE O CIRCUITO</span>';
+            exibirChecklistFinal();
             return;
         }
 
-        const statusTxt = document.getElementById('status-mensagem');
-        const elInicio = document.getElementById('ponto-inicio');
-        const elFim = document.getElementById('ponto-fim');
-
-        statusTxt.innerHTML = `<span class="cor-instrucao">ETAPA ${etapaAtual + 1} DE ${sequencia.length}</span><br>Clique no ponto inicial do fio`;
+        statusTxt.innerHTML = sequencia[etapaAtual].msg;
 
         elInicio.style.display = 'block';
         elFim.style.display = 'block';
-        elInicio.style.background = '#ffff00';
-        elFim.style.background = '#00ff00';
+        elInicio.style.background = sequencia[etapaAtual].cor;
+        elFim.style.background = sequencia[etapaAtual].cor;
         elInicio.style.pointerEvents = 'auto';
         elFim.style.pointerEvents = 'none';
         aguardandoDestino = false;
 
-        elInicio.style.top = sequencia[etapaAtual].inicio[0] + '%';
-        elInicio.style.left = sequencia[etapaAtual].inicio[1] + '%';
-        elFim.style.top = sequencia[etapaAtual].fim[0] + '%';
-        elFim.style.left = sequencia[etapaAtual].fim[1] + '%';
+        elInicio.style.top = sequencia[etapaAtual].ini.t;
+        elInicio.style.left = sequencia[etapaAtual].ini.l;
+        elFim.style.top = sequencia[etapaAtual].fim.t;
+        elFim.style.left = sequencia[etapaAtual].fim.l;
 
         elInicio.onclick = (e) => { 
             e.stopPropagation(); 
@@ -689,28 +648,17 @@
         
         if (tudoLigado) {
             lamp.style.opacity = "1"; 
-            
-            // Marca que o teste de ligar foi bem sucedido
             primeiroTesteFeito = true; 
-            
-            // Garante que a placa não vai aparecer enquanto a lâmpada estiver acesa
             placa.classList.remove('show');
-            
         } else {
             lamp.style.opacity = "0";
-            
-            // Se o circuito já foi testado com sucesso (ligado uma vez)
-            // E a placa ainda não foi exibida
             if (primeiroTesteFeito && !placaJaExibida) {
-                placaJaExibida = true; // Trava ativada de forma definitiva
+                placaJaExibida = true;
                 placa.classList.add('show'); 
-                
-                // Remove a placa após 3 segundos (3000ms)
                 setTimeout(() => {
                     placa.classList.remove('show');
                 }, 3000);
             } else {
-                // Em qualquer outro momento de clique, mantém a placa escondida
                 placa.classList.remove('show');
             }
         }
