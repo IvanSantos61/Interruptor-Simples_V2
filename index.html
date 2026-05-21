@@ -341,7 +341,7 @@
         <img src="con_wago.png" id="wago-retorno" class="conector" style="width: 65px; top: 17.7%; left: 59.6%;">
         <img src="con_wago.png" id="wago-neutro" class="conector" style="width: 65px; top: 14%; left: 57%;">
 
-        <!-- ÁREAS SENSÍVEIS AO MOUSE - COMPONENTES ELÉTRICOS -->
+        <!-- AREAS SENSIVEIS AO MOUSE - COMPONENTES ELETRICOS -->
         <div class="area-sensivel" id="area-barra-aterramento" style="top: 62%; left: 15%; width: 120px; height: 40px;">BARRA ATERR.</div>
         <div class="area-sensivel" id="area-dg" style="top: 35%; left: 8%; width: 100px; height: 35px;">DG</div>
         <div class="area-sensivel" id="area-dps" style="top: 45%; left: 22%; width: 100px; height: 35px;">DPS</div>
@@ -414,16 +414,6 @@
     const balaoRetorno = document.getElementById('balao-cor-retorno');
 
     const telaEntrada = document.getElementById('tela-entrada');
-
-    // CONFIGURAÇÃO DAS ÁREAS SENSÍVEIS - Propriedades ajustáveis
-    const areasConfig = {
-        'area-barra-aterramento': { top: 62, left: 15, width: 120, height: 40 },
-        'area-dg': { top: 35, left: 8, width: 100, height: 35 },
-        'area-dps': { top: 45, left: 22, width: 100, height: 35 },
-        'area-dr': { top: 55, left: 35, width: 100, height: 35 },
-        'area-disjuntores': { top: 28, left: 48, width: 120, height: 40 },
-        'area-barra-neutro': { top: 72, left: 58, width: 120, height: 40 }
-    };
 
     function iniciarLaboratorio() { 
         telaEntrada.style.opacity = '0'; 
@@ -498,41 +488,57 @@
                 it.style.textShadow = '0 0 5px rgba(0, 255, 0, 0.4)';
             }, (idx + 1) * 600);
         });
-
-        setTimeout(() => { msgFinal.style.display = 'block'; }, 7000);
+        setTimeout(() => { msgFinal.style.display = "block"; }, (itens.length + 1) * 600);
         overlay.onclick = () => { overlay.remove(); };
     }
 
     function carregarEtapa() {
         if (etapaAtual >= sequencia.length) {
             instalacaoConcluida = true;
+            statusTxt.innerHTML = '<span class="cor-alerta">FIAÇÃO CONCLUÍDA!</span> <span class="cor-instrucao">LIGUE O DG, O DR E O INTERRUPTOR PARA TESTAR.</span>';
+            elInicio.style.display = 'none'; 
+            elFim.style.display = 'none';
+            
             painelEquip.style.display = 'flex';
-            statusTxt.innerHTML = '<span class="status-final acesa">INSTALAÇÃO CONCLUÍDA! AGORA TESTE O CIRCUITO</span>';
+            atualizarSimbolosPainel();
+            
             exibirChecklistFinal();
             return;
         }
-
-        statusTxt.innerHTML = sequencia[etapaAtual].msg;
-
-        elInicio.style.display = 'block';
-        elFim.style.display = 'block';
-        elInicio.style.background = sequencia[etapaAtual].cor;
-        elFim.style.background = sequencia[etapaAtual].cor;
+        const dados = sequencia[etapaAtual];
+        statusTxt.innerHTML = dados.msg;
+        
+        elInicio.style.top = dados.ini.t; 
+        elInicio.style.left = dados.ini.l; 
+        elInicio.style.background = dados.cor; 
+        elInicio.style.borderColor = "#ffffff";
+        elInicio.style.display = 'block'; 
+        elInicio.style.opacity = '1';
         elInicio.style.pointerEvents = 'auto';
+
+        elFim.style.top = dados.fim.t; 
+        elFim.style.left = dados.fim.l; 
+        elFim.style.background = dados.cor; 
+        elFim.style.borderColor = "#ffffff";
+        elFim.style.display = 'block'; 
+        elFim.style.opacity = '0';
         elFim.style.pointerEvents = 'none';
+        
         aguardandoDestino = false;
 
-        elInicio.style.top = sequencia[etapaAtual].ini.t;
-        elInicio.style.left = sequencia[etapaAtual].ini.l;
-        elFim.style.top = sequencia[etapaAtual].fim.t;
-        elFim.style.left = sequencia[etapaAtual].fim.l;
+        elInicio.onclick = null;
+        elFim.onclick = null;
 
         elInicio.onclick = (e) => { 
             e.stopPropagation(); 
+            fecharBalao(); 
+            elInicio.style.background = "#00ff00"; 
+            
+            elFim.style.opacity = '1';
+            elFim.style.pointerEvents = 'auto';
+            
             aguardandoDestino = true; 
-            elInicio.style.pointerEvents = 'none'; 
-            elFim.style.pointerEvents = 'auto'; 
-            statusTxt.innerHTML = sequencia[etapaAtual].msgDestino; 
+            if(sequencia[etapaAtual].msgDestino) statusTxt.innerHTML = sequencia[etapaAtual].msgDestino; 
         };
 
         elFim.onclick = (e) => { 
@@ -648,17 +654,28 @@
         
         if (tudoLigado) {
             lamp.style.opacity = "1"; 
+            
+            // Marca que o teste de ligar foi bem sucedido
             primeiroTesteFeito = true; 
+            
+            // Garante que a placa não vai aparecer enquanto a lâmpada estiver acesa
             placa.classList.remove('show');
+            
         } else {
             lamp.style.opacity = "0";
+            
+            // Se o circuito já foi testado com sucesso (ligado uma vez)
+            // E a placa ainda não foi exibida
             if (primeiroTesteFeito && !placaJaExibida) {
-                placaJaExibida = true;
+                placaJaExibida = true; // Trava ativada de forma definitiva
                 placa.classList.add('show'); 
+                
+                // Remove a placa após 3 segundos (3000ms)
                 setTimeout(() => {
                     placa.classList.remove('show');
                 }, 3000);
             } else {
+                // Em qualquer outro momento de clique, mantém a placa escondida
                 placa.classList.remove('show');
             }
         }
