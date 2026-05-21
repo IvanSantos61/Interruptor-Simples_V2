@@ -1,646 +1,817 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laboratório SMT Pro</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <title>Simulador de Instalação Elétrica Residencial Resumido</title>
+    <!-- Tailwind CSS para estilização rápida e responsiva -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Ícones Lucide para componentes visuais -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: #060b13; 
-            color: white; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            padding: 20px;
-            margin: 0;
-            overflow-x: hidden;
+        /* Estilos customizados para o Canvas e interações */
+        canvas {
+            background-color: #1e293b; /* Fundo azul escuro para o quadro */
+            border-radius: 0.5rem;
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+        }
+        /* Efeito de transição suave para os botões do checklist */
+        .checklist-item {
+            transition: all 0.3s ease;
         }
 
-        h1 {
-            color: #00f0ff;
-            text-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff;
-            font-size: 2.5em;
-            margin-bottom: 20px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
+        /* --- NOVOS ESTILOS PARA AS ÁREAS SENSÍVEIS (TOOLTIPS) --- */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            border-bottom: 1px dotted #3b82f6; /* Linha pontilhada azul para indicar interatividade */
+            cursor: help;
         }
 
-        /* --- TELA DE ENTRADA --- */
-        #tela-entrada {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background-color: #060b13; z-index: 1000;
-            display: flex; align-items: center; justify-content: center;
-            transition: opacity 0.5s ease, visibility 0.5s;
-        }
-
-        .moldura-entrada {
-            width: 80%; max-width: 900px; height: 70%; max-height: 450px;
-            border: 3px solid #00f0ff; border-radius: 25px;
-            box-shadow: 0 0 50px rgba(0, 240, 255, 0.4), inset 0 0 20px rgba(0, 240, 255, 0.1);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 20px; text-align: center;
-        }
-
-        .intro-entrada {
-            color: #008b8b; font-size: 55px; font-weight: 400; line-height: 1.1;
-            letter-spacing: 1px; text-transform: uppercase;
-            text-shadow: 0 0 15px rgba(0, 139, 139, 0.5); margin: 0 0 10px 0;
-        }
-
-        .titulo-entrada {
-            color: #00f0ff; font-size: 38px; font-weight: 400; line-height: 1.2;
-            letter-spacing: 1px; text-transform: uppercase;
-            text-shadow: 0 0 25px rgba(0, 240, 255, 0.6); margin: 0 0 25px 0;
-        }
-
-        .subtitulo-entrada {
-            color: #00f0ff; font-size: 24px; font-weight: 450; letter-spacing: 5px;
-            text-transform: uppercase; margin: 0 0 50px 0;
-        }
-
-        .creditos-entrada { color: #445566; font-size: 15px; font-weight: 500; margin-bottom: 50px; }
-
-        .btn-iniciar-lab {
-            background: transparent; border: 2px solid #00f0ff; border-radius: 50px;
-            color: #00f0ff; font-size: 16px; font-weight: bold; text-transform: uppercase;
-            padding: 12px 35px; cursor: pointer; letter-spacing: 1px;
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2); transition: all 0.3s ease;
-            animation: pulsarBotao 1.5s infinite;
-        }
-        @keyframes pulsarBotao { 0% { opacity: 0.5; box-shadow: 0 0 10px rgba(0,240,255,0.2); } 50% { opacity: 1; box-shadow: 0 0 25px rgba(0,240,255,0.6); } 100% { opacity: 0.5; box-shadow: 0 0 10px rgba(0,240,255,0.2); } }
-        .btn-iniciar-lab:hover { background: #00f0ff; color: #060b13; }
-
-        /* --- INTERFACE DO SIMULADOR --- */
-        #painel-status {
-            width: 90%; max-width: 950px;
-            background: rgba(0, 0, 0, 0.4); border: 1px solid #1a2a44;
-            border-radius: 15px; padding: 25px; margin-bottom: 30px;
-            text-align: center; min-height: 80px; display: flex;
-            justify-content: center; align-items: center;
-        }
-
-        #status-mensagem { 
-            font-family: 'Arial Narrow', Arial, sans-serif; 
-            font-size: 1.3em; 
-            font-weight: bold; 
-            color: #ffffff; 
-            letter-spacing: 1px;
-            text-transform: uppercase; 
-            transition: all 0.3s ease; 
-        }
-        .cor-alerta { color: #ff0000 !important; text-shadow: 0 0 5px rgba(255, 0, 0, 0.3); }
-        .cor-instrucao { color: #ffcc00; text-shadow: 0 0 5px rgba(255, 204, 0, 0.4); }
-        .status-final { padding: 12px 40px; border-radius: 50px; display: inline-block; box-shadow: 0 0 15px rgba(0,0,0,0.5); letter-spacing: 1px; }
-        .acesa { background: #008000; box-shadow: 0 0 20px #00ff00; border: 1px solid #00ff00; }
-        .apagada { background: #cc0000; box-shadow: 0 0 20px #ff0000; border: 1px solid #ff4444; }
-
-        #container-simulador { position: relative; line-height: 0; user-select: none; border-radius: 10px; overflow: hidden; display: inline-block; }
-        #fundo { max-width: 1000px; height: auto; display: block; }
-
-        .camada-cabo { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: 100% 100%; pointer-events: none; z-index: 5; opacity: 0; transition: opacity 0.3s; }
-        #camada-lampada { position: absolute; z-index: 30; opacity: 0; transition: opacity 0.2s; pointer-events: auto; top: 46.5%; left: 75.8%; width: 242px; cursor: help; }
-
-        .tecla { position: absolute; cursor: pointer; z-index: 25; transition: transform 0.1s; }
-        .tecla:active { transform: scale(0.95); }
-        
-        .conector { position: absolute; display: none; z-index: 15; pointer-events: auto; transform-origin: center; cursor: help; }
-
-        /* --- PAINEL DE MONITORAMENTO --- */
-        #painel-equipamentos {
-            position: absolute;
-            top: 22%;
-            left: 66.3%;
-            width: 190px;
-            background: rgba(5, 10, 20, 0.95);
-            border: 2px solid #00f0ff;
-            border-radius: 12px;
-            padding: 15px;
-            box-shadow: 0 0 25px rgba(0, 240, 255, 0.3);
-            font-family: 'Orbitron', sans-serif;
-            z-index: 90;
-            display: none; 
-            flex-direction: column;
-            gap: 10px;
-        }
-        .titulo-painel-equip {
-            font-size: 11px;
-            color: #00f0ff;
-            text-align: center;
-            font-weight: bold;
-            border-bottom: 1px solid rgba(0, 240, 255, 0.3);
-            padding-bottom: 6px;
-            margin-bottom: 4px;
-            letter-spacing: 1px;
-        }
-        .item-equip-moldura {
-            background: rgba(0, 255, 255, 0.05); 
-            border: 1px solid #00f0ff; 
-            border-radius: 5px;
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 260px;
+            background-color: #0f172a; /* Slate 900 */
+            color: #fff;
+            text-align: left;
+            border-radius: 6px;
             padding: 8px 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 14px;
-            font-weight: bold;
-        }
-        .nome-equip { color: #ffffff; letter-spacing: 1px; }
-        .status-equip-simbolo { font-size: 16px; font-weight: bold; }
-        .simbolo-ligado { color: #00ff00; text-shadow: 0 0 8px #00ff00; }
-        .simbolo-desligado { color: #ff0000; text-shadow: 0 0 8px #ff0000; }
-
-        /* --- BALÕES INFORMATIVOS --- */
-        .balao-base {
-            position: absolute; z-index: 400; background: white; color: black;
-            padding: 15px; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.5);
-            font-weight: bold; font-size: 15px; line-height: 1.3; display: none;
-            flex-direction: column; align-items: center; text-align: center; border: 2px solid #333;
+            position: absolute;
+            z-index: 50;
+            bottom: 125%; /* Posiciona acima do texto */
+            left: 50%;
+            margin-left: -130px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            font-size: 0.75rem;
+            line-height: 1.25rem;
+            font-weight: normal;
+            border: 1px solid #334155;
         }
 
-        #balao-informativo { top: 59.5%; left: 30.5%; width: 190px; }
-        #balao-informativo::after { content: ""; position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); border-width: 12px 12px 0; border-style: solid; border-color: white transparent transparent; }
-        #balao-cor-fase { top: 52%; left: 4%; width: 185px; }
-        #balao-cor-fase::after { content: ""; position: absolute; right: -12px; top: 50%; transform: translateY(-50%); border-width: 12px 0 12px 12px; border-style: solid; border-color: transparent transparent transparent white; }
-        #balao-cor-neutro { top: 15%; left: 31%; width: 185px; }
-        #balao-cor-neutro::after { content: ""; position: absolute; right: -12px; top: 50%; transform: translateY(-50%); border-width: 12px 0 12px 12px; border-style: solid; border-color: transparent transparent transparent white; }
-        #balao-seccionar-fase { top: 40%; left: 33%; width: 210px; }
-        #balao-seccionar-fase::after { content: ""; position: absolute; right: -12px; top: 50%; transform: translateY(-50%); border-width: 12px 0 12px 12px; border-style: solid; border-color: transparent transparent transparent white; }
-        #balao-cor-retorno { top: 32%; left: 40%; width: 210px; }
-        #balao-cor-retorno::after { content: ""; position: absolute; right: -12px; top: 50%; transform: translateY(-50%); border-width: 12px 0 12px 12px; border-style: solid; border-color: transparent transparent transparent white; }
-
-        .referencia-nbr { color: red; font-size: 13px; margin-top: 5px; display: block; }
-
-        .btn-acao { 
-            position: absolute; 
-            padding: 8px 25px; 
-            width: 130px; 
-            border: none; 
-            border-radius: 20px; 
-            font-weight: bold; 
-            cursor: pointer; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5); 
-            font-size: 14px; 
-            color: white; 
-            text-transform: uppercase;
-            text-align: center;
-            z-index: 100;
+        /* Setinha do balão */
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #0f172a transparent transparent transparent;
         }
 
-        #btn-ajuda { 
-            background: #1a2a44; 
-            border: 1px solid #00f0ff; 
-            box-shadow: 0 0 10px rgba(0,255,255,0.3); 
-            top: 79%;   
-            left: 15%; 
+        /* Mostra o tooltip ao passar o mouse */
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
         }
-
-        #btn-reiniciar { 
-            background: #cc0000; 
-            top: 87%;   
-            left: 15%; 
-        }
-
-        /* --- PLACA CONCLUÍDO COM SCANNER --- */
-        #placa-concluido {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8);
-            width: 500px; background: linear-gradient(145deg, #2c2c2c, #1a1a1a);
-            border: 4px solid #333; border-radius: 15px; z-index: 110; display: none;
-            flex-direction: column; align-items: center; justify-content: center; padding: 60px 40px;
-            box-shadow: 0 0 50px rgba(0,0,0,0.8), inset 0 0 15px rgba(255,255,255,0.1);
-            opacity: 0; transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            overflow: hidden; 
-        }
-        #placa-concluido.show { display: flex; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-        
-        #placa-concluido::before {
-            content: ""; position: absolute; top: -100%; left: 0; width: 100%; height: 4px;
-            background: #00ff00; box-shadow: 0 0 15px #00ff00;
-            animation: scan 2s linear infinite; z-index: 1;
-        }
-        @keyframes scan { 0% { top: -10%; } 100% { top: 110%; } }
-        
-        .texto-concluido { 
-            color: #00ff00; font-size: 3em; font-weight: bold; text-shadow: 0 0 20px rgba(0, 255, 0, 0.6); display: flex; align-items: center; gap: 20px; letter-spacing: 2px; z-index: 2;
-        }
-
-        .parafuso { 
-            position: absolute; 
-            width: 18px; 
-            height: 18px; 
-            border-radius: 50%; 
-            background: linear-gradient(to bottom, #111 2px, transparent 2px, transparent calc(100% - 2px), #111 calc(100% - 2px)), linear-gradient(to right, #444 48%, #111 48%, #111 52%, #444 52%); 
-            box-shadow: inset 1px 1px 3px rgba(0,0,0,0.6), 0 0 4px rgba(0,0,0,0.8); 
-            border: 1px solid #222; 
-        }
-        .p-tl { top: 8px; left: 8px; } .p-tr { top: 8px; right: 8px; }
-        .p-bl { bottom: 8px; left: 8px; } .p-br { bottom: 8px; right: 8px; }
-
-        #modal-ajuda { 
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 380px; background: rgba(5, 10, 20, 0.98); border: 2px solid #00f0ff; border-radius: 15px; z-index: 150; display: none; flex-direction: column; padding: 25px; box-shadow: 0 0 30px rgba(0, 255, 255, 0.4); 
-        }
-        .ajuda-titulo { color: #00f0ff; text-align: center; margin-bottom: 20px; font-weight: bold; font-size: 18px; letter-spacing: 1px; }
-        
-        .ajuda-item { background: rgba(0, 255, 255, 0.05); border: 1px solid #00f0ff; color: white; padding: 10px; margin-bottom: 10px; border-radius: 5px; cursor: pointer; font-size: 16px; }
-        
-        .btn-fechar { background: #222; color: #aaa; border: 1px solid #444; padding: 8px; margin-top: 5px; border-radius: 5px; cursor: pointer; font-weight: bold; }
-
-        #visualizador-ajuda { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 200; display: none; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; }
-        #img-ajuda-grande { max-width: 70%; max-height: 70%; border: 2px solid #00f0ff; border-radius: 8px; }
-        .legenda-voltar { color: #00f0ff; font-weight: bold; margin-top: 15px; font-size: 16px; letter-spacing: 1px; text-transform: uppercase; }
-
-        .ponto { 
-            position: absolute; width: 14px; height: 14px; 
-            border: 2px solid #ffffff; border-radius: 50%; 
-            cursor: pointer; display: none; z-index: 40; 
-            transform: translate(-50%, -50%); animation: pulsar 1.2s infinite; 
-            box-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
-            transition: opacity 0.2s ease;
-        }
-        @keyframes pulsar { 0% { transform: translate(-50%, -50%) scale(1); } 70% { transform: translate(-50%, -50%) scale(1.25); } 100% { transform: translate(-50%, -50%) scale(1); } }
-        #status-mensagem span.destaque { color: #ff9900; }
     </style>
 </head>
-<body onclick="fecharBalao()">
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans">
 
-    <div id="tela-entrada">
-        <div class="moldura-entrada">
-            <div class="intro-entrada">Laboratório SMT Pro</div>
-            <h1 class="titulo-entrada">INTERRUPTOR SIMPLES PARA 1<br>LÂMPADA</h1>
-            <h2 class="subtitulo-entrada">CIRCUITO MONOFÁSICO - 127V</h2>
-            <div class="creditos-entrada">© Desenvolvido por Ivan Santos - ConectaeadPLUS - 2026</div>
-            <button class="btn-iniciar-lab" onclick="iniciarLaboratorio()">Clique para iniciar o Laboratório</button>
-        </div>
-    </div>
-
-    <h1>LABORATÓRIO SMT PRO</h1>
-
-    <audio id="som-disjuntor" src="disj.mp3"></audio>
-    <audio id="som-interruptor" src="int.mp3"></audio>
-    <audio id="som-conexao" src="conexao.mp3"></audio>
-
-    <div id="painel-status">
-        <div id="status-mensagem">AGUARDANDO INÍCIO...</div>
-    </div>
-
-    <div id="container-simulador" onclick="fecharBalao()">
-        <img src="ambiente.jpg" id="fundo">
-         
-        <div id="camada-fase1" class="camada-cabo"></div>
-        <div id="camada-fase2" class="camada-cabo"></div>
-        <div id="camada-retorno1" class="camada-cabo"></div>
-        <div id="camada-retorno2" class="camada-cabo"></div>
-        <div id="camada-neutro1" class="camada-cabo"></div>
-        <div id="camada-neutro2" class="camada-cabo"></div>
-
-        <div id="balao-informativo" class="balao-base">A seção mínima dos fios de iluminação é 1,5mm²<span class="referencia-nbr">(Item 6.2.6.1.1 da NBR-5410)</span></div>
-        <div id="balao-cor-fase" class="balao-base">A fase poderá ser de qualquer cor<span class="referencia-nbr">(Item 6.1.5.3.4 da NBR-5410)</span></div>
-        <div id="balao-cor-neutro" class="balao-base">O neutro deve ser de cor Azul Claro<span class="referencia-nbr">(Item 6.1.5.3.1 da NBR-5410)</span></div>
-        <div id="balao-seccionar-fase" class="balao-base">O interruptor deve seccionar o condutor vivo (fase)<span class="referencia-nbr">(Item 6.3.7.2.1 da NBR-5410)</span></div>
-        <div id="balao-cor-retorno" class="balao-base">O retorno também pode ser de qualquer cor.<span class="referencia-nbr">(continuidade da fase NBR-5410)</span></div>
-
-        <img src="lamp_on.png" id="camada-lampada" title="Para interligações consulte em 'AJUDA'">
-
-        <img src="al_dg_off.png" id="tecla-dg" class="tecla" style="top: 25%; left: 11.4%; width: 50px;" onclick="toggleDispositivo('dg')">
-        <img src="al_dr_off.png" id="tecla-dr" class="tecla" style="top: 28%; left: 23.8%; width: 50px;" onclick="toggleDispositivo('dr')">
-        <img src="tec_int_off.png" id="tecla-int" class="tecla" style="top: 73%; left: 72%; width: 53px; z-index: 100; pointer-events: auto; cursor: help;" onclick="toggleDispositivo('int')" title="Para interligações consulte em 'AJUDA'">
-
-        <img src="con_wago.png" id="wago-fase" class="conector" style="width: 65px; top: 26%; left: 57.4%;">
-        <img src="con_wago.png" id="wago-retorno" class="conector" style="width: 65px; top: 17.7%; left: 59.6%;">
-        <img src="con_wago.png" id="wago-neutro" class="conector" style="width: 65px; top: 14%; left: 57%;">
-
-        <div id="painel-equipamentos">
-            <div class="titulo-painel-equip">STATUS DO CIRCUITO</div>
-            
-            <div class="item-equip-moldura">
-                <span class="nome-equip">DG</span>
-                <span id="status-dg-painel" class="status-equip-simbolo simbolo-desligado">✘</span>
+    <!-- Cabeçalho Principal -->
+    <header class="bg-slate-800 border-b border-slate-700 p-4 shadow-md">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="p-2 bg-amber-500 rounded-lg text-slate-950">
+                    <i data-lucide="zap" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight">Laboratório Virtual de Eletricidade</h1>
+                    <p class="text-xs text-slate-400">Prática de Instalações Elétricas Residenciais Baseada na NBR 5410</p>
+                </div>
             </div>
-            
-            <div class="item-equip-moldura">
-                <span class="nome-equip">DR</span>
-                <span id="status-dr-painel" class="status-equip-simbolo simbolo-desligado">✘</span>
+            <!-- Indicador do Status Geral da Instalação -->
+            <div id="status-geral" class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900 border border-slate-700 text-sm font-medium">
+                <span class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span>
+                <span>Circuito Desenergizado</span>
             </div>
-            
-            <div class="item-equip-moldura">
-                <span class="nome-equip">INT</span>
-                <span id="status-int-painel" class="status-equip-simbolo simbolo-desligado">✘</span>
-            </div>  
         </div>
+    </header>
 
-        <div id="ponto-inicio" class="ponto"></div>
-        <div id="ponto-fim" class="ponto"></div>
-
-        <div id="placa-concluido">
-            <div class="parafuso p-tl"></div><div class="parafuso p-tr"></div>
-            <div class="parafuso p-bl"></div><div class="parafuso p-br"></div>
-            <div class="texto-concluido"><span>✓</span> CONCLUÍDO</div>
-        </div>
-
-        <div id="modal-ajuda">
-            <div class="ajuda-titulo">AJUDA TÉCNICA</div>
-            <div class="ajuda-item" onclick="mostrarEsquema('ligaint.png')">1. Ligação do Interruptor</div>
-            <div class="ajuda-item" onclick="mostrarEsquema('ligabocal.png')">2. Ligação da Lâmpada</div>
-            <div class="ajuda-item" onclick="mostrarEsquema('emendas2.png')">3. Emendas e conexões</div>
-            <div class="ajuda-item" onclick="mostrarEsquema('listamat.png')">4. Lista de material</div>
-            <button class="btn-fechar" onclick="fecharAjuda()">FECHAR</button>
-        </div>
-
-        <button id="btn-ajuda" class="btn-acao" onclick="abrirAjuda()">AJUDA</button>
-        <button id="btn-reiniciar" class="btn-acao" onclick="location.reload()">REINICIAR</button>
-
-        <div id="visualizador-ajuda" onclick="voltarParaMenu()">
-            <img id="img-ajuda-grande" src=""><div class="legenda-voltar">CLIQUE PARA VOLTAR</div>
-        </div>
-    </div>
-
-<script>
-    let estados = { dg: false, dr: false, int: false };
-    let instalacaoConcluida = false;
-    let primeiroTesteFeito = false; 
-    let placaJaExibida = false; 
-    let placaAtiva = false;
-    let etapaAtual = 0;
-    let aguardandoDestino = false;
-
-    const somDisjuntor = document.getElementById('som-disjuntor');
-    const somInterruptor = document.getElementById('som-interruptor');
-    const somConexao = document.getElementById('som-conexao');
-     
-    const balao = document.getElementById('balao-informativo');
-    const balaoCor = document.getElementById('balao-cor-fase');
-    const balaoNeutro = document.getElementById('balao-cor-neutro');
-    const balaoSeccionar = document.getElementById('balao-seccionar-fase');
-    const balaoRetorno = document.getElementById('balao-cor-retorno');
-
-    const telaEntrada = document.getElementById('tela-entrada');
-
-    function iniciarLaboratorio() { 
-        telaEntrada.style.opacity = '0'; 
-        setTimeout(() => { 
-            telaEntrada.style.visibility = 'hidden'; 
-            carregarEtapa(); 
-        }, 500); 
-    }
-
-    function fecharBalao() {
-        balao.style.display = 'none';
-        balaoCor.style.display = 'none';
-        balaoNeutro.style.display = 'none';
-        balaoSeccionar.style.display = 'none';
-        balaoRetorno.style.display = 'none';
-    }
-
-    function abrirAjuda() { document.getElementById('modal-ajuda').style.display = 'flex'; }
-    function fecharAjuda() { document.getElementById('modal-ajuda').style.display = 'none'; }
-    function mostrarEsquema(src) { document.getElementById('img-ajuda-grande').src = src; document.getElementById('visualizador-ajuda').style.display = 'flex'; fecharAjuda(); }
-    function voltarParaMenu() { document.getElementById('visualizador-ajuda').style.display = 'none'; abrirAjuda(); }
-
-    const sequencia = [
-        { id: 'FASE1', cor: '#ff0000', max: 54, pasta: 'FASE1', ini: {t: '38%', l: '27%'}, fim: {t: '23%', l: '56.5%'}, wagoRot: '90deg', msg: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NA REFERENCIA INDICADA NO DR, PARA INICIAR A PASSAGEM DA FASE</span>', msgDestino: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NO PONTO INDICADO NA CAIXA DE PASSAGEM, PARA LEVAR A FASE</span>' },
-        { id: 'NEUTRO1', cor: '#00bfff', max: 70, pasta: 'NEUTRO1', ini: {t: '35%', l: '44.3%'}, fim: {t: '14%', l: '56%'}, wagoRot: '270deg', msg: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NA REFERÊNCIA INDICADA NO BARRAMENTO PARA INICIAR A PASSAGEM DO NEUTRO</span>', msgDestino: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NO PONTO INDICADO NA CAIXA DE PASSAGEM, PARA LEVAR O NEUTRO</span>' },
-        { id: 'FASE2', cor: '#ff0000', max: 23, pasta: 'FASE2', ini: {t: '32%', l: '58.5%'}, fim: {t: '81%', l: '68%'}, msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA MOSTRADA NO CONECTOR DE EMENDA', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA MOSTRADA NO INTERRUPTOR' },
-        { id: 'RETORNO1', cor: '#ffff00', max: 20, pasta: 'RETORNO1', ini: {t: '19.3%', l: '63%'}, fim: {t: '75%', l: '68%'}, wagoRot: '0deg', msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA INDICADA NA CAIXA', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA DO INTERRUPTOR' },
-        { id: 'RETORNO2', cor: '#ffff00', max: 24, pasta: 'RETORNO2', ini: {t: '16.3%', l: '63%'}, fim: {t: '55%', l: '89%'}, wagoRot: '0deg', msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> LEVE O RETORNO À LÂMPADA.</span> CLIQUE NA REFERÊNCIA INDICADA NO CONECTOR', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO</span>: CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA MOSTRADA NA LÂMPADA' },
-        { id: 'NEUTRO2', cor: '#00bfff', max: 29, pasta: 'NEUTRO2', ini: {t: '8%', l: '58%'}, fim: {t: '55%', l: '91.3%'}, msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA INDICADA NO CONECTOR DE EMENDA', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO</span>: CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA MOSTRADA NA LÂMPADA.' }
-    ];
-
-    const elInicio = document.getElementById('ponto-inicio');
-    const elFim = document.getElementById('ponto-fim');
-    const statusTxt = document.getElementById('status-mensagem');
-    const painelEquip = document.getElementById('painel-equipamentos');
-
-    function exibirChecklistFinal() {
-        const posX = '34%'; 
-        const posY = '57%'; 
-
-        const overlay = document.createElement('div');
-        overlay.style.cssText = 'position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:9999; display:flex; align-items:center; justify-content:center; cursor:pointer;';
+    <!-- Conteúdo Principal - Grid Responsivo -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 grid grid-cols-1 lg:grid-cols-3 gap-6">
         
-        overlay.innerHTML = `<div style="position:absolute; left:${posX}; top:${posY}; transform:translate(-50%, -50%); background:rgba(6, 11, 19, 0.95); border:2px solid #00ff00; padding:40px 30px; border-radius:15px; width:500px; color:#fff; text-align:left; backdrop-filter: blur(8px); box-shadow: 0 0 30px rgba(0, 255, 0, 0.15);">
-            <h2 style="color:#00ff00; text-align:center; margin-bottom:30px; text-transform:uppercase; text-shadow: 0 0 10px rgba(0, 255, 0, 0.4);">Checklist Técnico</h2>
-            <div id="check-itens" style="font-size:16px; line-height:2.5;">
-                <div class="c-item">☐ Fase chegando ao interruptor</div>
-                <div class="c-item">☐ Neutro indo diretamente para as lâmpadas</div>
-                <div class="c-item">☐ Emendas com conectores adequados</div>
-                <div class="c-item">☐ Instalação do disjuntor de proteção</div>
-                <div class="c-item">☐ Instalação do dispositivo DR</div>
-                <div class="c-item">☐ Bitola dos fios adequada</div>
-                <div class="c-item">☐ Condutores identificados por cores</div>
-                <div class="c-item">☐ Bornes de dispositivos de proteção apertados</div>
-                <div class="c-item">☐ Verificação de curto-circuito</div>
-                <div class="c-item">☐ Lâmpadas não apresentam cintilação (pisca)</div>
+        <!-- Coluna da Esquerda: Painel de Controle e Instruções -->
+        <div class="space-y-6 lg:col-span-1">
+            
+            <!-- Card de Instruções Dinâmicas -->
+            <div class="bg-slate-800 border border-slate-700 rounded-xl p-5 shadow-lg">
+                <h2 class="text-lg font-semibold mb-3 flex items-center gap-2 text-amber-400">
+                    <i data-lucide="book-open" class="w-5 h-5"></i>
+                    Guia de Procedimentos
+                </h2>
+                <div id="instrucoes-passo" class="space-y-3 text-sm text-slate-300">
+                    <!-- Conteúdo será injetado via JS -->
+                </div>
             </div>
-            <div id="msg-final" style="display:none; margin-top:35px; color:#00ff00; font-weight:bold; font-size:18px; border:2px solid #00ff00; padding:15px; text-align:center; border-radius:8px; box-shadow: inset 0 0 10px rgba(0, 255, 0, 0.2);">
-                INSTALAÇÃO CONCLUÍDA.<br>CLIQUE PARA TESTAR
+
+            <!-- Card dos Componentes Disponíveis -->
+            <div class="bg-slate-800 border border-slate-700 rounded-xl p-5 shadow-lg">
+                <h2 class="text-lg font-semibold mb-4 flex items-center gap-2 text-blue-400">
+                    <i data-lucide="cpu" class="w-5 h-5"></i>
+                    Componentes do Quadro
+                </h2>
+                <div class="grid grid-cols-1 gap-3">
+                    <!-- Componente: Rede de Alimentação -->
+                    <div class="p-3 bg-slate-900/50 border border-slate-700/50 rounded-lg flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="git-fork" class="text-emerald-400 w-5 h-5"></i>
+                            <div>
+                                <span class="tooltip text-sm font-medium block">
+                                    Rede de Alimentação
+                                    <span class="tooltiptext">Ponto de entrada da energia elétrica vinda da concessionária. Traz os condutores de Fase, Neutro e Terra para o Quadro de Distribuição.</span>
+                                </span>
+                                <span class="text-xs text-slate-400">Entrada Concessionária</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Componente: Disjuntor Geral -->
+                    <div class="p-3 bg-slate-900/50 border border-slate-700/50 rounded-lg flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="shield" class="text-red-400 w-5 h-5"></i>
+                            <div>
+                                <span class="tooltip text-sm font-medium block">
+                                    Disjuntor Geral (DG)
+                                    <span class="tooltiptext">Dispositivo de manobra e proteção contra sobrecorrentes (curto-circuito e sobrecarga) de toda a instalação elétrica da residência.</span>
+                                </span>
+                                <span class="text-xs text-slate-400">Proteção Geral</span>
+                            </div>
+                        </div>
+                        <button id="btn-dg" class="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded text-xs font-semibold uppercase tracking-wider transition-colors">Desarmado</button>
+                    </div>
+
+                    <!-- Componente: Dispositivo DR -->
+                    <div class="p-3 bg-slate-900/50 border border-slate-700/50 rounded-lg flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="activity" class="text-orange-400 w-5 h-5"></i>
+                            <div>
+                                <span class="tooltip text-sm font-medium block">
+                                    Dispositivo DR
+                                    <span class="tooltiptext">Interruptor Diferencial Residual. Protege pessoas e animais contra choques elétricos, detectando fugas de corrente de baixa intensidade.</span>
+                                </span>
+                                <span class="text-xs text-slate-400">Proteção contra Choques</span>
+                            </div>
+                        </div>
+                        <button id="btn-dr" class="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded text-xs font-semibold uppercase tracking-wider transition-colors">Desarmado</button>
+                    </div>
+
+                    <!-- Componente: DPS -->
+                    <div class="p-3 bg-slate-900/50 border border-slate-700/50 rounded-lg flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="zap-off" class="text-yellow-400 w-5 h-5"></i>
+                            <div>
+                                <span class="tooltip text-sm font-medium block">
+                                    Dispositivo DPS
+                                    <span class="tooltiptext">Dispositivo de Proteção contra Surtos. Protege os equipamentos eletrônicos contra queimas causadas por descargas atmosféricas (raios).</span>
+                                </span>
+                                <span class="text-xs text-slate-400">Proteção contra Surtos</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Componente: Disjuntores dos Circuitos -->
+                    <div class="p-3 bg-slate-900/50 border border-slate-700/50 rounded-lg flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="toggle-left" class="text-purple-400 w-5 h-5"></i>
+                            <div>
+                                <span class="tooltip text-sm font-medium block">
+                                    Disjuntores Termomagnéticos
+                                    <span class="tooltiptext">Disjuntores parciais que protegem individualmente os circuitos internos (Ex: Circuito 1 - Iluminação).</span>
+                                </span>
+                                <span class="text-xs text-slate-400">Circuitos Individuais</span>
+                            </div>
+                        </div>
+                        <button id="btn-dj-circuito" class="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded text-xs font-semibold uppercase tracking-wider transition-colors">Desarmado</button>
+                    </div>
+
+                    <!-- Componente: Barra de Neutro -->
+                    <div class="p-3 bg-slate-900/50 border border-slate-700/50 rounded-lg flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="minus" class="text-blue-400 w-5 h-5"></i>
+                            <div>
+                                <span class="tooltip text-sm font-medium block">
+                                    Barramento de Neutro
+                                    <span class="tooltiptext">Barra de cobre destinada à conexão de todos os fios neutros da instalação, garantindo o retorno da corrente para a concessionária.</span>
+                                </span>
+                                <span class="text-xs text-slate-400">Barra de Conexão</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Componente: Barra de Aterramento -->
+                    <div class="p-3 bg-slate-900/50 border border-slate-700/50 rounded-lg flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="git-commit" class="text-green-400 w-5 h-5"></i>
+                            <div>
+                                <span class="tooltip text-sm font-medium block">
+                                    Barramento de Terra
+                                    <span class="tooltiptext">Barra de cobre interligada às hastes de aterramento da edificação. Coleta correntes de fuga e estática, escoando-as para o solo de forma segura.</span>
+                                </span>
+                                <span class="text-xs text-slate-400">Barra de Proteção (PE)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
-        </div>`;
-        
-        document.body.appendChild(overlay);
-        const itens = overlay.querySelectorAll('.c-item');
-        const msgFinal = overlay.querySelector('#msg-final');
-        
-        itens.forEach((it, idx) => {
-            setTimeout(() => { 
-                it.textContent = it.textContent.replace('☐', '✔'); 
-                it.style.color = '#00ff00'; 
-                it.style.fontWeight = 'bold';
-                it.style.textShadow = '0 0 5px rgba(0, 255, 0, 0.4)';
-            }, (idx + 1) * 600);
-        });
-        setTimeout(() => { msgFinal.style.display = "block"; }, (itens.length + 1) * 600);
-        overlay.onclick = () => { overlay.remove(); };
-    }
+        </div>
 
-    function carregarEtapa() {
-        if (etapaAtual >= sequencia.length) {
-            instalacaoConcluida = true;
-            statusTxt.innerHTML = '<span class="cor-alerta">FIAÇÃO CONCLUÍDA!</span> <span class="cor-instrucao">LIGUE O DG, O DR E O INTERRUPTOR PARA TESTAR.</span>';
-            elInicio.style.display = 'none'; 
-            elFim.style.display = 'none';
+        <!-- Coluna do Centro e Direita: Área de Desenho (Canvas) e Resultados -->
+        <div class="lg:col-span-2 space-y-6">
             
-            painelEquip.style.display = 'flex';
-            atualizarSimbolosPainel();
-            
-            exibirChecklistFinal();
-            return;
-        }
-        const dados = sequencia[etapaAtual];
-        statusTxt.innerHTML = dados.msg;
-        
-        elInicio.style.top = dados.ini.t; 
-        elInicio.style.left = dados.ini.l; 
-        elInicio.style.background = dados.cor; 
-        elInicio.style.borderColor = "#ffffff";
-        elInicio.style.display = 'block'; 
-        elInicio.style.opacity = '1';
-        elInicio.style.pointerEvents = 'auto';
-
-        elFim.style.top = dados.fim.t; 
-        elFim.style.left = dados.fim.l; 
-        elFim.style.background = dados.cor; 
-        elFim.style.borderColor = "#ffffff";
-        elFim.style.display = 'block'; 
-        elFim.style.opacity = '0';
-        elFim.style.pointerEvents = 'none';
-        
-        aguardandoDestino = false;
-
-        elInicio.onclick = null;
-        elFim.onclick = null;
-
-        elInicio.onclick = (e) => { 
-            e.stopPropagation(); 
-            fecharBalao(); 
-            elInicio.style.background = "#00ff00"; 
-            
-            elFim.style.opacity = '1';
-            elFim.style.pointerEvents = 'auto';
-            
-            aguardandoDestino = true; 
-            if(sequencia[etapaAtual].msgDestino) statusTxt.innerHTML = sequencia[etapaAtual].msgDestino; 
-        };
-
-        elFim.onclick = (e) => { 
-            e.stopPropagation(); 
-            if (aguardandoDestino) {
-                elFim.style.background = "#00ff00"; 
-                elFim.style.pointerEvents = 'none';
-                elInicio.onclick = null;
-                elFim.onclick = null;
-                animarCabo(sequencia[etapaAtual]);
-            }
-        };
-    }
-
-    function animarCabo(cabo) {
-        fecharBalao(); 
-        let frame = 0;
-        const camada = document.getElementById(`camada-${cabo.id.toLowerCase()}`);
-        
-        camada.style.transition = "none";
-        camada.style.opacity = "1";
-
-        const loop = setInterval(() => {
-            if (frame > cabo.max) {
-                clearInterval(loop);
-                return;
-            }
-
-            const frameString = frame.toString().padStart(4, '0');
-            const imgUrl = `${cabo.pasta}/quadro${frameString}.png`;
-            
-            const imgPreload = new Image();
-            imgPreload.src = imgUrl;
-            imgPreload.onload = () => {
-                camada.style.backgroundImage = `url('${imgUrl}')`;
-            };
-
-            if (frame === cabo.max) {
-                clearInterval(loop);
-
-                somConexao.currentTime = 0; 
-                somConexao.play();
-
-                if (cabo.id === 'FASE1') { balao.style.display = 'flex'; balaoCor.style.display = 'flex'; }
-                if (cabo.id === 'NEUTRO1') { balaoNeutro.style.display = 'flex'; }
-                if (cabo.id === 'FASE2') { balaoSeccionar.style.display = 'flex'; }
-                if (cabo.id === 'RETORNO1') { balaoRetorno.style.display = 'flex'; }
-
-                let idWago;
-                if (cabo.id === 'FASE1') idWago = 'wago-fase';
-                else if (cabo.id === 'NEUTRO1') idWago = 'wago-neutro';
-                else if (cabo.id === 'RETORNO1') idWago = 'wago-retorno'; 
-                else if (cabo.id === 'RETORNO2') idWago = 'wago-retorno';
-
-                if (idWago) {
-                    setTimeout(() => {
-                        const wago = document.getElementById(idWago);
-                        wago.style.transform = `translate(-50%, -50%) rotate(${cabo.wagoRot})`; 
-                        wago.style.display = 'block';
-                        wago.title = "Para interligações consulte em 'AJUDA'";
-                    }, 1500);
-                }
-
-                etapaAtual++; 
-                setTimeout(carregarEtapa, 600);
-                return;
-            }
-            
-            frame += 1;
-        }, 25);
-    }
-
-    function toggleDispositivo(tipo) {
-        estados[tipo] = !estados[tipo];
-        const el = document.getElementById(`tecla-${tipo}`);
-        if (tipo === 'dg' || tipo === 'dr') {
-            somDisjuntor.currentTime = 0; somDisjuntor.play();
-            if (tipo === 'dg') el.src = estados.dg ? 'al_dg_on.png' : 'al_dg_off.png';
-            if (tipo === 'dr') el.src = estados.dr ? 'al_dr_on.png' : 'al_dr_off.png';
-        }
-        if (tipo === 'int') { 
-            somInterruptor.currentTime = 0; somInterruptor.play(); 
-            el.src = estados.int ? 'tec_int_on.png' : 'tec_int_off.png'; 
-        }
-        
-        if (instalacaoConcluida) {
-            atualizarSimbolosPainel();
-        }
-        atualicarCircuito();
-    }
-
-    function atualizarSimbolosPainel() {
-        const elDg = document.getElementById('status-dg-painel');
-        const elDr = document.getElementById('status-dr-painel');
-        const elInt = document.getElementById('status-int-painel');
-
-        if(!elDg || !elDr || !elInt) return;
-
-        if(estados.dg) { elDg.innerHTML = "✔"; elDg.className = "status-equip-simbolo simbolo-ligado"; }
-        else { elDg.innerHTML = "✘"; elDg.className = "status-equip-simbolo simbolo-desligado"; }
-
-        if(estados.dr) { elDr.innerHTML = "✔"; elDr.className = "status-equip-simbolo simbolo-ligado"; }
-        else { elDr.innerHTML = "✘"; elDr.className = "status-equip-simbolo simbolo-desligado"; }
-
-        if(estados.int) { elInt.innerHTML = "✔"; elInt.className = "status-equip-simbolo simbolo-ligado"; }
-        else { elInt.innerHTML = "✘"; elInt.className = "status-equip-simbolo simbolo-desligado"; }
-    }
-
-    function atualicarCircuito() {
-        const lamp = document.getElementById('camada-lampada');
-        const placa = document.getElementById('placa-concluido'); 
-        const tudoLigado = instalacaoConcluida && estados.dg && estados.dr && estados.int;
-        
-        if (tudoLigado) {
-            lamp.style.opacity = "1"; 
-            
-            // Marca que o teste de ligar foi bem sucedido
-            primeiroTesteFeito = true; 
-            
-            // Garante que a placa não vai aparecer enquanto a lâmpada estiver acesa
-            placa.classList.remove('show');
-            
-        } else {
-            lamp.style.opacity = "0";
-            
-            // Se o circuito já foi testado com sucesso (ligado uma vez)
-            // E a placa ainda não foi exibida
-            if (primeiroTesteFeito && !placaJaExibida) {
-                placaJaExibida = true; // Trava ativada de forma definitiva
-                placa.classList.add('show'); 
+            <!-- Painel do Canvas -->
+            <div class="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-lg flex flex-col h-full">
+                <div class="flex justify-between items-center mb-3">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="eye" class="text-indigo-400 w-5 h-5"></i>
+                        <span class="text-sm font-semibold text-slate-200">Diagrama Multifilar Interativo</span>
+                    </div>
+                    <!-- Status Intermediário das conexões -->
+                    <div id="status-mensagem" class="text-xs text-slate-400 italic">
+                        Selecione um ponto de início piscando no canvas para começar...
+                    </div>
+                </div>
                 
-                // Remove a placa após 3 segundos (3000ms)
-                setTimeout(() => {
-                    placa.classList.remove('show');
-                }, 3000);
-            } else {
-                // Em qualquer outro momento de clique, mantém a placa escondida
-                placa.classList.remove('show');
+                <!-- Canvas de desenho das conexões -->
+                <div class="relative flex-1 bg-slate-950 rounded-lg overflow-hidden flex justify-center items-center">
+                    <canvas id="quadroCanvas" width="750" height="420" class="w-full h-auto aspect-[75/42]"></canvas>
+                </div>
+
+                <!-- Controles Inferiores do Laboratório -->
+                <div class="flex justify-between items-center mt-4 pt-3 border-t border-slate-700">
+                    <button id="btn-reset" class="flex items-center gap-2 px-4 py-2 bg-slate-700 hover:bg-slate-600 active:bg-slate-900 text-slate-200 text-sm font-medium rounded-lg transition-all shadow border border-slate-600">
+                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                        Reiniciar Prática
+                    </button>
+                    <!-- Indicador visual do Interruptor Físico -->
+                    <div class="flex items-center gap-3 bg-slate-900 px-4 py-2 rounded-lg border border-slate-700">
+                        <span class="text-xs font-medium text-slate-400">Interruptor da Lâmpada:</span>
+                        <button id="btn-interruptor" class="px-3 py-1 bg-slate-800 border border-slate-600 hover:bg-slate-700 text-xs font-bold rounded uppercase tracking-wider transition-colors text-slate-300">Desligado</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Seção Oculta por padrão: Checklist Técnico e Homologação (Só aparece ao concluir a fiação) -->
+            <div id="painel-checklist" class="hidden bg-slate-800 border-2 border-dashed border-emerald-500/50 rounded-xl p-5 shadow-xl animate-fade-in">
+                <div class="flex items-center gap-2 mb-4 text-emerald-400">
+                    <i data-lucide="check-circle" class="w-6 h-6"></i>
+                    <h2 class="text-lg font-bold">Protocolo de Comissionamento Técnico</h2>
+                </div>
+                <p class="text-xs text-slate-400 mb-4">A fiação física foi concluída com sucesso. Para energizar o circuito e realizar o teste de carga, valide os critérios normativos da NBR 5410 abaixo:</p>
+                
+                <!-- Lista de checagem técnica -->
+                <div class="space-y-3 mb-5">
+                    <label class="checklist-item flex items-start gap-3 p-3 bg-slate-900/60 rounded-lg border border-slate-700 hover:border-slate-600 cursor-pointer">
+                        <input type="checkbox" id="chk-norma-cores" class="mt-1 accent-emerald-500 rounded">
+                        <div>
+                            <span class="text-sm font-semibold block text-slate-200">Padronização de Identificação por Cores</span>
+                            <span class="text-xs text-slate-400 block mt-0.5">Fase conectada em Vermelho/Preto, Neutro em Azul Claro e Condutor de Proteção (Terra) em Verde/Verde-Amarelo conforme item 6.1.5.3.</span>
+                        </div>
+                    </label>
+                    <label class="checklist-item flex items-start gap-3 p-3 bg-slate-900/60 rounded-lg border border-slate-700 hover:border-slate-600 cursor-pointer">
+                        <input type="checkbox" id="chk-seccionamento" class="mt-1 accent-emerald-500 rounded">
+                        <div>
+                            <span class="text-sm font-semibold block text-slate-200">Seccionamento Obrigatório do Condutor de Fase</span>
+                            <span class="text-xs text-slate-400 block mt-0.5">O condutor de Fase foi encaminhado diretamente ao dispositivo de manobra (interruptor), nunca diretamente à carga (lâmpada), atendendo ao item 6.5.4.1.</span>
+                        </div>
+                    </label>
+                    <label class="checklist-item flex items-start gap-3 p-3 bg-slate-900/60 rounded-lg border border-slate-700 hover:border-slate-600 cursor-pointer">
+                        <input type="checkbox" id="chk-dispositivos" class="mt-1 accent-emerald-500 rounded">
+                        <div>
+                            <span class="text-sm font-semibold block text-slate-200">Coordenação de Proteções (Disjuntor Geral + DR + DPS)</span>
+                            <span class="text-xs text-slate-400 block mt-0.5">Os dispositivos estão dispostos em cascata garantindo a seletividade e a proteção integral contra sobrecargas, surtos atmosféricos e choques por contato direto.</span>
+                        </div>
+                    </label>
+                </div>
+
+                <!-- Botão de Ativação Final -->
+                <button id="btn-energizar" disabled class="w-full py-3 bg-slate-700 text-slate-400 font-bold rounded-lg uppercase tracking-wider text-sm transition-all shadow cursor-not-allowed">
+                    Energizar e Testar Instalação
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="bg-slate-950 border-t border-slate-800 p-3 text-center text-xs text-slate-500">
+        Desenvolvido para fins educacionais e simulação técnica laboratorial em conformidade com as diretrizes normativas brasileiras.
+    </footer>
+
+    <!-- Lógica de Simulação em JavaScript -->
+    <script>
+        // Inicialização de Ícones
+        lucide.createIcons();
+
+        // Referências de Elementos do DOM
+        const canvas = document.getElementById('quadroCanvas');
+        const ctx = canvas.getContext('2d');
+        const txtStatusMsg = document.getElementById('status-mensagem');
+        const txtInstrucoes = document.getElementById('instrucoes-passo');
+        const painelChecklist = document.getElementById('painel-checklist');
+        const badgeStatusGeral = document.getElementById('status-geral');
+        
+        // Botões de Hardware/Componentes
+        const btnReset = document.getElementById('btn-reset');
+        const btnInterruptor = document.getElementById('btn-interruptor');
+        const btnDG = document.getElementById('btn-dg');
+        const btnDR = document.getElementById('btn-dr');
+        const btnDJCircuito = document.getElementById('btn-dj-circuito');
+        const btnEnergizar = document.getElementById('btn-energizar');
+
+        // Checkboxes de Homologação
+        const chkCores = document.getElementById('chk-norma-cores');
+        const chkSeccionamento = document.getElementById('chk-seccionamento');
+        const chkDispositivos = document.getElementById('chk-dispositivos');
+
+        // Banco de Dados Geométrico dos Elementos Visuais do Quadro
+        const componentesFisicos = {
+            rede: { x: 40, y: 30, w: 100, h: 40, label: "REDE CONCESSIONÁRIA" },
+            dg: { x: 180, y: 110, w: 50, h: 80, label: "DG" },
+            dr: { x: 250, y: 110, w: 70, h: 80, label: "IDR" },
+            dps: { x: 345, y: 110, w: 40, h: 80, label: "DPS" },
+            djCircuito: { x: 410, y: 110, w: 40, h: 80, label: "DJ C1" },
+            barraNeutro: { x: 500, y: 110, w: 15, h: 120, label: "N" },
+            barraTerra: { x: 550, y: 110, w: 15, h: 120, label: "PE" },
+            caixaPassagem: { x: 260, y: 20, w: 140, h: 50, label: "CAIXA DE PASSAGEM" },
+            lampada: { x: 650, y: 80, r: 25, label: "LÂMPADA" },
+            interruptor: { x: 650, y: 280, w: 40, h: 50, label: "INTERRUPTOR" }
+        };
+
+        // Roteiro Cronológico e Técnico de Conexões (Passo a Passo)
+        const listaEtapasFiacao = [
+            { id: 0, nome: "Alimentação do Disjuntor Geral", desc: "Conecte a FASE da rede ao terminal superior do Disjuntor Geral (DG).", cor: "#ef4444", ini: {x: 60, y: 70}, fim: {x: 195, y: 110}, pinoIni: "Rede (Fase)", pinoFim: "DG (Topo)" },
+            { id: 1, nome: "Jump Geral para o DR", desc: "Conecte a saída do Disjuntor Geral à entrada do Interruptor Diferencial Residual (DR).", cor: "#ef4444", ini: {x: 195, y: 190}, fim: {x: 270, y: 110}, pinoIni: "DG (Fundo)", pinoFim: "DR (Topo L)" },
+            { id: 2, nome: "Alimentação do DPS", desc: "Derive a fase que sai do DG para alimentar a entrada do Dispositivo de Proteção contra Surtos (DPS).", cor: "#ef4444", ini: {x: 195, y: 190}, fim: {x: 365, y: 110}, pinoIni: "DG (Fundo)", pinoFim: "DPS (Topo)" },
+            { id: 3, nome: "Saída do DR para o Disjuntor do Circuito", desc: "Conecte a saída protegida de fase do DR à entrada do Disjuntor do Circuito 1 (Iluminação).", cor: "#ef4444", ini: {x: 270, y: 190}, fim: {x: 430, y: 110}, pinoIni: "DR (Fundo L)", pinoFim: "DJ C1 (Topo)" },
+            { id: 4, nome: "Alimentação de Neutro da Rede ao DR", desc: "Conecte o NEUTRO da rede diretamente à entrada de Neutro do DR.", cor: "#3b82f6", ini: {x: 90, y: 70}, fim: {x: 305, y: 110}, pinoIni: "Rede (Neutro)", pinoFim: "DR (Topo N)" },
+            { id: 5, nome: "Saída de Neutro do DR para o Barramento", desc: "Encaminhe o Neutro protegido da saída do DR para o Barramento de Neutro.", cor: "#3b82f6", ini: {x: 305, y: 190}, fim: {x: 507, y: 120}, pinoIni: "DR (Fundo N)", pinoFim: "Barra N" },
+            { id: 6, nome: "Aterramento do DPS", desc: "Conecte o terminal de saída do DPS ao Barramento de Proteção (Terra).", cor: "#10b981", ini: {x: 365, y: 190}, fim: {x: 557, y: 120}, pinoIni: "DPS (Fundo)", pinoFim: "Barra PE" },
+            { id: 7, nome: "Aterramento da Rede ao Barramento", desc: "Interligue o condutor de TERRA vindo da rede ao Barramento de Proteção.", cor: "#10b981", ini: {x: 120, y: 70}, fim: {x: 557, y: 140}, pinoIni: "Rede (Terra)", pinoFim: "Barra PE" },
+            { id: 8, nome: "Fase do Circuito até o Interruptor", desc: "Leve a Fase da saída do Disjuntor do Circuito 1 até o terminal de entrada do Interruptor simples.", cor: "#ef4444", ini: {x: 430, y: 190}, fim: {x: 670, y: 280}, pinoIni: "DJ C1 (Fundo)", pinoFim: "Interruptor (L)" },
+            { id: 9, nome: "Retorno do Interruptor para a Lâmpada", desc: "Conecte o fio de RETORNO saindo do interruptor e leve-o até o polo central da Lâmpada.", cor: "#f59e0b", ini: {x: 670, y: 330}, fim: {x: 650, y: 105}, pinoIni: "Interruptor (Out)", pinoFim: "Lâmpada (Centro)" },
+            { id: 10, nome: "Fechamento do Neutro da Lâmpada", desc: "Conecte o condutor Neutro do Barramento de Neutro ao polo lateral da Lâmpada para fechar o circuito.", cor: "#3b82f6", ini: {x: 507, y: 140}, fim: {x: 625, y: 80}, pinoIni: "Barra N", pinoFim: "Lâmpada (Lateral)" }
+        ];
+
+        // Estados do Sistema (Engine)
+        let indiceEtapaAtual = 0;
+        let listaConexoesExecutadas = [];
+        let pontoSelecionadoAnterior = null;
+        let flagPiscando = true;
+
+        // Estados dos Dispositivos Mecânicos
+        let hardwareStatus = {
+            dgArmado: false,
+            drArmado: false,
+            djCircuitoArmado: false,
+            interruptorLigado: false,
+            sistemaEnergizado: false
+        };
+
+        // Loop de Animação para efeito de "pulsar" nos pontos de conexão
+        setInterval(() => {
+            flagPiscando = !flagPiscando;
+            renderizarQuadroCompleto();
+        }, 45000000); // Reduzido piscamento constante para economizar processamento, controlado no draw
+
+        function renderizarQuadroCompleto() {
+            // Limpeza de Tela
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 1. Desenho do Chassi do Quadro Geral (QDU)
+            ctx.fillStyle = '#334155';
+            ctx.fillRect(20, 90, 560, 260);
+            ctx.strokeStyle = '#475569';
+            ctx.lineWidth = 4;
+            ctx.strokeRect(20, 90, 560, 260);
+
+            // Etiqueta do Quadro
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = 'bold 10px sans-serif';
+            ctx.fillText("QUADRO DE DISTRIBUIÇÃO DE CIRCUITOS (QDC)", 35, 105);
+
+            // 2. Renderização de cada Componente Estático
+            desenharComponentesEstaticos();
+
+            // 3. Renderização Histórica das fiações já montadas pelo aluno
+            listaConexoesExecutadas.forEach(conexao => {
+                desenharFioGrosso(conexao.ini, conexao.fim, conexao.cor, false);
+            });
+
+            // 4. Mecânica de ajuda visual: destacar onde clicar na etapa atual
+            if (indiceEtapaAtual < listaEtapasFiacao.length) {
+                const etapaAtiva = listaEtapasFiacao[indiceEtapaAtual];
+                
+                if (!pontoSelecionadoAnterior) {
+                    // Passo A: Piscar o ponto inicial da fiação
+                    desenharPontoConexao(etapaAtiva.ini, '#3b82f6', true);
+                    desenharPontoConexao(etapaAtiva.fim, '#64748b', false);
+                } else {
+                    // Passo B: Aluno já clicou no início, piscar o destino correto
+                    desenharPontoConexao(etapaAtiva.ini, '#10b981', false); // fixo verde
+                    desenharPontoConexao(etapaAtiva.fim, '#10b981', true);  // piscando verde destino
+                }
             }
         }
-    }
-</script>
+
+        function desenharComponentesEstaticos() {
+            // REDE CONCESSIONÁRIA (Bornais Superiores)
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(componentesFisicos.rede.x, componentesFisicos.rede.y, componentesFisicos.rede.w, componentesFisicos.rede.h);
+            ctx.fillStyle = '#e2e8f0';
+            ctx.font = '9px sans-serif';
+            ctx.fillText("REDE DE ENTRADA", componentesFisicos.rede.x + 10, componentesFisicos.rede.y + 18);
+            desenharPontoConexao({x: 60, y: 70}, '#ef4444', false, "F");
+            desenharPontoConexao({x: 90, y: 70}, '#3b82f6', false, "N");
+            desenharPontoConexao({x: 120, y: 70}, '#10b981', false, "T");
+
+            // DISJUNTOR GERAL (DG)
+            const dg = componentesFisicos.dg;
+            ctx.fillStyle = hardwareStatus.dgArmado ? '#b91c1c' : '#1e293b';
+            ctx.fillRect(dg.x, dg.y, dg.w, dg.h);
+            ctx.strokeStyle = '#475569';
+            ctx.strokeRect(dg.x, dg.y, dg.w, dg.h);
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 10px sans-serif';
+            ctx.fillText("DG", dg.x + 18, dg.y + 45);
+            desenharPontoConexao({x: 195, y: 110}, '#475569', false);
+            desenharPontoConexao({x: 195, y: 190}, '#475569', false);
+
+            // DISPOSITIVO DR
+            const dr = componentesFisicos.dr;
+            ctx.fillStyle = hardwareStatus.drArmado ? '#c2410c' : '#1e293b';
+            ctx.fillRect(dr.x, dr.y, dr.w, dr.h);
+            ctx.strokeStyle = '#475569';
+            ctx.strokeRect(dr.x, dr.y, dr.w, dr.h);
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 10px sans-serif';
+            ctx.fillText("DR Bifásico", dr.x + 10, dr.y + 45);
+            // Polos superiores do DR
+            desenharPontoConexao({x: 270, y: 110}, '#475569', false, "L");
+            desenharPontoConexao({x: 305, y: 110}, '#475569', false, "N");
+            // Polos inferiores do DR
+            desenharPontoConexao({x: 270, y: 190}, '#475569', false);
+            desenharPontoConexao({x: 305, y: 190}, '#475569', false);
+
+            // DISPOSITIVO DPS
+            const dps = componentesFisicos.dps;
+            ctx.fillStyle = '#78350f';
+            ctx.fillRect(dps.x, dps.y, dps.w, dps.h);
+            ctx.strokeStyle = '#475569';
+            ctx.strokeRect(dps.x, dps.y, dps.w, dps.h);
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 9px sans-serif';
+            ctx.fillText("DPS", dps.x + 10, dps.y + 45);
+            desenharPontoConexao({x: 365, y: 110}, '#475569', false);
+            desenharPontoConexao({x: 365, y: 190}, '#475569', false);
+
+            // DISJUNTOR CIRCUITO 1 (Iluminação)
+            const djC1 = componentesFisicos.djCircuito;
+            ctx.fillStyle = hardwareStatus.djCircuitoArmado ? '#6b21a8' : '#1e293b';
+            ctx.fillRect(djC1.x, djC1.y, djC1.w, djC1.h);
+            ctx.strokeStyle = '#475569';
+            ctx.strokeRect(djC1.x, djC1.y, djC1.w, djC1.h);
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 9px sans-serif';
+            ctx.fillText("DJ C1", djC1.x + 8, djC1.y + 45);
+            desenharPontoConexao({x: 430, y: 110}, '#475569', false);
+            desenharPontoConexao({x: 430, y: 190}, '#475569', false);
+
+            // BARRAMENTO NEUTRO (Barra metálica azul)
+            const bN = componentesFisicos.barraNeutro;
+            ctx.fillStyle = '#1e3a8a';
+            ctx.fillRect(bN.x, bN.y, bN.w, bN.h);
+            ctx.fillStyle = '#60a5fa';
+            ctx.font = 'bold 10px sans-serif';
+            ctx.fillText("N", bN.x + 4, bN.y - 5);
+            desenharPontoConexao({x: 507, y: 120}, '#3b82f6', false);
+            desenharPontoConexao({x: 507, y: 140}, '#3b82f6', false);
+
+            // BARRAMENTO ATERRAMENTO (Barra metálica verde)
+            const bT = componentesFisicos.barraTerra;
+            ctx.fillStyle = '#064e3b';
+            ctx.fillRect(bT.x, bT.y, bT.w, bT.h);
+            ctx.fillStyle = '#34d399';
+            ctx.font = 'bold 10px sans-serif';
+            ctx.fillText("PE", bT.x + 2, bT.y - 5);
+            desenharPontoConexao({x: 557, y: 120}, '#10b981', false);
+            desenharPontoConexao({x: 557, y: 140}, '#10b981', false);
+
+            // INTERRUPTOR RESIDENCIAL (Mecânica externa)
+            const int = componentesFisicos.interruptor;
+            ctx.fillStyle = '#e2e8f0';
+            ctx.fillRect(int.x, int.y, int.w, int.h);
+            ctx.strokeStyle = '#94a3b8';
+            ctx.strokeRect(int.x, int.y, int.w, int.h);
+            ctx.fillStyle = '#0f172a';
+            ctx.font = 'bold 8px sans-serif';
+            ctx.fillText("INTERR.", int.x + 3, int.y + 28);
+            desenharPontoConexao({x: 670, y: 280}, '#475569', false);
+            desenharPontoConexao({x: 670, y: 330}, '#475569', false);
+
+            // LÂMPADA (Carga)
+            const lamp = componentesFisicos.lampada;
+            ctx.beginPath();
+            ctx.arc(lamp.x, lamp.y, lamp.r, 0, Math.PI * 2);
+            if (hardwareStatus.sistemaEnergizado && hardwareStatus.interruptorLigado) {
+                ctx.fillStyle = '#fef08a'; // Brilhando Amarelo intenso
+                ctx.shadowColor = '#facc15';
+                ctx.shadowBlur = 20;
+            } else {
+                ctx.fillStyle = '#334155'; // Apagada/Cinza
+                ctx.shadowBlur = 0;
+            }
+            ctx.fill();
+            ctx.shadowBlur = 0; // Reset de sombra
+            ctx.strokeStyle = '#94a3b8';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            ctx.fillStyle = hardwareStatus.interruptorLigado && hardwareStatus.sistemaEnergizado ? '#a16207' : '#fff';
+            ctx.font = 'bold 9px sans-serif';
+            ctx.fillText("LÂMPADA", lamp.x - 22, lamp.y + 4);
+
+            desenharPontoConexao({x: 650, y: 105}, '#475569', false); // polo central
+            desenharPontoConexao({x: 625, y: 80}, '#475569', false);  // polo lateral
+        }
+
+        function drawingLoopPulsar() {
+            flagPiscando = !flagPiscando;
+            renderizarQuadroCompleto();
+            requestAnimationFrame(() => {
+                setTimeout(drawingLoopPulsar, 400); // Ritmo de pulsação confortável
+            });
+        }
+
+        function desenharPontoConexao(pt, corPadrao, pulsarAtivo, textoBornal = "") {
+            ctx.beginPath();
+            ctx.arc(pt.x, pt.y, 5, 0, Math.PI * 2);
+            
+            if (pulsarAtivo) {
+                ctx.fillStyle = flagPiscando ? '#f59e0b' : '#ef4444'; // Altera entre laranja e vermelho
+                ctx.arc(pt.x, pt.y, 8, 0, Math.PI * 2);
+            } else {
+                ctx.fillStyle = corPadrao;
+            }
+            
+            ctx.fill();
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            if(textoBornal !== "") {
+                ctx.fillStyle = '#94a3b8';
+                ctx.font = '7px sans-serif';
+                ctx.fillText(textoBornal, pt.x - 3, pt.y - 8);
+            }
+        }
+
+        function desenharFioGrosso(ini, fim, cor, ativo) {
+            ctx.beginPath();
+            ctx.moveTo(ini.x, ini.y);
+            
+            // Cria curvas ortogonais estilizadas automaticamente para simular fios organizados em canaletas
+            if (Math.abs(ini.x - fim.x) > Math.abs(ini.y - fim.y)) {
+                ctx.lineTo((ini.x + fim.x) / 2, ini.y);
+                ctx.lineTo((ini.x + fim.x) / 2, fim.y);
+            } else {
+                ctx.lineTo(ini.x, (ini.y + fim.y) / 2);
+                ctx.lineTo(fim.x, (ini.y + fim.y) / 2);
+            }
+            
+            ctx.lineTo(fim.x, fim.y);
+            ctx.strokeStyle = cor;
+            ctx.lineWidth = 3.5;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.stroke();
+        }
+
+        // Sistema Gerenciador de Cliques nas coordenadas do Canvas
+        canvas.addEventListener('click', function(evt) {
+            if (indiceEtapaAtual >= listaEtapasFiacao.length) return; // Instalação concluída
+
+            const rect = canvas.getBoundingClientRect();
+            // Conversão de escala para manter precisão em telas responsivas
+            const xClick = (evt.clientX - rect.left) * (canvas.width / rect.width);
+            const yClick = (evt.clientY - rect.top) * (canvas.height / rect.height);
+
+            const etapaAlvo = listaEtapasFiacao[indiceEtapaAtual];
+
+            if (!pontoSelecionadoAnterior) {
+                // Checar clique no ponto inicial correto
+                if (verificarProximidadePonto(xClick, yClick, etapaAlvo.ini)) {
+                    pontoSelecionadoAnterior = etapaAlvo.ini;
+                    txtStatusMsg.innerText = `Conectado em ${etapaAlvo.pinoIni}. Agora clique no destino correto: ${etapaAlvo.pinoFim}.`;
+                    txtStatusMsg.className = "text-xs text-amber-400 font-semibold";
+                } else {
+                    txtStatusMsg.innerText = `Erro de Conexão: Para esta etapa, comece clicando em ${etapaAlvo.pinoIni}.`;
+                    txtStatusMsg.className = "text-xs text-red-400 font-semibold animate-bounce";
+                }
+            } else {
+                // Checar clique no ponto de destino correto
+                if (verificarProximidadePonto(xClick, yClick, etapaAlvo.fim)) {
+                    // Sucesso absoluto! Registrar cabo na malha
+                    listaConexoesExecutadas.push({
+                        ini: etapaAlvo.ini,
+                        fim: etapaAlvo.fim,
+                        cor: etapaAlvo.cor
+                    });
+                    
+                    pontoSelecionadoAnterior = null;
+                    indiceEtapaAtual++;
+                    txtStatusMsg.className = "text-xs text-emerald-400 font-semibold";
+                    
+                    atualizarFluxoLaboratorio();
+                } else {
+                    txtStatusMsg.innerText = `Erro de Destino: O cabo saindo de ${etapaAlvo.pinoIni} deve ser fixado em ${etapaAlvo.pinoFim}.`;
+                    txtStatusMsg.className = "text-xs text-red-400 font-semibold";
+                }
+            }
+        });
+
+        function verificarProximidadePonto(x1, y1, pontoAlvo) {
+            const distanciaMaximaMargem = 14; // Área de clique confortável (hitbox)
+            return Math.sqrt((x1 - pontoAlvo.x)**2 + (y1 - pontoAlvo.y)**2) < distanciaMaximaMargem;
+        }
+
+        function atualizarFluxoLaboratorio() {
+            if (indiceEtapaAtual < listaEtapasFiacao.length) {
+                const proxEtapa = listaEtapasFiacao[indiceEtapaAtual];
+                txtInstrucoes.innerHTML = `
+                    <div class="p-3 bg-slate-900 border-l-4 border-blue-500 rounded">
+                        <p class="font-bold text-slate-200 text-xs uppercase tracking-wide">Passo Atual: ${proxEtapa.nome}</p>
+                        <p class="text-sm mt-1 text-slate-300">${proxEtapa.desc}</p>
+                    </div>
+                `;
+                txtStatusMsg.innerText = `Pronto para nova conexão. Origem: ${proxEtapa.pinoIni}`;
+            } else {
+                // Fim de fiação atingido
+                txtInstrucoes.innerHTML = `
+                    <div class="p-3 bg-emerald-950/80 border border-emerald-500 rounded text-emerald-300 text-sm">
+                        <p class="font-bold">✓ Montagem do Circuito Finalizada!</p>
+                        <p class="text-xs mt-1">Todas as conexões físicas multifilares foram posicionadas. Siga para o protocolo abaixo.</p>
+                    </div>
+                `;
+                txtStatusMsg.innerText = "Infraestrutura pronta para testes.";
+                painelChecklist.classList.remove('hidden');
+            }
+            renderizarQuadroCompleto();
+        }
+
+        // Validação das Condições do Checklist de Engenharia
+        function checarLiberacaoDisjuntores() {
+            if(chkCores.checked && chkSeccionamento.checked && chkDispositivos.checked) {
+                btnEnergizar.disabled = false;
+                btnEnergizar.className = "w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold rounded-lg uppercase tracking-wider text-sm transition-all shadow-lg cursor-pointer transform hover:-translate-y-0.5";
+            } else {
+                btnEnergizar.disabled = true;
+                btnEnergizar.className = "w-full py-3 bg-slate-700 text-slate-400 font-bold rounded-lg uppercase tracking-wider text-sm transition-all shadow cursor-not-allowed";
+                desenergizarSistematicamente();
+            }
+        }
+
+        [chkCores, chkSeccionamento, chkDispositivos].forEach(chk => {
+            chk.addEventListener('change', checarLiberacaoDisjuntores);
+        });
+
+        // Evento de Ativação Geral da Malha Elétrica
+        btnEnergizar.addEventListener('click', () => {
+            badgeStatusGeral.className = "flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-950 border border-emerald-700 text-sm font-medium text-emerald-400";
+            badgeStatusGeral.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span> <span>Barramento Energizado 127V</span>`;
+            
+            // Libera interatividade mecânica nos botões dos aparelhos de proteção
+            btnDG.className = "px-3 py-1 bg-red-600 text-white rounded text-xs font-semibold uppercase tracking-wider transition-colors hover:bg-red-700 cursor-pointer";
+            btnDG.innerText = "Desarmado";
+            hardwareStatus.dgArmado = false;
+            
+            btnEnergizar.innerText = "Sistema Pronto e Sob Tensão";
+            btnEnergizar.disabled = true;
+            btnEnergizar.className = "w-full py-3 bg-emerald-900/40 text-emerald-500 border border-emerald-700/50 font-bold rounded-lg uppercase tracking-wider text-sm text-center";
+        });
+
+        // Lógica de Operação do Disjuntor Geral
+        btnDG.addEventListener('click', () => {
+            if (btnEnergizar.disabled && btnEnergizar.innerText !== "Sistema Pronto e Sob Tensão") return;
+            
+            hardwareStatus.dgArmado = !hardwareStatus.dgArmado;
+            if(hardwareStatus.dgArmado) {
+                btnDG.className = "px-3 py-1 bg-emerald-600 text-slate-950 rounded text-xs font-bold uppercase tracking-wider";
+                btnDG.innerText = "Armado";
+                // Libera o próximo da cascata (DR)
+                btnDR.className = "px-3 py-1 bg-red-600 text-white rounded text-xs font-semibold uppercase tracking-wider transition-colors hover:bg-red-700 cursor-pointer";
+            } else {
+                btnDG.className = "px-3 py-1 bg-red-600 text-white rounded text-xs font-semibold uppercase tracking-wider";
+                btnDG.innerText = "Desarmado";
+                desenergizarSistematicamente();
+            }
+            avaliarEstadoCargaLampada();
+        });
+
+        // Lógica de Operação do Interruptor Diferencial Residual (DR)
+        btnDR.addEventListener('click', () => {
+            if(!hardwareStatus.dgArmado) return; // Proteção mecânica/Intertravamento
+            
+            hardwareStatus.drArmado = !hardwareStatus.drArmado;
+            if(hardwareStatus.drArmado) {
+                btnDR.className = "px-3 py-1 bg-emerald-600 text-slate-950 rounded text-xs font-bold uppercase tracking-wider";
+                btnDR.innerText = "Armado";
+                // Libera disjuntor do circuito parcial
+                btnDJCircuito.className = "px-3 py-1 bg-red-600 text-white rounded text-xs font-semibold uppercase tracking-wider transition-colors hover:bg-red-700 cursor-pointer";
+            } else {
+                btnDR.className = "px-3 py-1 bg-red-600 text-white rounded text-xs font-semibold uppercase tracking-wider";
+                btnDR.innerText = "Desarmado";
+                hardwareStatus.djCircuitoArmado = false;
+                btnDJCircuito.className = "px-3 py-1 bg-slate-700 text-slate-400 rounded text-xs font-semibold uppercase tracking-wider cursor-not-allowed";
+                btnDJCircuito.innerText = "Desarmado";
+            }
+            avaliarEstadoCargaLampada();
+        });
+
+        // Lógica do Disjuntor Parcial de Iluminação (C1)
+        btnDJCircuito.addEventListener('click', () => {
+            if(!hardwareStatus.drArmado) return;
+
+            hardwareStatus.djCircuitoArmado = !hardwareStatus.djCircuitoArmado;
+            if(hardwareStatus.djCircuitoArmado) {
+                btnDJCircuito.className = "px-3 py-1 bg-emerald-600 text-slate-950 rounded text-xs font-bold uppercase tracking-wider";
+                btnDJCircuito.innerText = "Armado";
+            } else {
+                btnDJCircuito.className = "px-3 py-1 bg-red-600 text-white rounded text-xs font-semibold uppercase tracking-wider";
+                btnDJCircuito.innerText = "Desarmado";
+            }
+            avaliarEstadoCargaLampada();
+        });
+
+        // Controle Manobrável do Interruptor Físico da Parede
+        btnInterruptor.addEventListener('click', () => {
+            hardwareStatus.interruptorLigado = !hardwareStatus.interruptorLigado;
+            if(hardwareStatus.interruptorLigado) {
+                btnInterruptor.className = "px-3 py-1 bg-amber-500 text-slate-950 text-xs font-bold rounded uppercase tracking-wider";
+                btnInterruptor.innerText = "Ligado";
+            } else {
+                btnInterruptor.className = "px-3 py-1 bg-slate-800 border border-slate-600 text-xs font-bold rounded uppercase tracking-wider text-slate-300";
+                btnInterruptor.innerText = "Desligado";
+            }
+            avaliarEstadoCargaLampada();
+        });
+
+        function desenergizarSistematicamente() {
+            hardwareStatus.dgArmado = false;
+            hardwareStatus.drArmado = false;
+            hardwareStatus.djCircuitoArmado = false;
+            hardwareStatus.sistemaEnergizado = false;
+
+            btnDG.className = "px-3 py-1 bg-slate-700 text-slate-400 rounded text-xs font-semibold uppercase tracking-wider cursor-not-allowed";
+            btnDG.innerText = "Desarmado";
+            btnDR.className = "px-3 py-1 bg-slate-700 text-slate-400 rounded text-xs font-semibold uppercase tracking-wider cursor-not-allowed";
+            btnDR.innerText = "Desarmado";
+            btnDJCircuito.className = "px-3 py-1 bg-slate-700 text-slate-400 rounded text-xs font-semibold uppercase tracking-wider cursor-not-allowed";
+            btnDJCircuito.innerText = "Desarmado";
+
+            badgeStatusGeral.className = "flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900 border border-slate-700 text-sm font-medium";
+            badgeStatusGeral.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span> <span>Circuito Desenergizado</span>`;
+        }
+
+        function avaliarEstadoCargaLampada() {
+            // Regra de validação de continuidade elétrica da malha ativa
+            if(hardwareStatus.dgArmado && hardwareStatus.drArmado && hardwareStatus.djCircuitoArmado) {
+                hardwareStatus.sistemaEnergizado = true;
+            } else {
+                hardwareStatus.sistemaEnergizado = false;
+            }
+            renderizarQuadroCompleto();
+        }
+
+        // Função de Reset e Limpeza Geral do Experimento
+        btnReset.addEventListener('click', () => {
+            indiceEtapaAtual = 0;
+            listaConexoesExecutadas = [];
+            pontoSelecionadoAnterior = null;
+            
+            // Limpeza de UI
+            chkCores.checked = false;
+            chkSeccionamento.checked = false;
+            chkDispositivos.checked = false;
+            painelChecklist.classList.add('hidden');
+            
+            hardwareStatus.interruptorLigado = false;
+            btnInterruptor.className = "px-3 py-1 bg-slate-800 border border-slate-600 text-xs font-bold rounded uppercase tracking-wider text-slate-300";
+            btnInterruptor.innerText = "Desligado";
+
+            btnEnergizar.innerText = "Energizar e Testar Instalação";
+            
+            desenergizarSistematicamente();
+            atualizarFluxoLaboratorio();
+        });
+
+        // Inicialização do Sistema no Carregamento
+        atualizarFluxoLaboratorio();
+        drawingLoopPulsar();
+
+    </script>
 </body>
 </html>
