@@ -4,15 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laboratório SMT Pro</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&
-
-laboratorio_smt_final.html
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laboratório SMT Pro</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body { 
@@ -273,40 +264,36 @@ laboratorio_smt_final.html
         /* --- NOVAS ÁREAS SENSÍVEIS RETANGULARES (HOTSPOTS) --- */
         .hotspot {
             position: absolute;
-            background: rgba(0, 240, 255, 0.08);
-            border: 1px dashed rgba(0, 240, 255, 0.3);
+            background: transparent;
+            border: 1px dashed rgba(0, 240, 255, 0.2);
             z-index: 100;
             cursor: help;
-            transition: all 0.3s ease;
         }
         .hotspot:hover {
-            background: rgba(0, 240, 255, 0.15);
             border-color: #00f0ff;
-            box-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+            background: rgba(0, 240, 255, 0.05);
         }
         .hotspot::before {
-            content: attr(data-description);
+            content: attr(data-name);
             position: absolute;
             bottom: 110%;
             left: 50%;
-            transform: translateX(-50%) scale(0.8);
-            background: rgba(5, 10, 20, 0.98);
+            transform: translateX(-50%);
+            background: #000;
             color: #00f0ff;
-            padding: 8px 12px;
+            padding: 5px 10px;
             border: 1px solid #00f0ff;
             border-radius: 4px;
             white-space: nowrap;
-            font-size: 13px;
+            font-size: 12px;
             font-family: 'Orbitron', sans-serif;
             z-index: 101;
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
             pointer-events: none;
             opacity: 0;
-            transition: all 0.2s ease-out;
+            transition: opacity 0.2s;
         }
         .hotspot:hover::before {
             opacity: 1;
-            transform: translateX(-50%) scale(1);
         }
     </style>
 </head>
@@ -335,13 +322,13 @@ laboratorio_smt_final.html
     <div id="container-simulador" onclick="fecharBalao()">
         <img src="ambiente.jpg" id="fundo">
          
-        <!-- Hotspots de Equipamentos Retangulares (Posições aleatórias para ajuste) -->
-        <div class="hotspot" style="top: 10%; left: 5%; width: 80px; height: 120px;" data-description="DISJUNTOR GERAL - Proteção Principal"></div>
-        <div class="hotspot" style="top: 10%; left: 15%; width: 100px; height: 120px;" data-description="DISPOSITIVO DR - Proteção Diferencial Residual"></div>
-        <div class="hotspot" style="top: 10%; left: 30%; width: 60px; height: 120px;" data-description="DPS - Dispositivo de Proteção contra Surtos"></div>
-        <div class="hotspot" style="top: 10%; left: 40%; width: 150px; height: 120px;" data-description="DISJUNTORES DOS CIRCUITOS - Proteção de Saída"></div>
-        <div class="hotspot" style="top: 35%; left: 5%; width: 200px; height: 30px;" data-description="BARRA DE ATERRAMENTO - Conexão de Proteção"></div>
-        <div class="hotspot" style="top: 45%; left: 5%; width: 200px; height: 30px;" data-description="BARRA DE NEUTRO - Conexão de Retorno"></div>
+        <!-- Áreas Sensíveis (Hotspots) -->
+        <div class="hotspot" style="top: 10%; left: 5%; width: 60px; height: 100px;" data-name="DISJUNTOR GERAL"></div>
+        <div class="hotspot" style="top: 10%; left: 15%; width: 80px; height: 100px;" data-name="DISPOSITIVO DR"></div>
+        <div class="hotspot" style="top: 10%; left: 28%; width: 50px; height: 100px;" data-name="DPS"></div>
+        <div class="hotspot" style="top: 10%; left: 38%; width: 120px; height: 100px;" data-name="DISJUNTORES DOS CIRCUITOS"></div>
+        <div class="hotspot" style="top: 35%; left: 5%; width: 150px; height: 25px;" data-name="BARRA DE ATERRAMENTO"></div>
+        <div class="hotspot" style="top: 45%; left: 5%; width: 150px; height: 25px;" data-name="BARRA DE NEUTRO"></div>
 
         <div id="camada-fase1" class="camada-cabo"></div>
         <div id="camada-fase2" class="camada-cabo"></div>
@@ -682,4 +669,3 @@ laboratorio_smt_final.html
 </script>
 </body>
 </html>
-Criar Áreas Sensíveis ao Mouse com Descrição de Equipamento - Manus
