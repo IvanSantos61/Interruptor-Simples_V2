@@ -616,9 +616,18 @@
         if (tudoLigado) {
             lamp.style.opacity = "1"; 
             
-            // Se a placa já foi exibida neste teste, não ativa de novo
-            if (!placaJaExibida) {
-                primeiroTesteFeito = true;
+            // Marca que o teste de ligar foi bem sucedido
+            primeiroTesteFeito = true; 
+            
+            // Garante que a placa não vai aparecer enquanto a lâmpada estiver acesa
+            placa.classList.remove('show');
+            
+        } else {
+            lamp.style.opacity = "0";
+            
+            // Se o circuito já foi testado com sucesso (ligado uma vez)
+            // E a placa ainda não foi exibida
+            if (primeiroTesteFeito && !placaJaExibida) {
                 placaJaExibida = true; // Trava ativada de forma definitiva
                 placa.classList.add('show'); 
                 
@@ -626,12 +635,10 @@
                 setTimeout(() => {
                     placa.classList.remove('show');
                 }, 3000);
+            } else {
+                // Em qualquer outro momento de clique, mantém a placa escondida
+                placa.classList.remove('show');
             }
-        } else {
-            lamp.style.opacity = "0";
-            placa.classList.remove('show'); 
-            // A linha "placaJaExibida = false;" foi removida daqui, 
-            // assim a placa só aparecerá a PRIMEIRA vez que tudo for ligado.
         }
     }
 </script>
