@@ -209,11 +209,54 @@
             flex-direction: column; align-items: center; justify-content: center; padding: 60px 40px;
             box-shadow: 0 0 50px rgba(0,0,0,0.8), inset 0 0 15px rgba(255,255,255,0.1);
             opacity: 0; transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden; /* Para conter o scanner */
         }
         #placa-concluido.show { display: flex; opacity: 1; transform: translate(-50%, -50%) scale(1); }
         
         .texto-concluido { 
             color: #00ff00; font-size: 3em; font-weight: bold; text-shadow: 0 0 20px rgba(0, 255, 0, 0.6); display: flex; align-items: center; gap: 20px; letter-spacing: 2px; 
+            z-index: 120;
+        }
+
+        /* --- EFEITO SCANNER --- */
+        .scanner-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            border-radius: 15px;
+            z-index: 115;
+        }
+
+        .scanner-line {
+            position: absolute;
+            width: 100%;
+            height: 5px;
+            background: rgba(0, 240, 255, 0.6);
+            box-shadow: 0 0 20px 5px rgba(0, 240, 255, 0.4);
+            top: -10px;
+            animation: scanMove 2.5s ease-in-out infinite;
+        }
+
+        @keyframes scanMove {
+            0% { top: 0%; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+
+        .scan-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent 50%, rgba(0, 240, 255, 0.05) 50%);
+            background-size: 100% 4px;
+            opacity: 0.3;
         }
 
         .parafuso { 
@@ -224,6 +267,7 @@
             background: linear-gradient(to bottom, #111 2px, transparent 2px, transparent calc(100% - 2px), #111 calc(100% - 2px)), linear-gradient(to right, #444 48%, #111 48%, #111 52%, #444 52%); 
             box-shadow: inset 1px 1px 3px rgba(0,0,0,0.6), 0 0 4px rgba(0,0,0,0.8); 
             border: 1px solid #222; 
+            z-index: 125;
         }
         .p-tl { top: 8px; left: 8px; } .p-tr { top: 8px; right: 8px; }
         .p-bl { bottom: 8px; left: 8px; } .p-br { bottom: 8px; right: 8px; }
@@ -288,16 +332,10 @@
         <div id="balao-informativo" class="balao-base">A seção mínima dos fios de iluminação é 1,5mm²<span class="referencia-nbr">(Item 6.2.6.1.1 da NBR-5410)</span></div>
         <div id="balao-cor-fase" class="balao-base">A fase poderá ser de qualquer cor<span class="referencia-nbr">(Item 6.1.5.3.4 da NBR-5410)</span></div>
         <div id="balao-cor-neutro" class="balao-base">O neutro deve ser de cor Azul Claro<span class="referencia-nbr">(Item 6.1.5.3.1 da NBR-5410)</span></div>
-        <div id="balao-seccionar-fase" class="balao-base">O interruptor deve seccionar o condutor vivo (fase)<span class="referencia-nbr">(Item 6.3.7.2.1 da NBR-5410)</span></div>
-        <div id="balao-cor-retorno" class="balao-base">O retorno também pode ser de qualquer cor.<span class="referencia-nbr">(continuidade da fase NBR-5410)</span></div>
+        <div id="balao-seccionar-fase" class="balao-base">O interruptor deve seccionar sempre o condutor fase<span class="referencia-nbr">(Item 6.2.11.1.10 da NBR-5410)</span></div>
+        <div id="balao-cor-retorno" class="balao-base">O retorno é o condutor que liga o interruptor à lâmpada</div>
 
-        <img src="lamp_on.png" id="camada-lampada" title="Para interligações consulte em 'AJUDA'">
-
-        <img src="al_dg_off.png" id="tecla-dg" class="tecla" style="top: 25%; left: 11.4%; width: 50px;" onclick="toggleDispositivo('dg')">
-        <img src="al_dr_off.png" id="tecla-dr" class="tecla" style="top: 28%; left: 23.8%; width: 50px;" onclick="toggleDispositivo('dr')">
-        <img src="tec_int_off.png" id="tecla-int" class="tecla" style="top: 73%; left: 72%; width: 53px; z-index: 100; pointer-events: auto; cursor: help;" onclick="toggleDispositivo('int')" title="Para interligações consulte em 'AJUDA'">
-
-        <img src="con_wago.png" id="wago-fase" class="conector" style="width: 65px; top: 26%; left: 57.4%;">
+        <img src="con_wago.png" id="wago-fase" class="conector" style="width: 65px; top: 22.5%; left: 59.6%;">
         <img src="con_wago.png" id="wago-retorno" class="conector" style="width: 65px; top: 17.7%; left: 59.6%;">
         <img src="con_wago.png" id="wago-neutro" class="conector" style="width: 65px; top: 14%; left: 57%;">
 
@@ -324,6 +362,10 @@
         <div id="ponto-fim" class="ponto"></div>
 
         <div id="placa-concluido">
+            <div class="scanner-container">
+                <div class="scanner-line"></div>
+                <div class="scan-overlay"></div>
+            </div>
             <div class="parafuso p-tl"></div><div class="parafuso p-tr"></div>
             <div class="parafuso p-bl"></div><div class="parafuso p-br"></div>
             <div class="texto-concluido"><span>✓</span> CONCLUÍDO</div>
@@ -366,6 +408,10 @@
     const balaoRetorno = document.getElementById('balao-cor-retorno');
 
     const telaEntrada = document.getElementById('tela-entrada');
+    const statusTxt = document.getElementById('status-mensagem');
+    const painelEquip = document.getElementById('painel-equipamentos');
+    const elInicio = document.getElementById('ponto-inicio');
+    const elFim = document.getElementById('ponto-fim');
 
     function iniciarLaboratorio() { 
         telaEntrada.style.opacity = '0'; 
@@ -397,10 +443,38 @@
         { id: 'NEUTRO2', cor: '#00bfff', max: 29, pasta: 'NEUTRO2', ini: {t: '8%', l: '58%'}, fim: {t: '55%', l: '91.3%'}, msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA INDICADA NO CONECTOR DE EMENDA', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO</span>: CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA MOSTRADA NA LÂMPADA.' }
     ];
 
-    const elInicio = document.getElementById('ponto-inicio');
-    const elFim = document.getElementById('ponto-fim');
-    const statusTxt = document.getElementById('status-mensagem');
-    const painelEquip = document.getElementById('painel-equipamentos');
+    function carregarEtapa() {
+        if (etapaAtual >= sequencia.length) {
+            instalacaoConcluida = true;
+            statusTxt.innerHTML = '<span class="cor-alerta">FIAÇÃO CONCLUÍDA!</span> <span class="cor-instrucao">LIGUE O DG, O DR E O INTERRUPTOR PARA TESTAR.</span>';
+            elInicio.style.display = 'none'; 
+            elFim.style.display = 'none';
+            painelEquip.style.display = 'flex';
+            exibirChecklistFinal();
+            return;
+        }
+
+        const cabo = sequencia[etapaAtual];
+        aguardandoDestino = false;
+
+        elInicio.style.top = cabo.ini.t;
+        elInicio.style.left = cabo.ini.l;
+        elInicio.style.display = 'block';
+        elInicio.style.borderColor = cabo.cor;
+        elInicio.onclick = () => {
+            elInicio.style.display = 'none';
+            statusTxt.innerHTML = cabo.msgDestino;
+            elFim.style.top = cabo.fim.t;
+            elFim.style.left = cabo.fim.l;
+            elFim.style.display = 'block';
+            elFim.style.borderColor = cabo.cor;
+            elFim.onclick = () => {
+                elFim.style.display = 'none';
+                animarCabo(cabo);
+            };
+        };
+        statusTxt.innerHTML = cabo.msg;
+    }
 
     function exibirChecklistFinal() {
         const posX = '34%'; 
@@ -423,7 +497,7 @@
                 <div class="c-item">☐ Lâmpadas não apresentam cintilação (pisca)</div>
             </div>
             <div id="msg-final" style="display:none; margin-top:35px; color:#00ff00; font-weight:bold; font-size:18px; border:2px solid #00ff00; padding:15px; text-align:center; border-radius:8px;">
-                INSTALAÇÃO CONCLUÍDA.<br>CLIQUE PARA TESTAR
+                SISTEMA VERIFICADO.<br>CLIQUE PARA TESTAR
             </div>
         </div>`;
         document.body.appendChild(overlay);
@@ -434,71 +508,10 @@
                 it.textContent = it.textContent.replace('☐', '✔'); 
                 it.style.color = '#00ff00'; 
                 it.style.fontWeight = 'bold';
-            }, (idx + 1) * 600);
+            }, (idx + 1) * 400);
         });
-        setTimeout(() => { msgFinal.style.display = "block"; }, (itens.length + 1) * 600);
+        setTimeout(() => { msgFinal.style.display = "block"; }, (itens.length + 1) * 400);
         overlay.onclick = () => { overlay.remove(); };
-    }
-
-    function carregarEtapa() {
-        if (etapaAtual >= sequencia.length) {
-            instalacaoConcluida = true;
-            statusTxt.innerHTML = '<span class="cor-alerta">FIAÇÃO CONCLUÍDA!</span> <span class="cor-instrucao">LIGUE O DG, O DR E O INTERRUPTOR PARA TESTAR.</span>';
-            elInicio.style.display = 'none'; 
-            elFim.style.display = 'none';
-            
-            painelEquip.style.display = 'flex';
-            atualizarSimbolosPainel();
-            
-            exibirChecklistFinal();
-            return;
-        }
-        const dados = sequencia[etapaAtual];
-        statusTxt.innerHTML = dados.msg;
-        
-        elInicio.style.top = dados.ini.t; 
-        elInicio.style.left = dados.ini.l; 
-        elInicio.style.background = dados.cor; 
-        elInicio.style.borderColor = "#ffffff";
-        elInicio.style.display = 'block'; 
-        elInicio.style.opacity = '1';
-        elInicio.style.pointerEvents = 'auto';
-
-        elFim.style.top = dados.fim.t; 
-        elFim.style.left = dados.fim.l; 
-        elFim.style.background = dados.cor; 
-        elFim.style.borderColor = "#ffffff";
-        elFim.style.display = 'block'; 
-        elFim.style.opacity = '0';
-        elFim.style.pointerEvents = 'none';
-        
-        aguardandoDestino = false;
-
-        elInicio.onclick = null;
-        elFim.onclick = null;
-
-        elInicio.onclick = (e) => { 
-            e.stopPropagation(); 
-            fecharBalao(); 
-            elInicio.style.background = "#00ff00"; 
-            
-            elFim.style.opacity = '1';
-            elFim.style.pointerEvents = 'auto';
-            
-            aguardandoDestino = true; 
-            if(sequencia[etapaAtual].msgDestino) statusTxt.innerHTML = sequencia[etapaAtual].msgDestino; 
-        };
-
-        elFim.onclick = (e) => { 
-            e.stopPropagation(); 
-            if (aguardandoDestino) {
-                elFim.style.background = "#00ff00"; 
-                elFim.style.pointerEvents = 'none';
-                elInicio.onclick = null;
-                elFim.onclick = null;
-                animarCabo(sequencia[etapaAtual]);
-            }
-        };
     }
 
     function animarCabo(cabo) {
@@ -616,18 +629,30 @@
                     placaAtiva = true;
                     placaJaExibida = true;
                     
+                    const textoConcluido = placa.querySelector('.texto-concluido');
+                    textoConcluido.innerHTML = '<span>⌛</span> CHECANDO...';
+                    textoConcluido.style.color = '#00f0ff';
+                    textoConcluido.style.textShadow = '0 0 20px rgba(0, 240, 255, 0.6)';
+
                     setTimeout(() => {
                         if (!estados.dg || !estados.dr || !estados.int) {
                             placa.style.display = 'flex'; 
                             setTimeout(() => placa.classList.add('show'), 50);
                             
+                            // Mudar para CONCLUIDO após 2 segundos de "scanner"
+                            setTimeout(() => {
+                                textoConcluido.innerHTML = '<span>✓</span> CONCLUÍDO';
+                                textoConcluido.style.color = '#00ff00';
+                                textoConcluido.style.textShadow = '0 0 20px rgba(0, 255, 0, 0.6)';
+                            }, 2000);
+
                             setTimeout(() => { 
                                 placa.classList.remove('show'); 
                                 setTimeout(() => { 
                                     placa.style.display = 'none'; 
                                     placaAtiva = false; 
                                 }, 500); 
-                            }, 2000);
+                            }, 4500);
                         } else { 
                             placaAtiva = false; 
                         }
