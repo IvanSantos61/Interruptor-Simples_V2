@@ -2,7 +2,9 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laboratório SMT Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
@@ -259,19 +261,46 @@
         @keyframes pulsar { 0% { transform: translate(-50%, -50%) scale(1); } 70% { transform: translate(-50%, -50%) scale(1.25); } 100% { transform: translate(-50%, -50%) scale(1); } }
         #status-mensagem span.destaque { color: #ff9900; }
 
-        /* ==========================================================================
-           NOVAS ÁREAS SENSÍVEIS (HOTSPOTS INVISÍVEIS) - CONFIGURAÇÃO DE TESTE
-           ========================================================================== */
-        .hotspot-mapeado {
+        /* --- NOVAS ÁREAS SENSÍVEIS (HOTSPOTS) --- */
+        .hotspot {
             position: absolute;
-            background: rgba(255, 0, 0, 0.2); /* Vermelho translúcido para você enxergar e regular a área em tela */
-            cursor: crosshair;
-            z-index: 35; /* Fica acima do fundo e cabos, permitindo interação suave */
-            transition: background 0.2s;
+            width: 60px;
+            height: 60px;
+            background: rgba(0, 240, 255, 0.1);
+            border: 2px dashed rgba(0, 240, 255, 0.3);
+            border-radius: 50%;
+            z-index: 100;
+            cursor: help;
+            transition: all 0.3s ease;
         }
-        .hotspot-mapeado:hover {
-            background: rgba(0, 240, 255, 0.3); /* Destaque em Cyan ao passar o mouse */
-            border: 1px dashed #00f0ff;
+        .hotspot:hover {
+            background: rgba(0, 240, 255, 0.2);
+            border-color: #00f0ff;
+            box-shadow: 0 0 15px #00f0ff;
+        }
+        .hotspot::before {
+            content: attr(data-description);
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%) scale(0.8);
+            background: rgba(5, 10, 20, 0.95);
+            color: #00f0ff;
+            padding: 10px 15px;
+            border: 1px solid #00f0ff;
+            border-radius: 8px;
+            white-space: nowrap;
+            font-size: 14px;
+            font-family: 'Orbitron', sans-serif;
+            z-index: 101;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+            pointer-events: none;
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .hotspot:hover::before {
+            opacity: 1;
+            transform: translateX(-50%) scale(1);
         }
     </style>
 </head>
@@ -300,12 +329,11 @@
     <div id="container-simulador" onclick="fecharBalao()">
         <img src="ambiente.jpg" id="fundo">
          
-        <!-- --- MAPEAMENTO DE ÁREAS SENSÍVEIS (HOTSPOTS) --- -->
-        <!-- NOTA: Ajuste as porcentagens abaixo de acordo com a posição dos itens na sua imagem de fundo -->
-        <div class="hotspot-mapeado" style="top: 22%; left: 10%; width: 20%; height: 18%;" title="Quadro de Distribuição / Proteção" onclick="console.log('Clicou no Quadro')"></div>
-        <div class="hotspot-mapeado" style="top: 12%; left: 55%; width: 15%; height: 14%;" title="Caixa de Passagem (Conectores Wago)" onclick="console.log('Clicou na Caixa de Passagem')"></div>
-        <div class="hotspot-mapeado" style="top: 45%; left: 75%; width: 16%; height: 22%;" title="Ponto de Iluminação (Lâmpada)" onclick="console.log('Clicou na Lâmpada')"></div>
-        <div class="hotspot-mapeado" style="top: 71%; left: 70%; width: 10%; height: 15%;" title="Mecanismo do Interruptor" onclick="console.log('Clicou no Interruptor')"></div>
+        <!-- Hotspots de Equipamentos (Posições aleatórias para ajuste posterior) -->
+        <div class="hotspot" style="top: 15%; left: 15%;" data-description="Disjuntor Termomagnético - Proteção contra sobrecarga"></div>
+        <div class="hotspot" style="top: 25%; left: 45%;" data-description="Dispositivo DR - Proteção contra choque elétrico"></div>
+        <div class="hotspot" style="top: 55%; left: 75%;" data-description="Lâmpada LED - Ponto de iluminação"></div>
+        <div class="hotspot" style="top: 75%; left: 35%;" data-description="Interruptor Simples - Comando de acionamento"></div>
 
         <div id="camada-fase1" class="camada-cabo"></div>
         <div id="camada-fase2" class="camada-cabo"></div>
@@ -332,21 +360,9 @@
 
         <div id="painel-equipamentos">
             <div class="titulo-painel-equip">STATUS DO CIRCUITO</div>
-            
-            <div class="item-equip-moldura">
-                <span class="nome-equip">DG</span>
-                <span id="status-dg-painel" class="status-equip-simbolo simbolo-desligado">✘</span>
-            </div>
-            
-            <div class="item-equip-moldura">
-                <span class="nome-equip">DR</span>
-                <span id="status-dr-painel" class="status-equip-simbolo simbolo-desligado">✘</span>
-            </div>
-            
-            <div class="item-equip-moldura">
-                <span class="nome-equip">INT</span>
-                <span id="status-int-painel" class="status-equip-simbolo simbolo-desligado">✘</span>
-            </div>  
+            <div class="item-equip-moldura"><span class="nome-equip">DG</span><span id="status-dg-painel" class="status-equip-simbolo simbolo-desligado">✘</span></div>
+            <div class="item-equip-moldura"><span class="nome-equip">DR</span><span id="status-dr-painel" class="status-equip-simbolo simbolo-desligado">✘</span></div>
+            <div class="item-equip-moldura"><span class="nome-equip">INT</span><span id="status-int-painel" class="status-equip-simbolo simbolo-desligado">✘</span></div>  
         </div>
 
         <div id="ponto-inicio" class="ponto"></div>
@@ -537,7 +553,15 @@
     function animarCabo(cabo) {
         fecharBalao(); 
         let frame = 0;
-        const camada = document.getElementById(`camada-${cabo.id.toLowerCase()}`);
+        const camadaId = `camada-${cabo.id.toLowerCase()}`;
+        let camada = document.getElementById(camadaId);
+        
+        if (!camada) {
+            camada = document.createElement('div');
+            camada.id = camadaId;
+            camada.className = 'camada-cabo';
+            document.getElementById('container-simulador').appendChild(camada);
+        }
         
         camada.style.transition = "none";
         camada.style.opacity = "1";
@@ -559,7 +583,6 @@
 
             if (frame === cabo.max) {
                 clearInterval(loop);
-
                 somConexao.currentTime = 0; 
                 somConexao.play();
 
@@ -579,15 +602,13 @@
                         const wago = document.getElementById(idWago);
                         wago.style.transform = `translate(-50%, -50%) rotate(${cabo.wagoRot})`; 
                         wago.style.display = 'block';
-                        wago.title = "Para interligações consulte em 'AJUDA'";
-                    }, 1500);
+                    }, 1000);
                 }
 
                 etapaAtual++; 
                 setTimeout(carregarEtapa, 600);
                 return;
             }
-            
             frame += 1;
         }, 25);
     }
@@ -635,28 +656,17 @@
         
         if (tudoLigado) {
             lamp.style.opacity = "1"; 
-            
-            // Marca que o teste de ligar foi bem sucedido
             primeiroTesteFeito = true; 
-            
-            // Garante que a placa não vai aparecer enquanto a lâmpada estiver acesa
             placa.classList.remove('show');
-            
         } else {
             lamp.style.opacity = "0";
-            
-            // Se o circuito já foi testado com sucesso (ligado uma vez)
-            // E a placa ainda não foi exibida
             if (primeiroTesteFeito && !placaJaExibida) {
-                placaJaExibida = true; // Trava ativada de forma definitiva
+                placaJaExibida = true;
                 placa.classList.add('show'); 
-                
-                // Remove a placa após 3 segundos (3000ms)
                 setTimeout(() => {
                     placa.classList.remove('show');
                 }, 3000);
             } else {
-                // Em qualquer outro momento de clique, mantém a placa escondida
                 placa.classList.remove('show');
             }
         }
