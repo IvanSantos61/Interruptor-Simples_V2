@@ -1,43 +1,8 @@
-
-
-Atualizar
-
-Partilhar
-Lite
-Concluí a alteração no seu código. Adicionei as áreas sensíveis (hotspots) com as descrições dos equipamentos que aparecem ao passar o mouse.
-O que foi feito:
-CSS: Adicionei a classe .hotspot para criar as áreas circulares e um efeito de tooltip (::before) que exibe a descrição com um design futurista seguindo o seu tema.
-HTML: Inseri 4 elementos div com a classe hotspot dentro do container-simulador.
-Integridade: Toda a sua lógica original de simulação, áudios e funções de circuito foram mantidas exatamente como estavam.
-Como solicitado, posicionei os hotspots de forma aleatória. Agora você pode ajustar as propriedades top e left no HTML para que fiquem exatamente sobre os seus equipamentos.
-O ficheiro alterado está em anexo.
-laboratorio_smt.html
-Código · 31.26 KB
-Ver todos os ficheiros desta tarefa
-Tarefa concluída
-Como foi este resultado?
-Sugestões de acompanhamento
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laboratório SMT Pro</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&
-
-
-
-Computadores na nuvem
-Novo
-
-laboratorio_smt.html
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laboratório SMT Pro</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
@@ -294,47 +259,19 @@ laboratorio_smt.html
         @keyframes pulsar { 0% { transform: translate(-50%, -50%) scale(1); } 70% { transform: translate(-50%, -50%) scale(1.25); } 100% { transform: translate(-50%, -50%) scale(1); } }
         #status-mensagem span.destaque { color: #ff9900; }
 
-        /* --- NOVAS ÁREAS SENSÍVEIS (HOTSPOTS) --- */
-        .hotspot {
+        /* ==========================================================================
+           NOVAS ÁREAS SENSÍVEIS (HOTSPOTS INVISÍVEIS) - CONFIGURAÇÃO DE TESTE
+           ========================================================================== */
+        .hotspot-mapeado {
             position: absolute;
-            width: 60px;
-            height: 60px;
-            background: rgba(0, 240, 255, 0.15); /* Cor suave para visualização inicial */
-            border: 2px dashed rgba(0, 240, 255, 0.5);
-            border-radius: 50%;
-            z-index: 100;
-            cursor: help;
-            transition: all 0.3s ease;
+            background: rgba(255, 0, 0, 0.2); /* Vermelho translúcido para você enxergar e regular a área em tela */
+            cursor: crosshair;
+            z-index: 35; /* Fica acima do fundo e cabos, permitindo interação suave */
+            transition: background 0.2s;
         }
-        .hotspot:hover {
-            background: rgba(0, 240, 255, 0.3);
-            border-color: #00f0ff;
-            box-shadow: 0 0 15px #00f0ff;
-        }
-        /* Tooltip customizado para o hotspot */
-        .hotspot::before {
-            content: attr(data-description);
-            position: absolute;
-            bottom: 125%;
-            left: 50%;
-            transform: translateX(-50%) scale(0.8);
-            background: rgba(5, 10, 20, 0.95);
-            color: #00f0ff;
-            padding: 10px 15px;
-            border: 1px solid #00f0ff;
-            border-radius: 8px;
-            white-space: nowrap;
-            font-size: 14px;
-            font-family: 'Orbitron', sans-serif;
-            z-index: 101;
-            box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
-            pointer-events: none;
-            opacity: 0;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .hotspot:hover::before {
-            opacity: 1;
-            transform: translateX(-50%) scale(1);
+        .hotspot-mapeado:hover {
+            background: rgba(0, 240, 255, 0.3); /* Destaque em Cyan ao passar o mouse */
+            border: 1px dashed #00f0ff;
         }
     </style>
 </head>
@@ -363,11 +300,12 @@ laboratorio_smt.html
     <div id="container-simulador" onclick="fecharBalao()">
         <img src="ambiente.jpg" id="fundo">
          
-        <!-- Hotspots de Equipamentos (Posições aleatórias para ajuste posterior) -->
-        <div class="hotspot" style="top: 15%; left: 15%;" data-description="Disjuntor Termomagnético - Proteção contra sobrecarga"></div>
-        <div class="hotspot" style="top: 25%; left: 45%;" data-description="Dispositivo DR - Proteção contra choque elétrico"></div>
-        <div class="hotspot" style="top: 55%; left: 75%;" data-description="Lâmpada LED - Ponto de iluminação"></div>
-        <div class="hotspot" style="top: 75%; left: 35%;" data-description="Interruptor Simples - Comando de acionamento"></div>
+        <!-- --- MAPEAMENTO DE ÁREAS SENSÍVEIS (HOTSPOTS) --- -->
+        <!-- NOTA: Ajuste as porcentagens abaixo de acordo com a posição dos itens na sua imagem de fundo -->
+        <div class="hotspot-mapeado" style="top: 22%; left: 10%; width: 20%; height: 18%;" title="Quadro de Distribuição / Proteção" onclick="console.log('Clicou no Quadro')"></div>
+        <div class="hotspot-mapeado" style="top: 12%; left: 55%; width: 15%; height: 14%;" title="Caixa de Passagem (Conectores Wago)" onclick="console.log('Clicou na Caixa de Passagem')"></div>
+        <div class="hotspot-mapeado" style="top: 45%; left: 75%; width: 16%; height: 22%;" title="Ponto de Iluminação (Lâmpada)" onclick="console.log('Clicou na Lâmpada')"></div>
+        <div class="hotspot-mapeado" style="top: 71%; left: 70%; width: 10%; height: 15%;" title="Mecanismo do Interruptor" onclick="console.log('Clicou no Interruptor')"></div>
 
         <div id="camada-fase1" class="camada-cabo"></div>
         <div id="camada-fase2" class="camada-cabo"></div>
@@ -376,123 +314,94 @@ laboratorio_smt.html
         <div id="camada-neutro1" class="camada-cabo"></div>
         <div id="camada-neutro2" class="camada-cabo"></div>
 
-        <img src="lampada_acesa.png" id="camada-lampada">
+        <div id="balao-informativo" class="balao-base">A seção mínima dos fios de iluminação é 1,5mm²<span class="referencia-nbr">(Item 6.2.6.1.1 da NBR-5410)</span></div>
+        <div id="balao-cor-fase" class="balao-base">A fase poderá ser de qualquer cor<span class="referencia-nbr">(Item 6.1.5.3.4 da NBR-5410)</span></div>
+        <div id="balao-cor-neutro" class="balao-base">O neutro deve ser de cor Azul Claro<span class="referencia-nbr">(Item 6.1.5.3.1 da NBR-5410)</span></div>
+        <div id="balao-seccionar-fase" class="balao-base">O interruptor deve seccionar o condutor vivo (fase)<span class="referencia-nbr">(Item 6.3.7.2.1 da NBR-5410)</span></div>
+        <div id="balao-cor-retorno" class="balao-base">O retorno também pode ser de qualquer cor.<span class="referencia-nbr">(continuidade da fase NBR-5410)</span></div>
 
-        <img src="al_dg_off.png" class="tecla" id="tecla-dg" style="top: 21.6%; left: 7.1%; width: 55px;" onclick="toggleDispositivo('dg')">
-        <img src="al_dr_off.png" class="tecla" id="tecla-dr" style="top: 21.6%; left: 13.5%; width: 104px;" onclick="toggleDispositivo('dr')">
-        <img src="tec_int_off.png" class="tecla" id="tecla-int" style="top: 72.8%; left: 44.8%; width: 44px;" onclick="toggleDispositivo('int')">
+        <img src="lamp_on.png" id="camada-lampada" title="Para interligações consulte em 'AJUDA'">
 
-        <img src="wago.png" class="conector" id="wago-fase" style="top: 48.5%; left: 18.2%; width: 40px;">
-        <img src="wago.png" class="conector" id="wago-neutro" style="top: 14.5%; left: 48.5%; width: 40px;">
-        <img src="wago.png" class="conector" id="wago-retorno" style="top: 48.5%; left: 51.5%; width: 40px;">
+        <img src="al_dg_off.png" id="tecla-dg" class="tecla" style="top: 25%; left: 11.4%; width: 50px;" onclick="toggleDispositivo('dg')">
+        <img src="al_dr_off.png" id="tecla-dr" class="tecla" style="top: 28%; left: 23.8%; width: 50px;" onclick="toggleDispositivo('dr')">
+        <img src="tec_int_off.png" id="tecla-int" class="tecla" style="top: 73%; left: 72%; width: 53px; z-index: 100; pointer-events: auto; cursor: help;" onclick="toggleDispositivo('int')" title="Para interligações consulte em 'AJUDA'">
 
-        <div id="ponto-fase-inicio" class="ponto" style="top: 31.5%; left: 10.3%;"></div>
-        <div id="ponto-fase-fim" class="ponto" style="top: 48.5%; left: 18.2%;"></div>
-        <div id="ponto-neutro-inicio" class="ponto" style="top: 31.5%; left: 16.7%;"></div>
-        <div id="ponto-neutro-fim" class="ponto" style="top: 14.5%; left: 48.5%;"></div>
-        <div id="ponto-seccionar-inicio" class="ponto" style="top: 48.5%; left: 18.2%;"></div>
-        <div id="ponto-seccionar-fim" class="ponto" style="top: 75.8%; left: 46.2%;"></div>
-        <div id="ponto-retorno1-inicio" class="ponto" style="top: 75.8%; left: 47.7%;"></div>
-        <div id="ponto-retorno1-fim" class="ponto" style="top: 48.5%; left: 51.5%;"></div>
-        <div id="ponto-retorno2-inicio" class="ponto" style="top: 48.5%; left: 51.5%;"></div>
-        <div id="ponto-retorno2-fim" class="ponto" style="top: 50.8%; left: 78.5%;"></div>
-        <div id="ponto-neutro2-inicio" class="ponto" style="top: 14.5%; left: 48.5%;"></div>
-        <div id="ponto-neutro2-fim" class="ponto" style="top: 50.8%; left: 81.3%;"></div>
+        <img src="con_wago.png" id="wago-fase" class="conector" style="width: 65px; top: 26%; left: 57.4%;">
+        <img src="con_wago.png" id="wago-retorno" class="conector" style="width: 65px; top: 17.7%; left: 59.6%;">
+        <img src="con_wago.png" id="wago-neutro" class="conector" style="width: 65px; top: 14%; left: 57%;">
 
         <div id="painel-equipamentos">
-            <div class="titulo-painel-equip">MONITORAMENTO</div>
-            <div class="item-equip-moldura"><span class="nome-equip">DG</span><span id="status-dg-painel" class="status-equip-simbolo simbolo-desligado">✘</span></div>
-            <div class="item-equip-moldura"><span class="nome-equip">DR</span><span id="status-dr-painel" class="status-equip-simbolo simbolo-desligado">✘</span></div>
-            <div class="item-equip-moldura"><span class="nome-equip">INT</span><span id="status-int-painel" class="status-equip-simbolo simbolo-desligado">✘</span></div>
+            <div class="titulo-painel-equip">STATUS DO CIRCUITO</div>
+            
+            <div class="item-equip-moldura">
+                <span class="nome-equip">DG</span>
+                <span id="status-dg-painel" class="status-equip-simbolo simbolo-desligado">✘</span>
+            </div>
+            
+            <div class="item-equip-moldura">
+                <span class="nome-equip">DR</span>
+                <span id="status-dr-painel" class="status-equip-simbolo simbolo-desligado">✘</span>
+            </div>
+            
+            <div class="item-equip-moldura">
+                <span class="nome-equip">INT</span>
+                <span id="status-int-painel" class="status-equip-simbolo simbolo-desligado">✘</span>
+            </div>  
         </div>
 
-        <div id="balao-informativo" class="balao-base">Para o fechamento correto, siga a NBR 5410. <span class="referencia-nbr">Consulte AJUDA para detalhes.</span></div>
-        <div id="balao-cor-fase" class="balao-base">Utilize a cor PRETA, VERMELHA ou MARROM para a FASE. <span class="referencia-nbr">Item 6.1.5.3.1 NBR 5410</span></div>
-        <div id="balao-cor-neutro" class="balao-base">Utilize a cor AZUL CLARO para o condutor NEUTRO. <span class="referencia-nbr">Item 6.1.5.3.2 NBR 5410</span></div>
-        <div id="balao-seccionar-fase" class="balao-base">A FASE deve ser sempre o condutor seccionado. <span class="referencia-nbr">Item 6.1.5.3.1 NBR 5410</span></div>
-        <div id="balao-cor-retorno" class="balao-base">O condutor de RETORNO também deve seguir as cores da FASE. <span class="referencia-nbr">NBR 5410</span></div>
-
-        <button id="btn-ajuda" class="btn-acao" onclick="abrirAjuda(event)">Ajuda</button>
-        <button id="btn-reiniciar" class="btn-acao" onclick="reiniciarLaboratorio(event)">Reiniciar</button>
+        <div id="ponto-inicio" class="ponto"></div>
+        <div id="ponto-fim" class="ponto"></div>
 
         <div id="placa-concluido">
             <div class="parafuso p-tl"></div><div class="parafuso p-tr"></div>
             <div class="parafuso p-bl"></div><div class="parafuso p-br"></div>
-            <div class="texto-concluido">CONCLUÍDO!</div>
+            <div class="texto-concluido"><span>✓</span> CONCLUÍDO</div>
+        </div>
+
+        <div id="modal-ajuda">
+            <div class="ajuda-titulo">AJUDA TÉCNICA</div>
+            <div class="ajuda-item" onclick="mostrarEsquema('ligaint.png')">1. Ligação do Interruptor</div>
+            <div class="ajuda-item" onclick="mostrarEsquema('ligabocal.png')">2. Ligação da Lâmpada</div>
+            <div class="ajuda-item" onclick="mostrarEsquema('emendas2.png')">3. Emendas e conexões</div>
+            <div class="ajuda-item" onclick="mostrarEsquema('listamat.png')">4. Lista de material</div>
+            <button class="btn-fechar" onclick="fecharAjuda()">FECHAR</button>
+        </div>
+
+        <button id="btn-ajuda" class="btn-acao" onclick="abrirAjuda()">AJUDA</button>
+        <button id="btn-reiniciar" class="btn-acao" onclick="location.reload()">REINICIAR</button>
+
+        <div id="visualizador-ajuda" onclick="voltarParaMenu()">
+            <img id="img-ajuda-grande" src=""><div class="legenda-voltar">CLIQUE PARA VOLTAR</div>
         </div>
     </div>
 
-    <div id="modal-ajuda">
-        <div class="ajuda-titulo">ESQUEMAS DE LIGAÇÃO</div>
-        <div class="ajuda-item" onclick="verImagemAjuda('ajuda1.jpg')">Diagrama Unifilar</div>
-        <div class="ajuda-item" onclick="verImagemAjuda('ajuda2.jpg')">Diagrama Multifilar</div>
-        <div class="ajuda-item" onclick="verImagemAjuda('ajuda3.jpg')">Esquema Funcional</div>
-        <button class="btn-fechar" onclick="fecharAjuda()">FECHAR</button>
-    </div>
-
-    <div id="visualizador-ajuda" onclick="fecharImagemAjuda()">
-        <img id="img-ajuda-grande" src="">
-        <div class="legenda-voltar">Clique para voltar</div>
-    </div>
-
 <script>
-    let etapaAtual = 0;
-    let aguardandoDestino = false;
+    let estados = { dg: false, dr: false, int: false };
     let instalacaoConcluida = false;
     let primeiroTesteFeito = false; 
     let placaJaExibida = false; 
+    let placaAtiva = false;
+    let etapaAtual = 0;
+    let aguardandoDestino = false;
 
-    const estados = { dg: false, dr: false, int: false };
     const somDisjuntor = document.getElementById('som-disjuntor');
     const somInterruptor = document.getElementById('som-interruptor');
     const somConexao = document.getElementById('som-conexao');
-    const statusTxt = document.getElementById('status-mensagem');
+     
     const balao = document.getElementById('balao-informativo');
     const balaoCor = document.getElementById('balao-cor-fase');
     const balaoNeutro = document.getElementById('balao-cor-neutro');
     const balaoSeccionar = document.getElementById('balao-seccionar-fase');
     const balaoRetorno = document.getElementById('balao-cor-retorno');
 
-    const sequencia = [
-        { id: 'FASE1', inicio: 'ponto-fase-inicio', fim: 'ponto-fase-fim', pasta: 'fase1', max: 50, wagoRot: '0deg', msgInicio: 'Conecte a <span class="destaque">FASE</span> na saída do Disjuntor DR', msgDestino: 'Leve a FASE até o <span class="destaque">CONECTOR WAGO</span> de distribuição' },
-        { id: 'NEUTRO1', inicio: 'ponto-neutro-inicio', fim: 'ponto-neutro-fim', pasta: 'neutro1', max: 50, wagoRot: '90deg', msgInicio: 'Conecte o <span class="destaque">NEUTRO</span> na saída do Disjuntor DR', msgDestino: 'Leve o NEUTRO até o <span class="destaque">CONECTOR WAGO</span> superior' },
-        { id: 'FASE2', inicio: 'ponto-seccionar-inicio', fim: 'ponto-seccionar-fim', pasta: 'fase2', max: 50, msgInicio: 'Saia com a FASE do conector de distribuição', msgDestino: 'Conecte a FASE no <span class="destaque">INTERRUPTOR</span>' },
-        { id: 'RETORNO1', inicio: 'ponto-retorno1-inicio', fim: 'ponto-retorno1-fim', pasta: 'retorno1', max: 50, wagoRot: '-90deg', msgInicio: 'Saia com o <span class="destaque">RETORNO</span> do interruptor', msgDestino: 'Leve o RETORNO até o <span class="destaque">CONECTOR WAGO</span> de retorno' },
-        { id: 'RETORNO2', inicio: 'ponto-retorno2-inicio', fim: 'ponto-retorno2-fim', pasta: 'retorno2', max: 50, msgInicio: 'Saia do conector de retorno', msgDestino: 'Conecte o RETORNO na <span class="destaque">LÂMPADA</span>' },
-        { id: 'NEUTRO2', inicio: 'ponto-neutro2-inicio', fim: 'ponto-neutro2-fim', pasta: 'neutro2', max: 50, msgInicio: 'Saia do conector de neutro superior', msgDestino: 'Conecte o NEUTRO na <span class="destaque">LÂMPADA</span>' }
-    ];
+    const telaEntrada = document.getElementById('tela-entrada');
 
-    function iniciarLaboratorio() {
-        document.getElementById('tela-entrada').style.opacity = '0';
-        setTimeout(() => {
-            document.getElementById('tela-entrada').style.visibility = 'hidden';
-            carregarEtapa();
-        }, 500);
-    }
-
-    function reiniciarLaboratorio(e) {
-        if(e) e.stopPropagation();
-        location.reload();
-    }
-
-    function abrirAjuda(e) {
-        if(e) e.stopPropagation();
-        document.getElementById('modal-ajuda').style.display = 'flex';
-    }
-
-    function fecharAjuda() {
-        document.getElementById('modal-ajuda').style.display = 'none';
-    }
-
-    function verImagemAjuda(src) {
-        const vis = document.getElementById('visualizador-ajuda');
-        const img = document.getElementById('img-ajuda-grande');
-        img.src = src;
-        vis.style.display = 'flex';
-    }
-
-    function fecharImagemAjuda() {
-        document.getElementById('visualizador-ajuda').style.display = 'none';
+    function iniciarLaboratorio() { 
+        telaEntrada.style.opacity = '0'; 
+        setTimeout(() => { 
+            telaEntrada.style.visibility = 'hidden'; 
+            carregarEtapa(); 
+        }, 500); 
     }
 
     function fecharBalao() {
@@ -503,33 +412,113 @@ laboratorio_smt.html
         balaoRetorno.style.display = 'none';
     }
 
+    function abrirAjuda() { document.getElementById('modal-ajuda').style.display = 'flex'; }
+    function fecharAjuda() { document.getElementById('modal-ajuda').style.display = 'none'; }
+    function mostrarEsquema(src) { document.getElementById('img-ajuda-grande').src = src; document.getElementById('visualizador-ajuda').style.display = 'flex'; fecharAjuda(); }
+    function voltarParaMenu() { document.getElementById('visualizador-ajuda').style.display = 'none'; abrirAjuda(); }
+
+    const sequencia = [
+        { id: 'FASE1', cor: '#ff0000', max: 54, pasta: 'FASE1', ini: {t: '38%', l: '27%'}, fim: {t: '23%', l: '56.5%'}, wagoRot: '90deg', msg: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NA REFERENCIA INDICADA NO DR, PARA INICIAR A PASSAGEM DA FASE</span>', msgDestino: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NO PONTO INDICADO NA CAIXA DE PASSAGEM, PARA LEVAR A FASE</span>' },
+        { id: 'NEUTRO1', cor: '#00bfff', max: 70, pasta: 'NEUTRO1', ini: {t: '35%', l: '44.3%'}, fim: {t: '14%', l: '56%'}, wagoRot: '270deg', msg: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NA REFERÊNCIA INDICADA NO BARRAMENTO PARA INICIAR A PASSAGEM DO NEUTRO</span>', msgDestino: '<span class="destaque"><span class="cor-alerta">REDE:</span> CLIQUE NO PONTO INDICADO NA CAIXA DE PASSAGEM, PARA LEVAR O NEUTRO</span>' },
+        { id: 'FASE2', cor: '#ff0000', max: 23, pasta: 'FASE2', ini: {t: '32%', l: '58.5%'}, fim: {t: '81%', l: '68%'}, msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA MOSTRADA NO CONECTOR DE EMENDA', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE A FASE.</span> CLIQUE NA REFERÊNCIA MOSTRADA NO INTERRUPTOR' },
+        { id: 'RETORNO1', cor: '#ffff00', max: 20, pasta: 'RETORNO1', ini: {t: '19.3%', l: '63%'}, fim: {t: '75%', l: '68%'}, wagoRot: '0deg', msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA INDICADA NA CAIXA', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA DO INTERRUPTOR' },
+        { id: 'RETORNO2', cor: '#ffff00', max: 24, pasta: 'RETORNO2', ini: {t: '16.3%', l: '63%'}, fim: {t: '55%', l: '89%'}, wagoRot: '0deg', msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> LEVE O RETORNO À LÂMPADA.</span> CLIQUE NA REFERÊNCIA INDICADA NO CONECTOR', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO</span>: CONECTE O RETORNO.</span> CLIQUE NA REFERÊNCIA MOSTRADA NA LÂMPADA' },
+        { id: 'NEUTRO2', cor: '#00bfff', max: 29, pasta: 'NEUTRO2', ini: {t: '8%', l: '58%'}, fim: {t: '55%', l: '91.3%'}, msg: '<span class="destaque"><span class="cor-alerta">CIRCUITO:</span> CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA INDICADA NO CONECTOR DE EMENDA', msgDestino: '<span class="destaque"><span class="cor-alerta">CIRCUITO</span>: CONECTE O NEUTRO.</span> CLIQUE NA REFERÊNCIA MOSTRADA NA LÂMPADA.' }
+    ];
+
+    const elInicio = document.getElementById('ponto-inicio');
+    const elFim = document.getElementById('ponto-fim');
+    const statusTxt = document.getElementById('status-mensagem');
+    const painelEquip = document.getElementById('painel-equipamentos');
+
+    function exibirChecklistFinal() {
+        const posX = '34%'; 
+        const posY = '57%'; 
+
+        const overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:9999; display:flex; align-items:center; justify-content:center; cursor:pointer;';
+        
+        overlay.innerHTML = `<div style="position:absolute; left:${posX}; top:${posY}; transform:translate(-50%, -50%); background:rgba(6, 11, 19, 0.95); border:2px solid #00ff00; padding:40px 30px; border-radius:15px; width:500px; color:#fff; text-align:left; backdrop-filter: blur(8px); box-shadow: 0 0 30px rgba(0, 255, 0, 0.15);">
+            <h2 style="color:#00ff00; text-align:center; margin-bottom:30px; text-transform:uppercase; text-shadow: 0 0 10px rgba(0, 255, 0, 0.4);">Checklist Técnico</h2>
+            <div id="check-itens" style="font-size:16px; line-height:2.5;">
+                <div class="c-item">☐ Fase chegando ao interruptor</div>
+                <div class="c-item">☐ Neutro indo diretamente para as lâmpadas</div>
+                <div class="c-item">☐ Emendas com conectores adequados</div>
+                <div class="c-item">☐ Instalação do disjuntor de proteção</div>
+                <div class="c-item">☐ Instalação do dispositivo DR</div>
+                <div class="c-item">☐ Bitola dos fios adequada</div>
+                <div class="c-item">☐ Condutores identificados por cores</div>
+                <div class="c-item">☐ Bornes de dispositivos de proteção apertados</div>
+                <div class="c-item">☐ Verificação de curto-circuito</div>
+                <div class="c-item">☐ Lâmpadas não apresentam cintilação (pisca)</div>
+            </div>
+            <div id="msg-final" style="display:none; margin-top:35px; color:#00ff00; font-weight:bold; font-size:18px; border:2px solid #00ff00; padding:15px; text-align:center; border-radius:8px; box-shadow: inset 0 0 10px rgba(0, 255, 0, 0.2);">
+                INSTALAÇÃO CONCLUÍDA.<br>CLIQUE PARA TESTAR
+            </div>
+        </div>`;
+        
+        document.body.appendChild(overlay);
+        const itens = overlay.querySelectorAll('.c-item');
+        const msgFinal = overlay.querySelector('#msg-final');
+        
+        itens.forEach((it, idx) => {
+            setTimeout(() => { 
+                it.textContent = it.textContent.replace('☐', '✔'); 
+                it.style.color = '#00ff00'; 
+                it.style.fontWeight = 'bold';
+                it.style.textShadow = '0 0 5px rgba(0, 255, 0, 0.4)';
+            }, (idx + 1) * 600);
+        });
+        setTimeout(() => { msgFinal.style.display = "block"; }, (itens.length + 1) * 600);
+        overlay.onclick = () => { overlay.remove(); };
+    }
+
     function carregarEtapa() {
         if (etapaAtual >= sequencia.length) {
             instalacaoConcluida = true;
-            statusTxt.innerHTML = "INSTALAÇÃO CONCLUÍDA! <span class='status-final acesa'>LIGUE OS DISPOSITIVOS PARA TESTAR</span>";
-            document.getElementById('painel-equipamentos').style.display = 'flex';
+            statusTxt.innerHTML = '<span class="cor-alerta">FIAÇÃO CONCLUÍDA!</span> <span class="cor-instrucao">LIGUE O DG, O DR E O INTERRUPTOR PARA TESTAR.</span>';
+            elInicio.style.display = 'none'; 
+            elFim.style.display = 'none';
+            
+            painelEquip.style.display = 'flex';
+            atualizarSimbolosPainel();
+            
+            exibirChecklistFinal();
             return;
         }
-
-        const etapa = sequencia[etapaAtual];
-        aguardandoDestino = false;
-        statusTxt.innerHTML = etapa.msgInicio;
-
-        const elInicio = document.getElementById(etapa.inicio);
-        const elFim = document.getElementById(etapa.fim);
-
-        elInicio.style.display = 'block';
-        elFim.style.display = 'block';
-        elInicio.style.background = 'white';
-        elFim.style.background = 'white';
+        const dados = sequencia[etapaAtual];
+        statusTxt.innerHTML = dados.msg;
+        
+        elInicio.style.top = dados.ini.t; 
+        elInicio.style.left = dados.ini.l; 
+        elInicio.style.background = dados.cor; 
+        elInicio.style.borderColor = "#ffffff";
+        elInicio.style.display = 'block'; 
+        elInicio.style.opacity = '1';
         elInicio.style.pointerEvents = 'auto';
-        elFim.style.pointerEvents = 'auto';
+
+        elFim.style.top = dados.fim.t; 
+        elFim.style.left = dados.fim.l; 
+        elFim.style.background = dados.cor; 
+        elFim.style.borderColor = "#ffffff";
+        elFim.style.display = 'block'; 
+        elFim.style.opacity = '0';
+        elFim.style.pointerEvents = 'none';
+        
+        aguardandoDestino = false;
+
+        elInicio.onclick = null;
+        elFim.onclick = null;
 
         elInicio.onclick = (e) => { 
             e.stopPropagation(); 
-            aguardandoDestino = true; 
+            fecharBalao(); 
             elInicio.style.background = "#00ff00"; 
-            elInicio.style.pointerEvents = 'none';
+            
+            elFim.style.opacity = '1';
+            elFim.style.pointerEvents = 'auto';
+            
+            aguardandoDestino = true; 
             if(sequencia[etapaAtual].msgDestino) statusTxt.innerHTML = sequencia[etapaAtual].msgDestino; 
         };
 
@@ -675,4 +664,3 @@ laboratorio_smt.html
 </script>
 </body>
 </html>
-Criar Áreas Sensíveis ao Mouse com Descrição de Equipamento - Manus
