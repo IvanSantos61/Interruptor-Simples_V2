@@ -662,25 +662,38 @@
         else { elInt.innerHTML = "✘"; elInt.className = "status-equip-simbolo simbolo-desligado"; }
     }
 
-    function atualicarCircuito() {
+  function atualicarCircuito() {
         const lamp = document.getElementById('camada-lampada');
         const placa = document.getElementById('placa-concluido'); 
         const tudoLigado = instalacaoConcluida && estados.dg && estados.dr && estados.int;
         
+        // Se a fiação não terminou, não faz nada com o circuito de teste
+        if (!instalacaoConcluida) return;
+
         if (tudoLigado) {
+            // Liga a lâmpada visualmente
             lamp.style.opacity = "1"; 
             primeiroTesteFeito = true; 
+            
+            // Garante que a placa de concluído suma se ligar tudo de novo
             placa.classList.remove('show');
+            
+            // Atualiza a linha de status em maiúsculas
+            statusTxt.innerHTML = "LÂMPADA ACESA";
         } else {
+            // Desliga a lâmpada visualmente
             lamp.style.opacity = "0";
+            
+            // Atualiza a linha de status em maiúsculas
+            statusTxt.innerHTML = "LÂMPADA APAGADA";
+            
+            // Exibe a placa com a mensagem 'concluido' apenas na primeira vez que o circuito for desligado
             if (primeiroTesteFeito && !placaJaExibida) {
                 placaJaExibida = true;
                 placa.classList.add('show'); 
                 setTimeout(() => {
                     placa.classList.remove('show');
                 }, 3000);
-            } else {
-                placa.classList.remove('show');
             }
         }
     }
