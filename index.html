@@ -261,7 +261,7 @@
         @keyframes pulsar { 0% { transform: translate(-50%, -50%) scale(1); } 70% { transform: translate(-50%, -50%) scale(1.25); } 100% { transform: translate(-50%, -50%) scale(1); } }
         #status-mensagem span.destaque { color: #ff9900; }
 
-        /* --- NOVAS ÁREAS SENSÍVEIS RETANGULARES (HOTSPOTS) --- */
+     /* --- NOVAS ÁREAS SENSÍVEIS RETANGULARES (HOTSPOTS) --- */
         .hotspot {
             position: absolute;
             background: transparent;
@@ -286,7 +286,7 @@
             border-radius: 4px;
             white-space: nowrap;
             font-size: 14px;
-            font-family: 'Inter', 'Roboto', sans-serif;;
+            font-family: 'Inter', 'Roboto', sans-serif;
             z-index: 101;
             pointer-events: none;
             opacity: 0;
@@ -295,6 +295,14 @@
         .hotspot:hover::before {
             opacity: 1;
         }
+
+        /* === COLE ESTE TRECHO NOVO AQUI === */
+        .hotspot.balao-baixo::before {
+            bottom: auto;
+            top: 105%;
+        }
+        /* ================================== */
+
     </style>
 </head>
 <body onclick="fecharBalao()">
@@ -322,20 +330,23 @@
     <div id="container-simulador" onclick="fecharBalao()">
         <img src="ambiente.jpg" id="fundo">
          
-        <!-- Áreas Sensíveis (Hotspots) -->
+       <!-- Áreas Sensíveis (Hotspots) -->
         <div class="hotspot" style="top: 13%; left: 11.5%; width: 40px; height: 150px;" data-name="DISJUNTOR GERAL"></div>
         <div class="hotspot" style="top: 12.5%; left: 19.5%; width: 88px; height: 160px;" data-name="DISPOSITIVO DR"></div>  
         <div class="hotspot" style="top: 13%; left: 15.8%; width: 37.5px; height: 150px;" data-name="DPS"></div>
         <div class="hotspot" style="top: 13%; left: 28.5%; width: 113px; height: 150px;" data-name="DISJUNTORES DOS CIRCUITOS"></div>
         <div class="hotspot" style="top: 9%; left: 6.5%; width: 22px; height: 200px;" data-name="B.ATERRAMENTO"></div>
         <div class="hotspot" style="top: 9%; left: 43.2%; width: 20px; height: 200px;" data-name="BARRA DE NEUTRO"></div>
- <div class="hotspot" style="top: 50%; left: 5%; width: 40px; height: 180px;" data-name="REDE ELÉTRICA"></div>
-    <!-- Novos Hotspots Adicionados -->
-        <div class="hotspot" style="top: 12%; left: 56%; width: 150px; height: 130px;" data-name="CAIXA DE PASSAGEM 4x2&quot;"></div>
+        <div class="hotspot" style="top: 50%; left: 5%; width: 40px; height: 180px;" data-name="REDE ELÉTRICA"></div>
+        
+        <!-- Novos Hotspots Adicionados -->
+        <!-- ADICIONADO A CLASSE 'balao-baixo' NESSA LINHA ABAIXO -->
+        <div class="hotspot balao-baixo" style="top: 12%; left: 56%; width: 150px; height: 130px;" data-name="CAIXA DE PASSAGEM 4x2&quot;"></div>
+        
         <div class="hotspot" style="top: 71%; left: 71%; width: 70px; height: 100px;" data-name="INTERRUPTOR SIMPLES"></div>
         <div class="hotspot" style="top: 48%; left: 86%; width: 90px; height: 90px;" data-name="LÂMPADA LED"></div>
         <div class="hotspot" style="top: 42%; left: 87%; width: 70px; height: 45px;" data-name="BOCAL E27"></div>
-            <!-- Novos Hotspots Adicionados (FINAL) -->
+        <!-- Novos Hotspots Adicionados (FINAL) -->
         
         <div id="camada-fase1" class="camada-cabo"></div>
         <div id="camada-fase2" class="camada-cabo"></div>
