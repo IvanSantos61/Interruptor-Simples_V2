@@ -662,7 +662,7 @@
         else { elInt.innerHTML = "✘"; elInt.className = "status-equip-simbolo simbolo-desligado"; }
     }
 
-  function atualicarCircuito() {
+function atualicarCircuito() {
         const lamp = document.getElementById('camada-lampada');
         const placa = document.getElementById('placa-concluido'); 
         const tudoLigado = instalacaoConcluida && estados.dg && estados.dr && estados.int;
@@ -675,19 +675,19 @@
             lamp.style.opacity = "1"; 
             primeiroTesteFeito = true; 
             
-            // Garante que a placa de concluído suma se ligar tudo de novo
+            // Garante que a placa de concluído suma
             placa.classList.remove('show');
             
-            // Atualiza a linha de status em maiúsculas
-            statusTxt.innerHTML = "LÂMPADA ACESA";
+            // STATUS VERDE: LÂMPADA ACESA
+            statusTxt.innerHTML = '<span style="background-color: #008000; color: white; padding: 10px 30px; border-radius: 20px; font-weight: bold; border: 2px solid #00ff00; box-shadow: 0 0 15px rgba(0,255,0,0.4); display: inline-block;">LÂMPADA ACESA</span>';
         } else {
             // Desliga a lâmpada visualmente
             lamp.style.opacity = "0";
             
-            // Atualiza a linha de status em maiúsculas
-            statusTxt.innerHTML = "LÂMPADA APAGADA";
+            // STATUS VERMELHO: LÂMPADA APAGADA
+            statusTxt.innerHTML = '<span style="background-color: #b30000; color: white; padding: 10px 30px; border-radius: 20px; font-weight: bold; border: 2px solid #ff0000; box-shadow: 0 0 15px rgba(255,0,0,0.4); display: inline-block;">LÂMPADA APAGADA</span>';
             
-            // Exibe a placa com a mensagem 'concluido' apenas na primeira vez que o circuito for desligado
+            // Exibe a placa de concluído apenas na primeira vez
             if (primeiroTesteFeito && !placaJaExibida) {
                 placaJaExibida = true;
                 placa.classList.add('show'); 
