@@ -37,7 +37,7 @@
         <div id="status-mensagem">AGUARDANDO INÍCIO...</div>
     </div>
 
-    <div id="container-simulador" onclick="fecharBalao()">
+<div id="container-simulador" onclick="fecharBalao()">
         <img src="ambiente.jpg" id="fundo">
         
         <div id="camada-fase1" class="camada-cabo"></div>
@@ -45,13 +45,13 @@
         <div id="camada-fase2" class="camada-cabo"></div>
         <div id="camada-retorno1" class="camada-cabo"></div>
         <div id="camada-neutro2" class="camada-cabo"></div>
-        
-        <img src="lamp_on.png" id="camada-lampada" style="position: absolute; z-index: 30; opacity: 0; top: 46.5%; left: 75.8%; width: 242px;">
-
+        <div class="hotspot" style="top: 13%; left: 11.5%; width: 40px; height: 150px;" data-name="DISJUNTOR GERAL"></div>
+        <img src="lamp_on.png" id="camada-lampada">
         <img src="al_dg_off.png" id="tecla-dg" class="tecla" style="top: 25%; left: 11.4%; width: 50px;" onclick="toggleDispositivo('dg')">
         <img src="al_dr_off.png" id="tecla-dr" class="tecla" style="top: 28%; left: 23.8%; width: 50px;" onclick="toggleDispositivo('dr')">
-        <img src="tec_int_off.png" id="tecla-int" class="tecla" style="top: 73%; left: 66%; width: 53px;" onclick="toggleDispositivo('int')">
-    </div>
+        <img src="tec_int_off.png" id="tecla-int" class="tecla" style="top: 73%; left: 66%; width: 53px; z-index: 100; pointer-events: auto; cursor: help;" onclick="toggleDispositivo('int')">
+
+        </div>
 
 <script>
     let estados = { dg: false, dr: false, int: false };
