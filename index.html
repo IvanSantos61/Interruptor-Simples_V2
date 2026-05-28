@@ -3,23 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laboratório SMT Pro - Corrigido</title>
+    <title>Laboratório SMT Pro</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #060b13; color: white; display: flex; flex-direction: column; align-items: center; padding: 20px; margin: 0; overflow-x: hidden; }
-        h1 { color: #00f0ff; text-shadow: 0 0 10px #00f0ff; text-transform: uppercase; }
-        #tela-entrada { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #060b13; z-index: 1000; display: flex; align-items: center; justify-content: center; transition: opacity 0.5s; }
+        h1 { color: #00f0ff; text-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff; font-size: 2.5em; margin-bottom: 20px; letter-spacing: 2px; text-transform: uppercase; }
+        
+        /* [Estilos originais mantidos] */
+        #tela-entrada { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #060b13; z-index: 1000; display: flex; align-items: center; justify-content: center; transition: opacity 0.5s ease, visibility 0.5s; }
+        .moldura-entrada { width: 80%; max-width: 900px; height: 70%; max-height: 450px; border: 3px solid #00f0ff; border-radius: 25px; box-shadow: 0 0 50px rgba(0, 240, 255, 0.4), inset 0 0 20px rgba(0, 240, 255, 0.1); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; }
+        .btn-iniciar-lab { background: transparent; border: 2px solid #00f0ff; border-radius: 50px; color: #00f0ff; font-size: 16px; font-weight: bold; text-transform: uppercase; padding: 12px 35px; cursor: pointer; animation: pulsarBotao 1.5s infinite; }
+        
+        #painel-status { width: 90%; max-width: 950px; background: rgba(0, 0, 0, 0.4); border: 1px solid #1a2a44; border-radius: 15px; padding: 25px; margin-bottom: 30px; text-align: center; min-height: 80px; display: flex; justify-content: center; align-items: center; }
+        #status-mensagem { font-family: 'Arial Narrow', Arial, sans-serif; font-size: 1.3em; font-weight: bold; color: #ffffff; letter-spacing: 1px; text-transform: uppercase; }
+        .cor-alerta { color: #ff0000 !important; }
         
         #container-simulador { position: relative; line-height: 0; user-select: none; border-radius: 10px; overflow: hidden; display: inline-block; }
         #fundo { max-width: 1000px; height: auto; display: block; }
         
-        /* Camadas dos cabos corrigidas */
-        .camada-cabo { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; opacity: 0; transition: opacity 0.3s; background-size: 100% 100%; }
-        
-        #painel-status { width: 90%; max-width: 950px; background: rgba(0, 0, 0, 0.4); border: 1px solid #1a2a44; border-radius: 15px; padding: 25px; margin-bottom: 30px; text-align: center; }
+        .camada-cabo { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: 100% 100%; pointer-events: none; z-index: 5; opacity: 0; transition: opacity 0.3s; }
         .tecla { position: absolute; cursor: pointer; z-index: 125; }
-        .conector { position: absolute; display: none; z-index: 15; pointer-events: auto; }
+        .conector { position: absolute; display: none; z-index: 15; pointer-events: auto; transform-origin: center; cursor: help; }
+        .hotspot { position: absolute; background: transparent; border: 1px dashed rgba(0, 240, 255, 0.2); z-index: 100; cursor: help; }
         .balao-base { position: absolute; z-index: 400; background: white; color: black; padding: 15px; border-radius: 10px; display: none; }
+        .ponto { position: absolute; width: 14px; height: 14px; border: 2px solid #ffffff; border-radius: 50%; cursor: pointer; display: none; z-index: 150; transform: translate(-50%, -50%); }
     </style>
 </head>
 <body onclick="fecharBalao()">
@@ -37,7 +44,7 @@
         <div id="status-mensagem">AGUARDANDO INÍCIO...</div>
     </div>
 
-<div id="container-simulador" onclick="fecharBalao()">
+    <div id="container-simulador" onclick="fecharBalao()">
         <img src="ambiente.jpg" id="fundo">
         
         <div id="camada-fase1" class="camada-cabo"></div>
@@ -45,62 +52,65 @@
         <div id="camada-fase2" class="camada-cabo"></div>
         <div id="camada-retorno1" class="camada-cabo"></div>
         <div id="camada-neutro2" class="camada-cabo"></div>
-        <div class="hotspot" style="top: 13%; left: 11.5%; width: 40px; height: 150px;" data-name="DISJUNTOR GERAL"></div>
-        <img src="lamp_on.png" id="camada-lampada">
+        
+        <img src="lamp_on.png" id="camada-lampada" style="position: absolute; z-index: 30; opacity: 0; top: 46.5%; left: 75.8%; width: 242px;">
+
         <img src="al_dg_off.png" id="tecla-dg" class="tecla" style="top: 25%; left: 11.4%; width: 50px;" onclick="toggleDispositivo('dg')">
         <img src="al_dr_off.png" id="tecla-dr" class="tecla" style="top: 28%; left: 23.8%; width: 50px;" onclick="toggleDispositivo('dr')">
-        <img src="tec_int_off.png" id="tecla-int" class="tecla" style="top: 73%; left: 66%; width: 53px; z-index: 100; pointer-events: auto; cursor: help;" onclick="toggleDispositivo('int')">
+        <img src="tec_int_off.png" id="tecla-int" class="tecla" style="top: 73%; left: 66%; width: 53px; z-index: 100;" onclick="toggleDispositivo('int')">
 
-        </div>
+        <div id="ponto-inicio" class="ponto"></div>
+        <div id="ponto-fim" class="ponto"></div>
+    </div>
 
-<script>
-    let estados = { dg: false, dr: false, int: false };
-    let instalacaoConcluida = false;
-    let etapaAtual = 0;
+    <script>
+        let estados = { dg: false, dr: false, int: false };
+        let instalacaoConcluida = false;
+        let etapaAtual = 0;
+        let aguardandoDestino = false;
 
-    function iniciarLaboratorio() { 
-        document.getElementById('tela-entrada').style.opacity = '0'; 
-        setTimeout(() => { document.getElementById('tela-entrada').style.visibility = 'hidden'; carregarEtapa(); }, 500); 
-    }
-
-    const sequencia = [
-        { id: 'FASE1', max: 63, pasta: 'FASE1' },
-        { id: 'NEUTRO1', max: 79, pasta: 'NEUTRO1' },
-        { id: 'FASE2', max: 20, pasta: 'FASE2' },
-        { id: 'RETORNO1', max: 50, pasta: 'RETORNO1' },
-        { id: 'NEUTRO2', max: 20, pasta: 'NEUTRO2' }
-    ];
-
-    function animarCabo(cabo) {
-        const camada = document.getElementById(`camada-${cabo.id.toLowerCase()}`);
-        if (!camada) { console.error("Elemento não encontrado: camada-" + cabo.id.toLowerCase()); return; }
-        
-        camada.style.opacity = "1";
-        let frame = 1;
-        const loop = setInterval(() => {
-            if (frame > cabo.max) {
-                clearInterval(loop);
-                etapaAtual++;
-                carregarEtapa();
-                return;
-            }
-            const frameString = frame.toString().padStart(4, '0');
-            camada.style.backgroundImage = `url('${cabo.pasta}/quadro${frameString}.png')`;
-            frame++;
-        }, 25);
-    }
-
-    function carregarEtapa() {
-        if (etapaAtual >= sequencia.length) {
-            instalacaoConcluida = true;
-            document.getElementById('status-mensagem').innerText = 'FIAÇÃO CONCLUÍDA! LIGUE OS DISPOSITIVOS.';
-            return;
+        function iniciarLaboratorio() { 
+            document.getElementById('tela-entrada').style.opacity = '0'; 
+            setTimeout(() => { document.getElementById('tela-entrada').style.visibility = 'hidden'; carregarEtapa(); }, 500); 
         }
-        // Lógica de cliques simplificada para teste
-        console.log("Etapa atual: " + sequencia[etapaAtual].id);
-        // Exemplo: chamando direto para testar se a animação ocorre
-        animarCabo(sequencia[etapaAtual]);
-    }
-</script>
+
+        const sequencia = [
+            { id: 'FASE1', cor: '#ff0000', max: 63, pasta: 'FASE1', ini: {t: '38%', l: '27%'}, fim: {t: '23%', l: '56.5%'} },
+            { id: 'NEUTRO1', cor: '#00bfff', max: 79, pasta: 'NEUTRO1', ini: {t: '35%', l: '44.3%'}, fim: {t: '14%', l: '56%'} },
+            { id: 'FASE2', cor: '#ff0000', max: 20, pasta: 'FASE2', ini: {t: '32%', l: '58.5%'}, fim: {t: '81%', l: '68%'} },
+            { id: 'RETORNO1', cor: '#ffff00', max: 50, pasta: 'RETORNO1', ini: {t: '19.3%', l: '63%'}, fim: {t: '75%', l: '68%'} },
+            { id: 'NEUTRO2', cor: '#00bfff', max: 20, pasta: 'NEUTRO2', ini: {t: '8%', l: '58%'}, fim: {t: '55%', l: '91.3%'} }
+        ];
+
+        function animarCabo(cabo) {
+            let camada = document.getElementById(`camada-${cabo.id.toLowerCase()}`);
+            if(!camada) return;
+            camada.style.opacity = "1";
+            let frame = 1;
+            const loop = setInterval(() => {
+                if (frame > cabo.max) { clearInterval(loop); etapaAtual++; carregarEtapa(); return; }
+                const frameString = frame.toString().padStart(4, '0');
+                camada.style.backgroundImage = `url('${cabo.pasta}/quadro${frameString}.png')`;
+                frame++;
+            }, 25);
+        }
+
+        function carregarEtapa() {
+            if (etapaAtual >= sequencia.length) { instalacaoConcluida = true; return; }
+            const dados = sequencia[etapaAtual];
+            const elInicio = document.getElementById('ponto-inicio');
+            elInicio.style.top = dados.ini.t; elInicio.style.left = dados.ini.l; 
+            elInicio.style.display = 'block';
+            elInicio.onclick = (e) => { e.stopPropagation(); animarCabo(dados); elInicio.style.display = 'none'; };
+        }
+
+        function toggleDispositivo(tipo) {
+            estados[tipo] = !estados[tipo];
+            const el = document.getElementById(`tecla-${tipo}`);
+            if (tipo === 'dg') el.src = estados.dg ? 'al_dg_on.png' : 'al_dg_off.png';
+            if (tipo === 'dr') el.src = estados.dr ? 'al_dr_on.png' : 'al_dr_off.png';
+            if (tipo === 'int') el.src = estados.int ? 'tec_int_on.png' : 'tec_int_off.png';
+        }
+    </script>
 </body>
 </html>
